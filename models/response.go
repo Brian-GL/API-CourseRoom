@@ -1,6 +1,6 @@
 package models
 
-type ResposeInfrastruture struct {
+type ResponseInfrastructure struct {
 	Status ResponseStatus `json:"status"`
 	Data   any            `json:"data"`
 }

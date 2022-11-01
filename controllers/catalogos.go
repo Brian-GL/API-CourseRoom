@@ -31,7 +31,43 @@ func (controller *CatalogoController) Estados(c *gin.Context) {
 			return infrastructure.EstadosGetAsync(controller.DB, modelo.IdEstado)
 		})
 
-		response := future.Await().(models.ResposeInfrastruture)
+		response := future.Await().(models.ResponseInfrastructure)
+
+		switch response.Status {
+		case models.SUCCESS:
+			{
+				c.IndentedJSON(http.StatusOK, response.Data)
+			}
+		case models.ALERT:
+			{
+				c.IndentedJSON(http.StatusNotFound, response.Data)
+			}
+		default:
+			{
+				c.IndentedJSON(http.StatusInternalServerError, response.Data)
+			}
+		}
+	} else {
+
+		c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
+
+	}
+
+}
+
+func (controller *CatalogoController) EstatusTareasPendientes(c *gin.Context) {
+
+	var modelo *models.TokenInput
+
+	err := json.NewDecoder(c.Request.Body).Decode(&modelo)
+
+	if err == nil {
+
+		future := async.Exec(func() interface{} {
+			return infrastructure.EstatusTareaPendienteGetAsync(controller.DB)
+		})
+
+		response := future.Await().(models.ResponseInfrastructure)
 
 		switch response.Status {
 		case models.SUCCESS:
