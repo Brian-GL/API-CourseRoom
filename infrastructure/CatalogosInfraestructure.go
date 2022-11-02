@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func EstadosGetAsync(db *gorm.DB, IdEstado *int) models.ResponseInfrastructure {
+func EstadosGetAsync(db *gorm.DB, model *models.EstadosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado []entities.Estado
+		var resultado []entities.EstadosObtenerEntity
 
 		exec := "EXEC dbo.sp_csr_CatalogoEstados_Obtener @IdEstado = ?"
 
-		db.Raw(exec, IdEstado).Scan(&resultado)
+		db.Raw(exec, model.IdEstado).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
@@ -33,17 +33,17 @@ func EstadosGetAsync(db *gorm.DB, IdEstado *int) models.ResponseInfrastructure {
 
 }
 
-func EstatusTareaPendienteGetAsync(db *gorm.DB) models.ResponseInfrastructure {
+func EstatusTareaPendienteGetAsync(db *gorm.DB, model *models.EstatusTareaPendienteObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado []entities.EstatusTareaPendiente
+		var resultado []entities.EstatusTareasPendienteObtenerEntity
 
-		exec := "EXEC dbo.sp_csr_CatalogoEstatusTareasPendientes_Obtener"
+		exec := "EXEC dbo.sp_csr_CatalogoEstatusTareasPendientes_Obtener @IdEstatusTareaPendiente = ?"
 
-		db.Raw(exec).Scan(&resultado)
+		db.Raw(exec, model.IdEstatusTareaPendiente).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}

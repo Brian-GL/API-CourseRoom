@@ -7,13 +7,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInput) models.ResponseInfrastructure {
+func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado []entities.AvisosObtener
+		var resultado []entities.AvisosObtenerEntity
 
 		exec := "EXEC dbo.sp_csr_Avisos_Obtener @IdUsuario = ?, @Leido = ?"
 
