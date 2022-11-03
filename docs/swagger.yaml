@@ -1,13 +1,4 @@
 info:
   contact: {}
-paths:
-  /api/avisos/obtener:
-    post:
-      consumes:
-      - application/json
-      description: Obtiene los avisos de un usuario
-      produces:
-      - application/json
-      responses: {}
-      summary: Obtener avisos
+paths: {}
 swagger: "2.0"

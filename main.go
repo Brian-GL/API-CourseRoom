@@ -13,21 +13,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-//  @title           Swagger API CourseRoom
-//  @version         1.0
-//  @description     CourseRoom API para el sistema de CourseRoom.
-
-//  @contact.name   API Support
-//  @contact.email  Course_Room@outlook.com
-
-//  @license.name  Apache 2.0
-//  @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
-//  @host      localhost:1313
-//  @BasePath  /api/v1
-
-//  @securityDefinitions.basic  BasicAuth
-
 func main() {
 
 	db := database.GetDatabase()
@@ -75,6 +60,11 @@ func main() {
 		avisos := v1.Group("/avisos")
 		{
 			avisos.POST("/api/avisos/obtener", avisosController.AvisosObtener)
+			avisos.PUT("/api/avisos/actualizar", avisosController.AvisoActualizar)
+			avisos.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
+			avisos.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
+			avisos.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
+			avisos.POST("/api/avisos/validar", avisosController.AvisosValidar)
 		}
 
 		catalogos := v1.Group("/catalogos")
@@ -90,6 +80,11 @@ func main() {
 	// #region Avisos Endpoints
 
 	router.POST("/api/avisos/obtener", avisosController.AvisosObtener)
+	router.PUT("/api/avisos/actualizar", avisosController.AvisoActualizar)
+	router.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
+	router.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
+	router.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
+	router.POST("/api/avisos/validar", avisosController.AvisosValidar)
 
 	// #endregion
 

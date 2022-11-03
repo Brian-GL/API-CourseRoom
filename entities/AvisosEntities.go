@@ -9,3 +9,12 @@ type AvisosObtenerEntity struct {
 	Estatus       string    `json:"estatus"`
 	TipoAviso     string    `json:"tipoAviso"`
 }
+
+type AvisoDetalleObtenerEntity struct {
+	Aviso              string     `json:"aviso"`
+	Descripcion        string     `json:"descripcion"`
+	Estatus            string     `json:"estatus"`
+	TipoAviso          string     `json:"tipoAviso"`
+	FechaRegistro      time.Time  `json:"fechaRegistro"`
+	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+}

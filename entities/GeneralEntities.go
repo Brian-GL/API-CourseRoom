@@ -1,6 +1,6 @@
 package entities
 
-type ModificacionEntity struct {
+type AccionEntity struct {
 	Codigo  int    `json:"codigo"`
 	Mensaje string `json:"mensaje"`
 }
