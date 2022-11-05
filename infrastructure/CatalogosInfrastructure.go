@@ -58,3 +58,29 @@ func EstatusTareaPendienteGetAsync(db *gorm.DB, model *models.EstatusTareaPendie
 	return response
 
 }
+
+func CursoEstatusObtenerGetAsync(db *gorm.DB, model *models.CursoEstatusObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.CursoEstatusObtenerEntity
+
+		exec := "EXEC dbo.sp_csr_CatalogoCursoEstatus_Obtener @IdEstatus = ?"
+
+		db.Raw(exec, model.IdEstatus).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}

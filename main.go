@@ -23,6 +23,8 @@ func main() {
 
 	catalogoController := controllers.NewCatalogoController(db)
 
+	chatController := controllers.NewChatController(db)
+
 	cursoController := controllers.NewCursoController(db)
 
 	// #endregion
@@ -73,6 +75,12 @@ func main() {
 		{
 			catalogos.POST("/api/catalogos/estados", catalogoController.Estados)
 			catalogos.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
+			catalogos.POST("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
+		}
+
+		chats := v1.Group("/chat")
+		{
+			chats.POST("/api/chats/registrar", chatController.ChatRegistrar)
 		}
 
 		cursos := v1.Group("/cursos")
@@ -99,6 +107,13 @@ func main() {
 
 	router.POST("/api/catalogos/estados", catalogoController.Estados)
 	router.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
+	router.POST("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
+
+	// #endregion
+
+	// #region Chats Endpoints
+
+	router.POST("/api/chats/registrar", chatController.ChatRegistrar)
 
 	// #endregion
 
