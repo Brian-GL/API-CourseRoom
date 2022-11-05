@@ -86,6 +86,8 @@ func main() {
 		cursos := v1.Group("/cursos")
 		{
 			cursos.DELETE("/api/cursos/remover", cursoController.CursoRemover)
+			cursos.POST("/api/cursos/registrar", cursoController.CursoRegistrar)
+			cursos.POST("/api/cursos/grupos", cursoController.CursoGruposObtener)
 		}
 
 	}
@@ -119,7 +121,9 @@ func main() {
 
 	// #region Cursos Endpoints
 
+	router.POST("/api/cursos/registrar", cursoController.CursoRegistrar)
 	router.DELETE("/api/cursos/remover", cursoController.CursoRemover)
+	router.POST("/api/cursos/grupos", cursoController.CursoGruposObtener)
 
 	// #endregion
 
