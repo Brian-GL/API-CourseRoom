@@ -123,7 +123,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 
 }
 
-func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoInputModel) models.ResponseInfrastructure {
+func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoRemoverInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -131,9 +131,9 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoInputModel) models.
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Aviso_Remover @IdAviso = ?"
+		exec := "EXEC dbo.sp_csr_Aviso_Remover @IdAviso = ?, @IdUsuario = ?"
 
-		db.Raw(exec, model.IdAviso).Scan(&resultado)
+		db.Raw(exec, model.IdAviso, model.IdUsuario).Scan(&resultado)
 
 		if resultado != nil {
 

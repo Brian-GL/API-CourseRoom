@@ -243,7 +243,7 @@ func (controller *AvisosController) AvisoRemover(c *gin.Context) {
 
 	if validarToken {
 
-		var modelo *models.AvisoInputModel
+		var modelo *models.AvisoRemoverInputModel
 
 		err := c.ShouldBindJSON(&modelo)
 

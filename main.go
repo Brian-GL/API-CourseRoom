@@ -19,9 +19,11 @@ func main() {
 
 	// #region Controllers
 
+	avisosController := controllers.NewAvisosController(db)
+
 	catalogoController := controllers.NewCatalogoController(db)
 
-	avisosController := controllers.NewAvisosController(db)
+	cursoController := controllers.NewCursoController(db)
 
 	// #endregion
 
@@ -73,6 +75,11 @@ func main() {
 			catalogos.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
 		}
 
+		cursos := v1.Group("/cursos")
+		{
+			cursos.DELETE("/api/cursos/remover", cursoController.CursoRemover)
+		}
+
 	}
 
 	// #endregion
@@ -92,6 +99,12 @@ func main() {
 
 	router.POST("/api/catalogos/estados", catalogoController.Estados)
 	router.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
+
+	// #endregion
+
+	// #region Cursos Endpoints
+
+	router.DELETE("/api/cursos/remover", cursoController.CursoRemover)
 
 	// #endregion
 
