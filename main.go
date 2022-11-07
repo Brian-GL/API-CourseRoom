@@ -69,6 +69,7 @@ func main() {
 			avisos.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
 			avisos.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
 			avisos.POST("/api/avisos/validar", avisosController.AvisosValidar)
+			avisos.POST("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
 		}
 
 		catalogos := v1.Group("/catalogos")
@@ -76,11 +77,22 @@ func main() {
 			catalogos.POST("/api/catalogos/estados", catalogoController.Estados)
 			catalogos.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
 			catalogos.POST("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
+			catalogos.POST("/api/catalogos/localidades", catalogoController.Localidades)
+			catalogos.POST("/api/catalogos/preguntarespuesta", catalogoController.PreguntaRespuesta)
+			catalogos.POST("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
+			catalogos.POST("/api/catalogos/tematicas", catalogoController.Tematicas)
+			catalogos.POST("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
 		}
 
 		chats := v1.Group("/chat")
 		{
 			chats.POST("/api/chats/registrar", chatController.ChatRegistrar)
+			chats.POST("/api/chats/remover", chatController.ChatRemover)
+			chats.POST("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
+			chats.POST("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
+			chats.POST("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
+			chats.POST("/api/chats/buscar", chatController.ChatsBuscar)
+			chats.POST("/api/chats/obtener", chatController.ChatsObtener)
 		}
 
 		cursos := v1.Group("/cursos")
@@ -102,6 +114,7 @@ func main() {
 	router.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
 	router.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
 	router.POST("/api/avisos/validar", avisosController.AvisosValidar)
+	router.POST("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
 
 	// #endregion
 
@@ -110,12 +123,23 @@ func main() {
 	router.POST("/api/catalogos/estados", catalogoController.Estados)
 	router.POST("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
 	router.POST("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
+	router.POST("/api/catalogos/localidades", catalogoController.Localidades)
+	router.POST("/api/catalogos/preguntarespuesta", catalogoController.PreguntaRespuesta)
+	router.POST("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
+	router.POST("/api/catalogos/tematicas", catalogoController.Tematicas)
+	router.POST("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
 
 	// #endregion
 
 	// #region Chats Endpoints
 
 	router.POST("/api/chats/registrar", chatController.ChatRegistrar)
+	router.POST("/api/chats/remover", chatController.ChatRemover)
+	router.POST("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
+	router.POST("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
+	router.POST("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
+	router.POST("/api/chats/buscar", chatController.ChatsBuscar)
+	router.POST("/api/chats/obtener", chatController.ChatsObtener)
 
 	// #endregion
 

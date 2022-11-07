@@ -27,3 +27,10 @@ type AvisosValidarInputModel struct {
 	IdUsuario          *int       `json:"idUsuario" binding:"required"`
 	FechaVisualizacion *time.Time `json:"fechaVisualizacion"`
 }
+
+type AvisoPlagioProfesorRegistrarInputModel struct {
+	IdProfesor    *int    `json:"idProfesor" binding:"required"`
+	IdUsuario     *int    `json:"idUsuario" binding:"required"`
+	IdTarea       *int    `json:"idTarea" binding:"required"`
+	NombreArchivo *string `json:"nombreArchivo" binding:"required"`
+}

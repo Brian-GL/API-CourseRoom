@@ -180,3 +180,35 @@ func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) mo
 	return response
 
 }
+
+func AvisoPlagioProfesorRegistrarPostAsync(db *gorm.DB, model *models.AvisoPlagioProfesorRegistrarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.AvisoPlagioProfesor_Registrar @IdProfesor = ?, @IdUsuario = ?, @IdTarea = ?, @NombreArchivo = ?"
+
+		db.Raw(exec, model.IdProfesor, model.IdUsuario, model.IdTarea, model.NombreArchivo).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}

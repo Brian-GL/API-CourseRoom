@@ -11,3 +11,24 @@ type EstatusTareaPendienteObtenerInputModel struct {
 type CursoEstatusObtenerInputModel struct {
 	IdEstatus *int `json:"idEstatus"`
 }
+
+type LocalidadesObtenerInputModel struct {
+	IdEstado    *int `json:"idEstado"`
+	IdLocalidad *int `json:"idLocalidad"`
+}
+
+type PreguntaRespuestaEstatusObtenerInputModel struct {
+	IdEstatusPreguntaRespuesta *int `json:"idEstatusPreguntaRespuesta"`
+}
+
+type PreguntasCuestionarioObtenerInputModel struct {
+	IdCuestionario *int `json:"idCuestionario"`
+}
+
+type TematicasObtenerInputModel struct {
+	IdTematica *int `json:"idTematica"`
+}
+
+type TiposUsuarioObtenerInputModel struct {
+	IdTipoUsuario *int `json:"idTipoUsuario"`
+}
