@@ -24,7 +24,7 @@ func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoAccionInputModel) m
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -56,7 +56,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -88,7 +88,7 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoAccionInputModel) m
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -146,7 +146,7 @@ func AvisoPlagioProfesorRegistrarPostAsync(db *gorm.DB, model *models.AvisoPlagi
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
