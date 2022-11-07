@@ -16,7 +16,7 @@ func main() {
 
 	avisosController := controllers.NewAvisosController(db)
 
-	// catalogoController := controllers.NewCatalogoController(db)
+	catalogoController := controllers.NewCatalogoController(db)
 
 	// chatController := controllers.NewChatController(db)
 
@@ -38,7 +38,7 @@ func main() {
 
 	// // #region Catalogos Endpoints
 
-	// http.HandleFunc("/api/catalogos/estados", catalogoController.Estados)
+	http.HandleFunc("/api/catalogos/estados", catalogoController.EstadosObtener)
 	// http.HandleFunc("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
 	// http.HandleFunc("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
 	// http.HandleFunc("/api/catalogos/localidades", catalogoController.Localidades)
