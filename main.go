@@ -63,13 +63,13 @@ func main() {
 	{
 		avisos := v1.Group("/avisos")
 		{
-			avisos.POST("/api/avisos/obtener", avisosController.AvisosObtener)
 			avisos.PUT("/api/avisos/actualizar", avisosController.AvisoActualizar)
-			avisos.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
 			avisos.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
 			avisos.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
-			avisos.POST("/api/avisos/validar", avisosController.AvisosValidar)
+			avisos.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
 			avisos.POST("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
+			avisos.POST("/api/avisos/obtener", avisosController.AvisosObtener)
+			avisos.POST("/api/avisos/validar", avisosController.AvisosValidar)
 		}
 
 		catalogos := v1.Group("/catalogos")
@@ -108,13 +108,13 @@ func main() {
 
 	// #region Avisos Endpoints
 
-	router.POST("/api/avisos/obtener", avisosController.AvisosObtener)
 	router.PUT("/api/avisos/actualizar", avisosController.AvisoActualizar)
-	router.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
 	router.POST("/api/avisos/registrar", avisosController.AvisoRegistrar)
 	router.DELETE("/api/avisos/remover", avisosController.AvisoRemover)
-	router.POST("/api/avisos/validar", avisosController.AvisosValidar)
+	router.POST("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
 	router.POST("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
+	router.POST("/api/avisos/obtener", avisosController.AvisosObtener)
+	router.POST("/api/avisos/validar", avisosController.AvisosValidar)
 
 	// #endregion
 

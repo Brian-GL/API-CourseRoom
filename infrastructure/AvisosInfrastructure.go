@@ -7,33 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado []entities.AvisosObtenerEntity
-
-		exec := "EXEC dbo.sp_csr_Avisos_Obtener @IdUsuario = ?, @Leido = ?"
-
-		db.Raw(exec, model.IdUsuario, model.Leido).Scan(&resultado)
-
-		if len(resultado) > 0 {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoInputModel) models.ResponseInfrastructure {
+func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoAccionInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -41,9 +15,9 @@ func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoInputModel) models.
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Aviso_Actualizar @IdAviso = ?"
+		exec := "EXEC dbo.Aviso_Actualizar @IdAviso = ?, @IdUsuario = ?"
 
-		db.Raw(exec, model.IdAviso).Scan(&resultado)
+		db.Raw(exec, model.IdAviso, model.IdUsuario).Scan(&resultado)
 
 		if resultado != nil {
 
@@ -54,33 +28,7 @@ func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoInputModel) models.
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func AvisoDetalleObtenerGetAsync(db *gorm.DB, model *models.AvisoInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AvisoDetalleObtenerEntity
-
-		exec := "EXEC dbo.sp_csr_AvisoDetalle_Obtener @IdAviso = ?"
-
-		db.Raw(exec, model.IdAviso).Scan(&resultado)
-
-		if resultado != nil {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -99,7 +47,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Aviso_Registrar @IdUsuario = ?, @Aviso = ?, @Descripcion = ?, @IdTipoAviso = ?"
+		exec := "EXEC dbo.Aviso_Registrar @IdUsuario = ?, @Aviso = ?, @Descripcion = ?, @IdTipoAviso = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Aviso, model.Descripcion, model.IdTipoAviso).Scan(&resultado)
 
@@ -112,7 +60,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -123,7 +71,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 
 }
 
-func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoRemoverInputModel) models.ResponseInfrastructure {
+func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoAccionInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -131,7 +79,7 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoRemoverInputModel) 
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Aviso_Remover @IdAviso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.Aviso_Remover @IdAviso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdAviso, model.IdUsuario).Scan(&resultado)
 
@@ -144,7 +92,7 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoRemoverInputModel) 
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -155,22 +103,22 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoRemoverInputModel) 
 
 }
 
-func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) models.ResponseInfrastructure {
+func AvisoDetalleObtenerGetAsync(db *gorm.DB, model *models.AvisoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado *bool
+		var resultado *entities.AvisoDetalleObtenerEntity
 
-		exec := "EXEC dbo.sp_csr_Avisos_Validar @IdUsuario = ?, @FechaVisualizacion = ?"
+		exec := "EXEC dbo.AvisoDetalle_Obtener @IdAviso = ?"
 
-		db.Raw(exec, model.IdUsuario, model.FechaVisualizacion).Scan(&resultado)
+		db.Raw(exec, model.IdAviso).Scan(&resultado)
 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió validar los avisos del usuario"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
 		}
 
 	} else {
@@ -202,7 +150,59 @@ func AvisoPlagioProfesorRegistrarPostAsync(db *gorm.DB, model *models.AvisoPlagi
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.AvisosObtenerEntity
+
+		exec := "EXEC dbo.Avisos_Obtener @IdUsuario = ?, @Leido = ?"
+
+		db.Raw(exec, model.IdUsuario, model.Leido).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *bool
+
+		exec := "EXEC dbo.Avisos_Validar @IdUsuario = ?, @FechaVisualizacion = ?"
+
+		db.Raw(exec, model.IdUsuario, model.FechaVisualizacion).Scan(&resultado)
+
+		if resultado != nil {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió validar los avisos del usuario"}
 		}
 
 	} else {

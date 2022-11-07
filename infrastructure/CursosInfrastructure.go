@@ -15,7 +15,7 @@ func CursoRemoverDeleteAsync(db *gorm.DB, model *models.CursoRemoverInputModel) 
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Curso_Remover @IdCurso = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.Curso_Remover @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
 
@@ -47,7 +47,7 @@ func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Curso_Registrar  @Nombre = ?, @Descripcion = ?, @Imagen = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.Curso_Registrar  @Nombre = ?, @Descripcion = ?, @Imagen = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.Nombre, model.Descripcion, model.Imagen, model.IdProfesor).Scan(&resultado)
 
@@ -78,7 +78,7 @@ func CursoGruposObtenerGetAsync(db *gorm.DB, model *models.CursoGruposObtenerInp
 
 		var resultado []entities.CursoGruposObtenerEntity
 
-		exec := "EXEC dbo.sp_csr_CursoGrupos_Obtener @IdCurso = ?, @Activo = ?"
+		exec := "EXEC dbo.CursoGrupos_Obtener @IdCurso = ?, @Activo = ?"
 
 		db.Raw(exec, model.IdCurso, model.Activo).Scan(&resultado)
 

@@ -11,7 +11,7 @@ type AvisoInputModel struct {
 	IdAviso *int `json:"idAviso" binding:"required"`
 }
 
-type AvisoRemoverInputModel struct {
+type AvisoAccionInputModel struct {
 	IdAviso   *int `json:"idAviso" binding:"required"`
 	IdUsuario *int `json:"idUsuario" binding:"required"`
 }

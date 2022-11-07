@@ -15,7 +15,7 @@ func ChatRegistrarPostAsync(db *gorm.DB, model *models.ChatRegistrarInputModel) 
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.sp_csr_Chat_Registrar @IdUsuarioEmisor = ?, @IdUsuarioReceptor = ?"
+		exec := "EXEC dbo.Chat_Registrar @IdUsuarioEmisor = ?, @IdUsuarioReceptor = ?"
 
 		db.Raw(exec, model.IdUsuarioEmisor, model.IdUsuarioReceptor).Scan(&resultado)
 
@@ -28,7 +28,7 @@ func ChatRegistrarPostAsync(db *gorm.DB, model *models.ChatRegistrarInputModel) 
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -60,7 +60,7 @@ func ChatRemoverDeleteAsync(db *gorm.DB, model *models.ChatRemoverInputModel) mo
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -79,7 +79,7 @@ func ChatMensajeRegistrarPostAsync(db *gorm.DB, model *models.ChatMensajeRegistr
 
 		var resultado *entities.AccionEntity
 
-		exec := "dbo.sp_csr_ChatMensaje_Registrar @IdChat = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
+		exec := "dbo.ChatMensaje_Registrar @IdChat = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
 
 		db.Raw(exec, model.IdChat, model.IdUsuarioEmisor, model.Mensaje, model.Archivo).Scan(&resultado)
 
@@ -92,7 +92,7 @@ func ChatMensajeRegistrarPostAsync(db *gorm.DB, model *models.ChatMensajeRegistr
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -124,7 +124,7 @@ func ChatMensajeRemoverDeleteAsync(db *gorm.DB, model *models.ChatMensajeRemover
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {
@@ -150,7 +150,7 @@ func ChatMensajesObtenerGetAsync(db *gorm.DB, model *models.ChatMensajesObtenerI
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -176,7 +176,7 @@ func ChatsBuscarGetAsync(db *gorm.DB, model *models.ChatsBuscarInputModel) model
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -202,7 +202,7 @@ func ChatsObtenerGetAsync(db *gorm.DB, model *models.ChatsObtenerInputModel) mod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {

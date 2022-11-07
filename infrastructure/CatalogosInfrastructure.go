@@ -7,6 +7,32 @@ import (
 	"gorm.io/gorm"
 )
 
+func CursoEstatusGetAsync(db *gorm.DB, model *models.CursoEstatusObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.CursoEstatusObtenerEntity
+
+		exec := "EXEC dbo.CatalogoCursoEstatus_Obtener @IdEstatusCurso = ?"
+
+		db.Raw(exec, model.IdEstatusCurso).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
 func EstadosGetAsync(db *gorm.DB, model *models.EstadosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -15,14 +41,14 @@ func EstadosGetAsync(db *gorm.DB, model *models.EstadosObtenerInputModel) models
 
 		var resultado []entities.EstadosObtenerEntity
 
-		exec := "EXEC dbo.sp_csr_CatalogoEstados_Obtener @IdEstado = ?"
+		exec := "EXEC dbo.CatalogoEstados_Obtener @IdEstado = ?"
 
 		db.Raw(exec, model.IdEstado).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estados"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -41,40 +67,14 @@ func EstatusTareaPendienteGetAsync(db *gorm.DB, model *models.EstatusTareaPendie
 
 		var resultado []entities.EstatusTareasPendienteObtenerEntity
 
-		exec := "EXEC dbo.sp_csr_CatalogoEstatusTareasPendientes_Obtener @IdEstatusTareaPendiente = ?"
+		exec := "EXEC dbo.CatalogoTareaPendienteEstatus_Obtener @IdEstatusTareaPendiente = ?"
 
 		db.Raw(exec, model.IdEstatusTareaPendiente).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus de tareas pendientes"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func CursoEstatusGetAsync(db *gorm.DB, model *models.CursoEstatusObtenerInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado []entities.CursoEstatusObtenerEntity
-
-		exec := "EXEC dbo.sp_csr_CatalogoCursoEstatus_Obtener @IdEstatus = ?"
-
-		db.Raw(exec, model.IdEstatus).Scan(&resultado)
-
-		if len(resultado) > 0 {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -100,7 +100,7 @@ func LocalidadesGetAsync(db *gorm.DB, model *models.LocalidadesObtenerInputModel
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -119,14 +119,14 @@ func PreguntaRespuestaEstatusGetAsync(db *gorm.DB, model *models.PreguntaRespues
 
 		var resultado []entities.PreguntaRespuestaEstatusObtenerEntity
 
-		exec := "EXEC dbo.CatalogoLocalidades_Obtener @IdEstado = ?, @IdLocalidad = ?"
+		exec := "EXEC dbo.CatalogoPreguntaRespuestaEstatus_Obtener @IdEstatusPreguntaRespuesta = ?"
 
 		db.Raw(exec, model.IdEstatusPreguntaRespuesta).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -145,14 +145,14 @@ func PreguntasCuestionarioGetAsync(db *gorm.DB, model *models.PreguntasCuestiona
 
 		var resultado []entities.PreguntasCuestionarioObtenerEntity
 
-		exec := "EXEC dbo.CatalogoLocalidades_Obtener @IdEstado = ?, @IdLocalidad = ?"
+		exec := "EXEC dbo.CatalogoPreguntasCuestionario_Obtener @IdCuestionario = ?"
 
 		db.Raw(exec, model.IdCuestionario).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -178,7 +178,7 @@ func TematicasGetAsync(db *gorm.DB, model *models.TematicasObtenerInputModel) mo
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -204,7 +204,7 @@ func TiposUsuarioGetAsync(db *gorm.DB, model *models.TiposUsuarioObtenerInputMod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
