@@ -10,13 +10,13 @@ import (
 
 func main() {
 
-	db := database.GetDatabase()
+	db, token := database.GetDatabase()
 
 	// #region Controllers
 
-	avisosController := controllers.NewAvisosController(db)
+	avisosController := controllers.NewAvisosController(db, &token)
 
-	catalogoController := controllers.NewCatalogoController(db)
+	//catalogoController := controllers.NewCatalogoController(db)
 
 	// chatController := controllers.NewChatController(db)
 
@@ -38,7 +38,7 @@ func main() {
 
 	// // #region Catalogos Endpoints
 
-	http.HandleFunc("/api/catalogos/estados", catalogoController.EstadosObtener)
+	//http.HandleFunc("/api/catalogos/estados", catalogoController.EstadosObtener)
 	// http.HandleFunc("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
 	// http.HandleFunc("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
 	// http.HandleFunc("/api/catalogos/localidades", catalogoController.Localidades)
@@ -75,5 +75,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("\n\nCourseRoom API Stopped At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
 
 }

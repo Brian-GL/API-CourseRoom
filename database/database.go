@@ -9,14 +9,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetDatabase() *gorm.DB {
+func GetDatabase() (*gorm.DB, string) {
 
 	// Cargar archivo .env
 	err := godotenv.Load(".env")
 
 	if err != nil {
 		log.Fatalf("Error loading database info")
-		return nil
+		return nil, ""
 	}
 
 	//Cargar variables sql server
@@ -26,15 +26,19 @@ func GetDatabase() *gorm.DB {
 	databaseName := os.Getenv("DATABASE")
 
 	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
 	db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 		PrepareStmt:            true,
 	})
 
+	//Cargar variable token desde env
+	envToken := os.Getenv("SECRET_TOKEN")
+
 	if err == nil {
-		return db
+		return db, envToken
 	}
 
-	return nil
+	return nil, envToken
 
 }
