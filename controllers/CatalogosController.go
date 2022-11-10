@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
@@ -523,3 +524,6 @@ func (controller *CatalogoController) TiposUsuario(c *gin.Context) {
 	}
 
 }
+
+
+*/

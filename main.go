@@ -2,7 +2,7 @@ package main
 
 import (
 	"api-courseroom/controllers"
-	"api-courseroom/database"
+	"api-courseroom/middleware"
 	"fmt"
 	"net/http"
 	"time"
@@ -10,19 +10,15 @@ import (
 
 func main() {
 
-	db, token := database.GetDatabase()
+	//Creación de middleware:
+	middleware := middleware.NewMiddleware()
 
-	// #region Controllers
-
-	avisosController := controllers.NewAvisosController(db, &token)
-
-	//catalogoController := controllers.NewCatalogoController(db)
-
-	// chatController := controllers.NewChatController(db)
-
-	// cursoController := controllers.NewCursoController(db)
-
-	// #endregion
+	// Controladores
+	avisosController := controllers.NewAvisosController(middleware)
+	//catalogoController := controllers.NewCatalogoController(middleware)
+	// chatController := controllers.NewChatController(middleware)
+	// cursoController := controllers.NewCursoController(middleware)
+	usuariosController := controllers.NewUsuariosController(middleware)
 
 	// #region Avisos Endpoints
 
@@ -69,13 +65,21 @@ func main() {
 
 	// // #endregion
 
-	fmt.Println("\n\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
+	// #region Usuarios Endpoints
+
+	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar)
+	// http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
+	// http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
+	// http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
+	// http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
+
+	// // #endregion
+
+	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
 
 	err := http.ListenAndServe(":1313", nil)
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("\n\nCourseRoom API Stopped At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
 
 }

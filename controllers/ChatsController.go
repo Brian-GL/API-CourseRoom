@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
@@ -381,3 +382,6 @@ func (controller *ChatController) ChatsObtener(c *gin.Context) {
 	}
 
 }
+
+
+*/

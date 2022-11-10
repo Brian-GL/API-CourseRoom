@@ -7,25 +7,18 @@ import (
 	"api-courseroom/models"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
-	"gorm.io/gorm"
 )
 
 type AvisosController struct {
-	DB        *gorm.DB
-	Token     string
-	Validator *validator.Validate
-	JsonIter  jsoniter.API
+	Middleware *middleware.Middleware
+	JsonIter   jsoniter.API
 }
 
-func NewAvisosController(db *gorm.DB, token *string) AvisosController {
+func NewAvisosController(middleware *middleware.Middleware) AvisosController {
 	return AvisosController{
-		DB:        db,
-		Token:     *token,
-		Validator: validator.New(),
-		JsonIter:  jsoniter.ConfigCompatibleWithStandardLibrary}
+		Middleware: middleware,
+		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
 func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req *http.Request) {
@@ -54,7 +47,7 @@ func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Token {
+	if token == controller.Middleware.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -67,12 +60,12 @@ func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req
 
 				if err == nil {
 
-					err = controller.Validator.Struct(modelo)
+					err = controller.Middleware.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoActualizarPutAsync(controller.DB, modelo)
+							return infrastructure.AvisoActualizarPutAsync(controller.Middleware.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -193,7 +186,7 @@ func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Token {
+	if token == controller.Middleware.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -206,12 +199,12 @@ func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req 
 
 				if err == nil {
 
-					err = controller.Validator.Struct(modelo)
+					err = controller.Middleware.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoRegistrarPostAsync(controller.DB, modelo)
+							return infrastructure.AvisoRegistrarPostAsync(controller.Middleware.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -328,7 +321,7 @@ func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Token {
+	if token == controller.Middleware.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -342,12 +335,12 @@ func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *h
 
 				if err == nil {
 
-					err = controller.Validator.Struct(modelo)
+					err = controller.Middleware.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoRemoverDeleteAsync(controller.DB, modelo)
+							return infrastructure.AvisoRemoverDeleteAsync(controller.Middleware.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -464,7 +457,7 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Token {
+	if token == controller.Middleware.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -478,12 +471,12 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 
 				if err == nil {
 
-					err = controller.Validator.Struct(modelo)
+					err = controller.Middleware.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoDetalleObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.AvisoDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -573,6 +566,8 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 	}
 
 }
+
+/*
 
 func (controller *AvisosController) AvisoPlagioProfesorRegistrar(c *gin.Context) {
 
@@ -730,3 +725,6 @@ func (controller *AvisosController) AvisosValidar(c *gin.Context) {
 	}
 
 }
+
+
+*/

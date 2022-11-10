@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
@@ -171,3 +172,5 @@ func (controller *CursoController) CursoGruposObtener(c *gin.Context) {
 	}
 
 }
+
+*/

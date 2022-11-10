@@ -18,8 +18,8 @@ type AvisoAccionInputModel struct {
 
 type AvisoRegistrarInputModel struct {
 	IdUsuario   *int    `json:"idUsuario" validate:"required"`
-	Aviso       *string `json:"aviso" validate:"required, min: 3, max: 75"`
-	Descripcion *string `json:"descripcion" validate:"required, min: 3, max: 4000"`
+	Aviso       *string `json:"aviso" validate:"required"`
+	Descripcion *string `json:"descripcion" validate:"required"`
 	IdTipoAviso *int    `json:"idTipoAviso" validate:"required"`
 }
 
