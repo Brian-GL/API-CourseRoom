@@ -18,6 +18,7 @@ func main() {
 	//catalogoController := controllers.NewCatalogoController(middleware)
 	// chatController := controllers.NewChatController(middleware)
 	// cursoController := controllers.NewCursoController(middleware)
+	gruposController := controllers.NewGruposController(middleware)
 	usuariosController := controllers.NewUsuariosController(middleware)
 
 	// #region Avisos Endpoints
@@ -64,6 +65,14 @@ func main() {
 	// http.HandleFunc("/api/cursos/grupos", cursoController.CursoGruposObtener)
 
 	// // #endregion
+
+	// #region Grupos Endpoints
+
+	http.HandleFunc("/api/grupos/actualizar", gruposController.GrupoActualizar)
+	http.HandleFunc("/api/grupos/archivoscompartidos", gruposController.GrupoArchivosCompartidosObtener)
+	http.HandleFunc("/api/grupos/archivocompartido", gruposController.GrupoArchivoCompartidoRegistrar)
+
+	// #endregion
 
 	// #region Usuarios Endpoints
 
