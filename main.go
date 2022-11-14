@@ -26,9 +26,9 @@ func main() {
 	http.HandleFunc("/api/avisos/actualizar", avisosController.AvisoActualizar)
 	http.HandleFunc("/api/avisos/registrar", avisosController.AvisoRegistrar)
 	http.HandleFunc("/api/avisos/remover", avisosController.AvisoRemover)
-	// http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
+	http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
 	http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
-	// http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
+	http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
 	http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
 
 	// // #endregion
