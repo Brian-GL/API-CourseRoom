@@ -22,7 +22,7 @@ func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoAccionInputModel) m
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
 				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
@@ -86,7 +86,7 @@ func AvisoRemoverDeleteAsync(db *gorm.DB, model *models.AvisoAccionInputModel) m
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
 				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}

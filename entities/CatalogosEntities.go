@@ -11,9 +11,9 @@ type EstatusTareasPendienteObtenerEntity struct {
 }
 
 type CursoEstatusObtenerEntity struct {
-	IdEstatusCurso int    `json:"idEstatusCurso"`
-	Estatus        string `json:"estatus"`
-	Descripcion    string `json:"descripcion"`
+	IdEstatus   int    `json:"idEstatus"`
+	Estatus     string `json:"estatus"`
+	Descripcion string `json:"descripcion"`
 }
 
 type LocalidadesObtenerEntity struct {

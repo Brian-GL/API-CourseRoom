@@ -18,3 +18,7 @@ type AvisoDetalleObtenerEntity struct {
 	FechaRegistro      time.Time  `json:"fechaRegistro"`
 	FechaActualizacion *time.Time `json:"fechaActualizacion"`
 }
+
+type AvisosValidarEntity struct {
+	Validacion bool `json:"validacion"`
+}

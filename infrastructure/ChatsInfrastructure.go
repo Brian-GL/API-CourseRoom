@@ -54,9 +54,9 @@ func ChatRemoverDeleteAsync(db *gorm.DB, model *models.ChatRemoverInputModel) mo
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -118,9 +118,9 @@ func ChatMensajeRemoverDeleteAsync(db *gorm.DB, model *models.ChatMensajeRemover
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {

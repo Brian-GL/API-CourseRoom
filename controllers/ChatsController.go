@@ -1,6 +1,5 @@
 package controllers
 
-/*
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
@@ -8,380 +7,966 @@ import (
 	"api-courseroom/models"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	jsoniter "github.com/json-iterator/go"
 )
 
 type ChatController struct {
-	DB *gorm.DB
+	Middleware *middleware.Middleware
+	JsonIter   jsoniter.API
 }
 
-func NewChatController(db *gorm.DB) ChatController {
-	return ChatController{DB: db}
+func NewChatController(middleware *middleware.Middleware) ChatController {
+	return ChatController{
+		Middleware: middleware,
+		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
-func (controller *ChatController) ChatRegistrar(c *gin.Context) {
+func (controller *ChatController) ChatRegistrar(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatRegistrarInputModel
+		switch req.Method {
+		case "POST":
+			{
+				//Registrar aviso:
 
-		err := c.ShouldBindJSON(&modelo)
+				var modelo *models.ChatRegistrarInputModel
 
-		if err == nil {
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatRegistrarPostAsync(controller.DB, modelo)
-			})
+				if err == nil {
 
-			response := future.Await().(models.ResponseInfrastructure)
+					err = controller.Middleware.ValidateModel(modelo)
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatRegistrarPostAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatRemover(c *gin.Context) {
+func (controller *ChatController) ChatRemover(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatRemoverInputModel
+		switch req.Method {
 
-		err := c.ShouldBindJSON(&modelo)
+		case "DELETE":
+			{
+				//Registrar aviso:
 
-		if err == nil {
+				var modelo *models.ChatRemoverInputModel
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatRemoverDeleteAsync(controller.DB, modelo)
-			})
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			response := future.Await().(models.ResponseInfrastructure)
+				if err == nil {
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatRemoverDeleteAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatMensajeRegistrar(c *gin.Context) {
+func (controller *ChatController) ChatMensajeRegistrar(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatMensajeRegistrarInputModel
+		switch req.Method {
+		case "POST":
+			{
+				//Registrar aviso:
 
-		err := c.ShouldBindJSON(&modelo)
+				var modelo *models.ChatMensajeRegistrarInputModel
 
-		if err == nil {
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatMensajeRegistrarPostAsync(controller.DB, modelo)
-			})
+				if err == nil {
 
-			response := future.Await().(models.ResponseInfrastructure)
+					err = controller.Middleware.ValidateModel(modelo)
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatMensajeRegistrarPostAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatMensajeRemover(c *gin.Context) {
+func (controller *ChatController) ChatMensajeRemover(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatMensajeRemoverInputModel
+		switch req.Method {
 
-		err := c.ShouldBindJSON(&modelo)
+		case "DELETE":
+			{
+				//Registrar aviso:
 
-		if err == nil {
+				var modelo *models.ChatMensajeRemoverInputModel
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatMensajeRemoverDeleteAsync(controller.DB, modelo)
-			})
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			response := future.Await().(models.ResponseInfrastructure)
+				if err == nil {
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatMensajeRemoverDeleteAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatMensajesObtener(c *gin.Context) {
+func (controller *ChatController) ChatMensajesObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatMensajesObtenerInputModel
+		switch req.Method {
 
-		err := c.ShouldBindJSON(&modelo)
+		case "GET":
+			{
+				//Registrar aviso:
 
-		if err == nil {
+				var modelo *models.ChatMensajesObtenerInputModel
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatMensajesObtenerGetAsync(controller.DB, modelo)
-			})
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			response := future.Await().(models.ResponseInfrastructure)
+				if err == nil {
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatMensajesObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
 
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
-
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatsBuscar(c *gin.Context) {
+func (controller *ChatController) ChatsObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatsBuscarInputModel
+		switch req.Method {
 
-		err := c.ShouldBindJSON(&modelo)
+		case "GET":
+			{
+				//Registrar aviso:
 
-		if err == nil {
+				var modelo *models.ChatsObtenerInputModel
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatsBuscarGetAsync(controller.DB, modelo)
-			})
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			response := future.Await().(models.ResponseInfrastructure)
+				if err == nil {
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatsObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
 
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
-
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
 
-func (controller *ChatController) ChatsObtener(c *gin.Context) {
+func (controller *ChatController) ChatsBuscar(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
 
 	// Obtener token
-	token := c.GetHeader("Authorization")
+	token := req.Header.Get("Authorization")
 
 	// Validar que el token no se encuentre vacío:
 	if token == "" {
-		c.IndentedJSON(http.StatusUnauthorized, "El token es necesario para acceder a este recurso")
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
 		return
 	}
 
 	// Validar que el token sea el correcto:
-	validarToken := middleware.ValidateToken(&token)
 
-	if validarToken {
+	if token == controller.Middleware.SECRET_TOKEN {
 
-		var modelo *models.ChatsObtenerInputModel
+		switch req.Method {
 
-		err := c.ShouldBindJSON(&modelo)
+		case "GET":
+			{
+				//Registrar aviso:
 
-		if err == nil {
+				var modelo *models.ChatsBuscarInputModel
 
-			future := async.Exec(func() interface{} {
-				return infrastructure.ChatsObtenerGetAsync(controller.DB, modelo)
-			})
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
-			response := future.Await().(models.ResponseInfrastructure)
+				if err == nil {
 
-			switch response.Status {
-			case models.SUCCESS:
-				{
-					c.IndentedJSON(http.StatusOK, response.Data)
-				}
-			case models.ALERT:
-				{
-					c.IndentedJSON(http.StatusNotFound, response.Data)
-				}
-			default:
-				{
-					c.IndentedJSON(http.StatusInternalServerError, response.Data)
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.ChatsBuscarGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
 				}
 			}
-		} else {
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
 
-			c.IndentedJSON(http.StatusBadRequest, "El parámetro de entrada no cuenta con un formato adecuado")
-
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
 		}
+
 	} else {
-		c.IndentedJSON(http.StatusUnauthorized, "Token inválido")
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
 	}
 
 }
-
-
-*/

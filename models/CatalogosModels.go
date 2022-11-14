@@ -9,7 +9,7 @@ type EstatusTareaPendienteObtenerInputModel struct {
 }
 
 type CursoEstatusObtenerInputModel struct {
-	IdEstatusCurso *int `json:"idEstatusCurso"`
+	IdEstatus *int `json:"idEstatus"`
 }
 
 type LocalidadesObtenerInputModel struct {

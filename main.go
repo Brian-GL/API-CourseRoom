@@ -15,8 +15,8 @@ func main() {
 
 	// Controladores
 	avisosController := controllers.NewAvisosController(middleware)
-	//catalogoController := controllers.NewCatalogoController(middleware)
-	// chatController := controllers.NewChatController(middleware)
+	catalogoController := controllers.NewCatalogoController(middleware)
+	chatController := controllers.NewChatController(middleware)
 	// cursoController := controllers.NewCursoController(middleware)
 	gruposController := controllers.NewGruposController(middleware)
 	usuariosController := controllers.NewUsuariosController(middleware)
@@ -27,34 +27,34 @@ func main() {
 	http.HandleFunc("/api/avisos/registrar", avisosController.AvisoRegistrar)
 	http.HandleFunc("/api/avisos/remover", avisosController.AvisoRemover)
 	// http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
-	// http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
+	http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
 	// http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
-	// http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
+	http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
 
 	// // #endregion
 
 	// // #region Catalogos Endpoints
 
-	//http.HandleFunc("/api/catalogos/estados", catalogoController.EstadosObtener)
-	// http.HandleFunc("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareasPendientes)
-	// http.HandleFunc("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
-	// http.HandleFunc("/api/catalogos/localidades", catalogoController.Localidades)
-	// http.HandleFunc("/api/catalogos/preguntarespuesta", catalogoController.PreguntaRespuesta)
-	// http.HandleFunc("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
-	// http.HandleFunc("/api/catalogos/tematicas", catalogoController.Tematicas)
-	// http.HandleFunc("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
+	http.HandleFunc("/api/catalogos/estados", catalogoController.EstadosObtener)
+	http.HandleFunc("/api/catalogos/estatustareapendiente", catalogoController.EstatusTareaPendiente)
+	http.HandleFunc("/api/catalogos/cursoestatus", catalogoController.CursoEstatus)
+	http.HandleFunc("/api/catalogos/localidades", catalogoController.Localidades)
+	http.HandleFunc("/api/catalogos/preguntarespuesta", catalogoController.PreguntaRespuesta)
+	http.HandleFunc("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
+	http.HandleFunc("/api/catalogos/tematicas", catalogoController.Tematicas)
+	http.HandleFunc("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
 
 	// // #endregion
 
 	// // #region Chats Endpoints
 
-	// http.HandleFunc("/api/chats/registrar", chatController.ChatRegistrar)
-	// http.HandleFunc("/api/chats/remover", chatController.ChatRemover)
-	// http.HandleFunc("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
-	// http.HandleFunc("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
-	// http.HandleFunc("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
-	// http.HandleFunc("/api/chats/buscar", chatController.ChatsBuscar)
-	// http.HandleFunc("/api/chats/obtener", chatController.ChatsObtener)
+	http.HandleFunc("/api/chats/registrar", chatController.ChatRegistrar)
+	http.HandleFunc("/api/chats/remover", chatController.ChatRemover)
+	http.HandleFunc("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
+	http.HandleFunc("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
+	http.HandleFunc("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
+	http.HandleFunc("/api/chats/buscar", chatController.ChatsBuscar)
+	http.HandleFunc("/api/chats/obtener", chatController.ChatsObtener)
 
 	// // #endregion
 
