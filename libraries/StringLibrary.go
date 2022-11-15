@@ -1,4 +1,4 @@
-package middleware
+package libraries
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ import (
  *    - args - values that are using for formatting with template
  * Returns formatted string
  */
-func Format(template string, args ...interface{}) string {
+func FormatString(template string, args ...interface{}) string {
 	if args == nil {
 		return template
 	}

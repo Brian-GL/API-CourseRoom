@@ -77,11 +77,7 @@ func main() {
 	// #region Usuarios Endpoints
 
 	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar)
-	// http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
-	// http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
-	// http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
-	// http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
-
+	http.HandleFunc("/api/usuarios/credenciales", usuariosController.UsuarioCredencialesObtener)
 	// // #endregion
 
 	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))

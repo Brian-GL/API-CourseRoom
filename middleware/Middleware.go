@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"api-courseroom/entities"
+	"api-courseroom/libraries"
 	"api-courseroom/models"
 	"bytes"
 	"crypto/tls"
@@ -217,7 +218,7 @@ func (middleware *Middleware) EmailVerificatorAPI(email *string) entities.Accion
 
 	jsonIter := jsoniter.ConfigCompatibleWithStandardLibrary
 
-	query := Format(middleware.EMAIL_VERIFICATOR_API, *email)
+	query := libraries.FormatString(middleware.EMAIL_VERIFICATOR_API, *email)
 
 	resp, err := http.Get(query)
 

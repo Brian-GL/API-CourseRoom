@@ -2,8 +2,10 @@ package infrastructure
 
 import (
 	"api-courseroom/entities"
+	"api-courseroom/libraries"
 	"api-courseroom/middleware"
 	"api-courseroom/models"
+	"encoding/base64"
 	"strings"
 	"time"
 )
@@ -53,6 +55,51 @@ func UsuarioRegistrarPostAsync(middleware *middleware.Middleware, model *models.
 		}
 	} else {
 		response = models.ResponseInfrastructure{Status: models.ALERT, Data: responseAPI.Mensaje}
+	}
+
+	return response
+
+}
+
+func UsuarioCredencialObtenerPostAsync(middleware *middleware.Middleware, model *models.UsuarioCredencialObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	db := middleware.DB
+
+	if db != nil {
+
+		var resultado *string
+
+		exec := "EXEC dbo.UsuarioCredencial_Obtener @CorreoElectronico = ?"
+
+		db.Raw(exec, strings.ToUpper(*model.CorreoElectronico)).Scan(&resultado)
+
+		if resultado != nil {
+
+			decodificacion, err := base64.StdEncoding.DecodeString(*resultado)
+			if err != nil {
+				response = models.ResponseInfrastructure{Status: models.ERROR, Data: err.Error()}
+			} else {
+
+				query := libraries.FormatString(middleware.QR_SERVER_API, decodificacion)
+
+				dataCredencialesEmail := models.CredencialesEmail{
+					CorreoElectronico: query,
+					Anio:              time.Now().Year()}
+
+				go middleware.SendCredencialesEmail(&dataCredencialesEmail)
+
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: "Se ha enviado el correo electrónico de recuperación de credenciales"}
+
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
 	}
 
 	return response
