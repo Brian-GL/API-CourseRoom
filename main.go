@@ -19,6 +19,7 @@ func main() {
 	chatController := controllers.NewChatController(middleware)
 	// cursoController := controllers.NewCursoController(middleware)
 	gruposController := controllers.NewGruposController(middleware)
+	tareasController := controllers.NewTareasController(middleware)
 	usuariosController := controllers.NewUsuariosController(middleware)
 
 	// #region Avisos Endpoints
@@ -71,6 +72,31 @@ func main() {
 	http.HandleFunc("/api/grupos/actualizar", gruposController.GrupoActualizar)
 	http.HandleFunc("/api/grupos/archivoscompartidos", gruposController.GrupoArchivosCompartidosObtener)
 	http.HandleFunc("/api/grupos/archivocompartido", gruposController.GrupoArchivoCompartidoRegistrar)
+	http.HandleFunc("/api/grupos/mensajes", gruposController.GruposMensajesObtener)
+	http.HandleFunc("/api/grupos/obtener", gruposController.GruposObtener)
+	http.HandleFunc("/api/grupos/miembros", gruposController.GrupoMiembrosObtener)
+	http.HandleFunc("/api/grupos/tareaspendientes", gruposController.GrupoTareasPendientesObtener)
+	http.HandleFunc("/api/grupos/tareapendientedetalle", gruposController.GrupoTareaPendienteDetalleObtener)
+	http.HandleFunc("/api/grupos/tareapendienteestatus", gruposController.GrupoTareaPendienteEstatusActualizar)
+	http.HandleFunc("/api/grupos/miembro", gruposController.GrupoMiembroRemover)
+	http.HandleFunc("/api/grupos/miembro", gruposController.GrupoMiembroRegistrar)
+	http.HandleFunc("/api/grupos/tareapendiente", gruposController.GrupoTareaPendienteActualizar)
+	http.HandleFunc("/api/grupos/tareapendiente", gruposController.GrupoTareaPendienteRegistrar)
+
+	// #endregion
+
+	// #region Tareas Endpoints
+
+	http.HandleFunc("/api/tareas/archivosadjuntos", tareasController.TareaArchivosAdjuntosObtener)
+	http.HandleFunc("/api/tareas/estudiantedetalle", tareasController.TareaEstudianteDetalleObtener)
+	http.HandleFunc("/api/tareas/mes", tareasController.TareasMesObtener)
+	http.HandleFunc("/api/tareas/imagenesentregadas", tareasController.TareaImagenesEntregadasObtener)
+	http.HandleFunc("/api/tareas/retroalimentaciondetalle", tareasController.TareaRetroalimentacionDetalleObtener)
+	http.HandleFunc("/api/tareas/actualizar", tareasController.TareaActualizar)
+	http.HandleFunc("/api/tareas/archivoentregado", tareasController.TareaArchivoEntregadoRegistrar)
+	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
+	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRemover)
+	http.HandleFunc("/api/tareas/retroalimentacion", tareasController.TareaRetroalimentacionRegistrar)
 
 	// #endregion
 
