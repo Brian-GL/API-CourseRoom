@@ -48,3 +48,9 @@ type EmailVerificatorAPISuccess struct {
 	Email  string `json:"email"`
 	Domain string `json:"domain"`
 }
+
+type CourseRoomCalculator struct {
+	IdUsuario  int
+	IdTarea    int
+	IdProfesor int
+}

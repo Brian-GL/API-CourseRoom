@@ -2,7 +2,10 @@ package infrastructure
 
 import (
 	"api-courseroom/entities"
+	"api-courseroom/middleware"
 	"api-courseroom/models"
+	"net/rpc"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -198,7 +201,6 @@ func TareaArchivoEntregadoRegistrarPostAsync(db *gorm.DB, model *models.TareaArc
 	}
 
 	return response
-
 }
 
 func TareaRemoverDeleteAsync(db *gorm.DB, model *models.TareaRemoverInputModel) models.ResponseInfrastructure {
@@ -230,7 +232,6 @@ func TareaRemoverDeleteAsync(db *gorm.DB, model *models.TareaRemoverInputModel) 
 	}
 
 	return response
-
 }
 
 func TareaRegistrarPostAsync(db *gorm.DB, model *models.TareaRegistrarInputModel) models.ResponseInfrastructure {
@@ -295,4 +296,75 @@ func TareaRetroalimentacionRegistrarPostAsync(db *gorm.DB, model *models.TareaRe
 
 	return response
 
+}
+
+func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *models.TareaCalificarActualizarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	db := middleware.DB
+
+	if db != nil {
+
+		var resultado *entities.TareaCalificarActualizarEntity
+
+		exec := "EXEC dbo.TareaCalificar_Actualizar @IdTarea = ?, @IdProfesor = ?, @IdUsuario = ?, @Calificacion = ?"
+
+		db.Raw(exec, model.IdTarea, model.IdProfesor, model.IdUsuario, model.Calificacion).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+
+				var usuario *entities.UsuarioCuentaObtenerEntity
+
+				exec = "EXEC dbo.UsuarioCuenta_Obtener @IdUsuario = ?"
+
+				db.Raw(exec, model.IdUsuario).Scan(&usuario)
+
+				if usuario != nil {
+
+					modelEmail := models.CalificacionEmail{
+						CorreoElectronico:    usuario.CorreoElectronico,
+						NombreTarea:          resultado.NombreTarea,
+						FechaCalificacion:    time.Now().Format("10-10-2022 12:00 p.m"),
+						CalificacionObtenida: *model.Calificacion,
+						PuntualidadObtenida:  resultado.Puntualidad,
+						Anio:                 time.Now().Year()}
+
+					go middleware.SendCalificacionEmail(&modelEmail)
+				}
+
+				// Send request to rpc courseroom calculator:
+
+				rpc_client, err := rpc.Dial("tcp", middleware.COURSEROOM_CALCULATOR)
+
+				if err == nil {
+
+					var code int
+
+					modelCalculator := models.CourseRoomCalculator{
+						IdUsuario:  *model.IdUsuario,
+						IdTarea:    *model.IdTarea,
+						IdProfesor: *model.IdProfesor}
+
+					_ = rpc_client.Call("Server.Calificacion", &modelCalculator, &code)
+				}
+
+				defer rpc_client.Close()
+
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
 }

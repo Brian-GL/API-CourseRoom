@@ -31,6 +31,7 @@ type Middleware struct {
 	EMAIL_CREDENTIALS     string
 	EMAIL_VERIFICATOR_API string
 	QR_SERVER_API         string
+	COURSEROOM_CALCULATOR string
 }
 
 func NewMiddleware() *Middleware {
@@ -55,6 +56,7 @@ func NewMiddleware() *Middleware {
 	emailAPI := os.Getenv("EmailVerificatorAPI")
 	emailPort, _ := strconv.Atoi(os.Getenv("EMAIL_PORT"))
 	qrAPI := os.Getenv("QRServerAPI")
+	courseRoomCalculator := os.Getenv("COURSEROOM_CALCULATOR")
 
 	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
 
@@ -76,7 +78,8 @@ func NewMiddleware() *Middleware {
 		EMAIL_CREDENTIALS:     emailCredentials,
 		EMAIL_PORT:            emailPort,
 		EMAIL_VERIFICATOR_API: emailAPI,
-		QR_SERVER_API:         qrAPI}
+		QR_SERVER_API:         qrAPI,
+		COURSEROOM_CALCULATOR: courseRoomCalculator}
 }
 
 func (middleware *Middleware) ValidateModel(data interface{}) error {

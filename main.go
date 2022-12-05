@@ -102,8 +102,9 @@ func main() {
 
 	// #region Usuarios Endpoints
 
-	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar)
-	http.HandleFunc("/api/usuarios/credenciales", usuariosController.UsuarioCredencialesObtener)
+	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar)              //POST
+	http.HandleFunc("/api/usuarios/credenciales", usuariosController.UsuarioCredencialesObtener) //POST
+	http.HandleFunc("/api/usuarios/cuenta", usuariosController.UsuarioCuentaActualizar)          //PUT
 	// // #endregion
 
 	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))

@@ -105,3 +105,45 @@ func UsuarioCredencialObtenerPostAsync(middleware *middleware.Middleware, model 
 	return response
 
 }
+
+func UsuarioCuentaActualizarPutAsync(middleware *middleware.Middleware, model *models.UsuarioCuentaActualizarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	// validar existencia email:
+	responseAPI := middleware.EmailVerificatorAPI(model.CorreoElectronico)
+
+	if responseAPI.Codigo > 0 {
+
+		db := middleware.DB
+
+		if db != nil {
+
+			var resultado *entities.AccionEntity
+
+			exec := "EXEC dbo.UsuarioCuenta_Actualizar @IdUsuario = ?, @CorreoElectronico = ?, @Contrasena = ?, @ChatsConmigo = ?, @MostrarAvisos = ?, @Imagen = ?"
+
+			db.Raw(exec, model.IdUsuario, strings.ToUpper(*model.CorreoElectronico), model.Contrasena, model.ChatsConmigo, model.MostrarAvisos, model.Imagen).Scan(&resultado)
+
+			if resultado != nil {
+
+				if resultado.Codigo > 0 {
+					response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
+				} else {
+					response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+				}
+
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+		}
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ALERT, Data: responseAPI.Mensaje}
+	}
+
+	return response
+
+}

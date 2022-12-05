@@ -1,5 +1,7 @@
 package entities
 
+import "time"
+
 type CursoGruposObtenerEntity struct {
 	IdGrupo           int     `json:"idGrupo"`
 	Nombre            string  `json:"nombre"`
@@ -65,19 +67,19 @@ type CursoEstudianteRegistrarEntity struct {
 }
 
 type CursoEstudianteDetalleObtenerEntity struct {
-	Nombre                  string `json:"nombre"`
-	Descripcion             string `json:"descripcion"`
-	Imagen                  string `json:"imagen"`
-	IdProfesor              int    `json:"idProfesor"`
-	NombreProfesor          string `json:"nombreProfesor"`
-	ImagenProfesor          string `json:"imagenProfesor"`
-	FechaRegistroCurso      time   `json:"fechaRegistroCurso"`
-	FechaActualizacionCurso string `json:"fechaActulizacionCurso"`
-	Finalizado              bool   `json:"finalizado"`
-	FechaRegistro           time   `json:"fechaRegistro"`
-	FechaActualizacion      time   `json:"fechaActualizacion"`
-	Estatus                 string `json:"estatus"`
-	DescripcionEstatus      string `json:"descripcionEstatus"`
+	Nombre                  string    `json:"nombre"`
+	Descripcion             string    `json:"descripcion"`
+	Imagen                  string    `json:"imagen"`
+	IdProfesor              int       `json:"idProfesor"`
+	NombreProfesor          string    `json:"nombreProfesor"`
+	ImagenProfesor          string    `json:"imagenProfesor"`
+	FechaRegistroCurso      time.Time `json:"fechaRegistroCurso"`
+	FechaActualizacionCurso string    `json:"fechaActulizacionCurso"`
+	Finalizado              bool      `json:"finalizado"`
+	FechaRegistro           time.Time `json:"fechaRegistro"`
+	FechaActualizacion      time.Time `json:"fechaActualizacion"`
+	Estatus                 string    `json:"estatus"`
+	DescripcionEstatus      string    `json:"descripcionEstatus"`
 }
 
 type CursoCursoFinalizarActualizarEntity struct {
@@ -171,66 +173,65 @@ type CursoPromedioObtenerEntity struct {
 }
 
 type CursoBuscarEntity struct {
-	IdCurso        int     `json:"idCurso"`
-	Curso          string  `json:"curso"`
-	ImagenCurso    string  `json:"imagenCurso"`
-	IdProfesor     int     `json:"idProfesor"`
-	Profesor       string  `json:"profesor"`
-	ImagenProfesor string  `json:"imagenProfesor"`
-	ListaTematica  string  `json:"listaTematica"`
-	FechaRegistro  time    `json:"fechaRegistro"`
-	Puntaje        float32 `json:"puntaje"`
-	FechaRegistro  time    `json:"fechaRegistro"`
-	Estatus        string  `json:"estatus"`
+	IdCurso        int       `json:"idCurso"`
+	Curso          string    `json:"curso"`
+	ImagenCurso    string    `json:"imagenCurso"`
+	IdProfesor     int       `json:"idProfesor"`
+	Profesor       string    `json:"profesor"`
+	ImagenProfesor string    `json:"imagenProfesor"`
+	ListaTematica  string    `json:"listaTematica"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+	Puntaje        float32   `json:"puntaje"`
+	FechaIngreso   time.Time `json:"fechaIngreso"`
+	Estatus        string    `json:"estatus"`
 }
 
 type CursoObtenerEntity struct {
-	IdCurso        int     `json:"idCurso"`
-	Curso          string  `json:"curso"`
-	ImagenCurso    string  `json:"imagenCurso"`
-	IdProfesor     int     `json:"idProfesor"`
-	Profesor       string  `json:"profesor"`
-	ImagenProfesor string  `json:"imagenProfesor"`
-	ListaTematica  string  `json:"listaTematica"`
-	FechaRegistro  time    `json:"fechaRegistro"`
-	Puntaje        float32 `json:"puntaje"`
-	FechaRegistro  time    `json:"fechaRegistro"`
-	Estatus        string  `json:"estatus"`
+	IdCurso        int       `json:"idCurso"`
+	Curso          string    `json:"curso"`
+	ImagenCurso    string    `json:"imagenCurso"`
+	IdProfesor     int       `json:"idProfesor"`
+	Profesor       string    `json:"profesor"`
+	ImagenProfesor string    `json:"imagenProfesor"`
+	ListaTematica  string    `json:"listaTematica"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+	Puntaje        float32   `json:"puntaje"`
+	FechaIngreso   time.Time `json:"fechaIngreso"`
+	Estatus        string    `json:"estatus"`
 }
 
 type CursoNuevosObtenerEntity struct {
-	IdCurso        int     `json:"idCurso"`
-	Curso          string  `json:"curso"`
-	ImagenCurso    string  `json:"imagenCurso"`
-	IdProfesor     int     `json:"idProfesor"`
-	Profesor       string  `json:"profesor"`
-	ImagenProfesor string  `json:"imagenProfesor"`
-	ListaTematica  string  `json:"listaTematica"`
-	FechaRegistro  time    `json:"fechaRegistro"`
-	Puntaje        float32 `json:"puntaje"`
-	FechaRegistro  time    `json:"fechaRegistro"`
+	IdCurso        int       `json:"idCurso"`
+	Curso          string    `json:"curso"`
+	ImagenCurso    string    `json:"imagenCurso"`
+	IdProfesor     int       `json:"idProfesor"`
+	Profesor       string    `json:"profesor"`
+	ImagenProfesor string    `json:"imagenProfesor"`
+	ListaTematica  string    `json:"listaTematica"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+	Puntaje        float32   `json:"puntaje"`
 }
 
 type CursoProfesorObtenerEntity struct {
-	IdCurso        int     `json:"idCurso"`
-	Curso          string  `json:"curso"`
-	Imagen         string  `json:"imagen"`
-	ListaTematicas string  `json:"listaTematica"`
-	Estatus        string  `json:"estatus"`
-	FechaRegistro  Time    `json:"fechaRegistro"`
-	Puntaje        float32 `json:"puntaje"`
+	IdCurso        int       `json:"idCurso"`
+	Curso          string    `json:"curso"`
+	Imagen         string    `json:"imagen"`
+	ListaTematicas string    `json:"listaTematica"`
+	Estatus        string    `json:"estatus"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+	Puntaje        float32   `json:"puntaje"`
 }
 
 type CursoTareaEstudianteObtenerEntity struct {
-	IdTarea           int     `json:"idTarea"`
-	Nombre            string  `json:"nombre"`
-	FechaRegistro     string  `json:"fechaRegistro"`
-	FechaEntrega      string  `json:"fechaEntrega"`
-	FechaEntregada    string  `json:"fechaEntregada"`
-	FechaCalificacion Time    `json:"fechaCalificacion"`
-	Calificacion      float32 `json:"calificacion"`
-	Puntualidad       float32 `json:"puntualidad"`
-	Estatus           string  `json:"estatus"`
+	IdTarea           int       `json:"idTarea"`
+	Nombre            string    `json:"nombre"`
+	FechaRegistro     string    `json:"fechaRegistro"`
+	FechaEntrega      string    `json:"fechaEntrega"`
+	FechaEntregada    string    `json:"fechaEntregada"`
+	FechaCalificacion time.Time `json:"fechaCalificacion"`
+	Calificacion      float32   `json:"calificacion"`
+	Puntualidad       float32   `json:"puntualidad"`
+	Estatus           string    `json:"estatus"`
 }
 
 type CursoTematicaRegistrarEntity struct {

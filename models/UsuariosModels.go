@@ -34,12 +34,7 @@ type UsuarioRemoverInputModel struct {
 	IdTipoUsuario *int `json:"idTipoUsuario" validate:"required"`
 }
 
-// Estos dos modelos siguientes pueden ser uno:
-type UsuarioCuentaObtenerInputModel struct {
-	IdUsuario *int `json:"idUsuario" validate:"required"`
-}
-
-type UsuarioDesempenoObtenerInputModel struct {
+type UsuarioInputModel struct {
 	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
 
@@ -50,4 +45,13 @@ type UsuarioAccesoObtenerInputModel struct {
 
 type UsuarioCredencialObtenerInputModel struct {
 	CorreoElectronico *string `json:"correoElectronico" validate:"required,email"`
+}
+
+type UsuarioCuentaActualizarInputModel struct {
+	IdUsuario         *int    `json:"idUsuario" validate:"required"`
+	CorreoElectronico *string `json:"correoElectronico" validate:"required,email"`
+	Contrasena        *string `json:"contrasena" validate:"required,base64"`
+	ChatsConmigo      *bool   `json:"chatsConmigo" validate:"required"`
+	MostrarAvisos     *bool   `json:"mostrarAvisos" validate:"required"`
+	Imagen            *string `json:"imagen"`
 }

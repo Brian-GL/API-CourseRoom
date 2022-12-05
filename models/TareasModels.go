@@ -56,3 +56,10 @@ type TareaRetroalimentacionRegistrarInputModel struct {
 	NombreArchivo     *string `json:"nombreArchivo"`
 	Archivo           *string `json:"archivo"`
 }
+
+type TareaCalificarActualizarInputModel struct {
+	IdTarea      *int     `json:"idTarea" validate:"required"`
+	IdProfesor   *int     `json:"idProfesor" validate:"required"`
+	IdUsuario    *int     `json:"idUsuario" validate:"required"`
+	Calificacion *float32 `json:"calificacion" validate:"required"`
+}

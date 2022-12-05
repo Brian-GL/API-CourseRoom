@@ -51,3 +51,10 @@ type TareaRetroalimentacionDetalleObtenerEntity struct {
 	Archivo           *string   `json:"archivo"`
 	FechaRegistro     time.Time `json:"fechaRegistro"`
 }
+
+type TareaCalificarActualizarEntity struct {
+	Codigo      int     `json:"codigo"`
+	Puntualidad float32 `json:"puntualidad"`
+	NombreTarea string  `json:"nombreTarea"`
+	Mensaje     string  `json:"mensaje"`
+}
