@@ -97,6 +97,7 @@ func main() {
 	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/retroalimentacion", tareasController.TareaRetroalimentacionRegistrar)
+	http.HandleFunc("/api/tareas/calificar", tareasController.TareaCalificarActualizar) //PUT
 
 	// #endregion
 

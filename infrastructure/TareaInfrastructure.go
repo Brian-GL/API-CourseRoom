@@ -341,19 +341,19 @@ func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *
 
 				if err == nil {
 
-					var code int
+					var message string
 
 					modelCalculator := models.CourseRoomCalculator{
 						IdUsuario:  *model.IdUsuario,
 						IdTarea:    *model.IdTarea,
 						IdProfesor: *model.IdProfesor}
 
-					_ = rpc_client.Call("Server.Calificacion", &modelCalculator, &code)
+					_ = rpc_client.Call("Server.Calificacion", &modelCalculator, &message)
 				}
 
 				defer rpc_client.Close()
 
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
 				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
