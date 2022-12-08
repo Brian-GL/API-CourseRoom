@@ -103,9 +103,27 @@ func main() {
 
 	// #region Usuarios Endpoints
 
-	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar)              //POST
+	http.HandleFunc("/api/usuarios/actualizar", usuariosController.UsuarioActualizar)
+	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar) //POST
+	http.HandleFunc("/api/usuarios/remover", usuariosController.UsuarioRemover)
+	http.HandleFunc("/api/usuarios/acceso", usuariosController.UsuarioAccesoObtener)
 	http.HandleFunc("/api/usuarios/credenciales", usuariosController.UsuarioCredencialesObtener) //POST
 	http.HandleFunc("/api/usuarios/cuenta", usuariosController.UsuarioCuentaActualizar)          //PUT
+	http.HandleFunc("/api/usuarios/cuentaobtener", usuariosController.UsuarioCuentaObtener)
+	http.HandleFunc("/api/usuarios/desempeno", usuariosController.UsuarioDesempenoObtener)
+	http.HandleFunc("/api/usuarios/desempenoregistrar", usuariosController.UsuarioDesempenoRegistrar)
+	http.HandleFunc("/api/usuarios/detalle", usuariosController.UsuarioDetalleObtener)
+	http.HandleFunc("/api/usuarios/nuevapuntualidad", usuariosController.UsuarioNuevaPuntualidadCursoObtener)
+	http.HandleFunc("/api/usuarios/nuevapuntualidadgeneral", usuariosController.UsuarioNuevaPuntualidadGeneralObtener)
+	http.HandleFunc("/api/usuarios/nuevopromedio", usuariosController.UsuarioNuevoPromedioCursoObtener)
+	http.HandleFunc("/api/usuarios/nuevopromediogeneral", usuariosController.UsuarioNuevoPromedioGeneralObtener)
+	http.HandleFunc("/api/usuarios/buscar", usuariosController.UsuariosBuscar)
+	http.HandleFunc("/api/usuarios/sesion", usuariosController.UsuarioSesionActualizar)
+	http.HandleFunc("/api/usuarios/sesionregistrar", usuariosController.UsuarioSesionRegistrar)
+	http.HandleFunc("/api/usuarios/sesiones", usuariosController.UsuarioSesionesObtener)
+	http.HandleFunc("/api/usuarios/tematica", usuariosController.UsuarioTematicaRegistrar)
+	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
+
 	// // #endregion
 
 	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))

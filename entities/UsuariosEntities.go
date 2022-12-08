@@ -1,8 +1,10 @@
 package entities
 
+import "time"
+
 type UsuarioAccesoObtenerEntity struct {
-	IdUsuario     *int `json:"idUsuario"`
-	IdTipoUsuario *int `json:"idTipoUsuario"`
+	IdUsuario     int `json:"idUsuario"`
+	IdTipoUsuario int `json:"idTipoUsuario"`
 }
 
 type UsuarioCuentaObtenerEntity struct {
@@ -11,4 +13,79 @@ type UsuarioCuentaObtenerEntity struct {
 	Imagen            *string `json:"imagen"`
 	ChatsConmigo      bool    `json:"chatsConmigo"`
 	MostrarAvisos     bool    `json:"mostrarAvisos"`
+}
+
+type UsuarioDesempenoObtenerEntity struct {
+	IdCurso                      int       `json:"idCurso"`
+	Curso                        string    `json:"curso"`
+	ImagenCurso                  *string   `json:"imagenCurso"`
+	IdTarea                      int       `json:"idTarea"`
+	Tarea                        string    `json:"tarea"`
+	Calificacion                 float64   `json:"calificacion"`
+	PromedioCurso                float64   `json:"promedioCurso"`
+	PrediccionPromedioCurso      *float64  `json:"prediccionPromedioCurso"`
+	RumboPromedioCurso           *string   `json:"rumboPromedioCurso"`
+	PromedioGeneral              float64   `json:"promedioGeneral"`
+	PrediccionPromedioGeneral    *float64  `json:"prediccionPromedioGeneral"`
+	RumboPromedioGeneral         *string   `json:"rumboPromedioGeneral"`
+	PuntualidadCurso             float64   `json:"puntualidadCurso"`
+	PrediccionPuntualidadCurso   *float64  `json:"prediccionPuntualidadCurso"`
+	RumboPuntualidadCurso        *string   `json:"rumboPuntualidadCurso"`
+	PuntualidadGeneral           float64   `json:"puntualidadGeneral"`
+	PrediccionPuntualidadGeneral *float64  `json:"prediccionPuntualidadGeneral"`
+	RumboPuntualidadGeneral      *string   `json:"rumboPuntualidadGeneral"`
+	FechaRegistro                time.Time `json:"fechaRegistro"`
+}
+
+type UsuarioDetalleObtenerEntity struct {
+	Nombre             string     `json:"nombre"`
+	Paterno            string     `json:"paterno"`
+	Materno            *string    `json:"materno"`
+	Descripcion        *string    `json:"descripcion"`
+	FechaNacimiento    *time.Time `json:"fechaNacimiento"`
+	Genero             *string    `json:"genero"`
+	IdLocalidad        *int       `json:"idLocalidad"`
+	IdEstado           *int       `json:"idEstado"`
+	TipoUsuario        string     `json:"tipoUsuario"`
+	PromedioGeneral    *float64   `json:"promedioGeneral"`
+	FechaRegistro      time.Time  `json:"fechaRegistro"`
+	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+}
+
+type UsuarioPuntualidadEntity struct {
+	NuevaPuntualidad *float64 `json:"nuevaPuntualidad"`
+}
+
+type UsuarioPromedioEntity struct {
+	NuevaPromedio *float64 `json:"nuevaPromedio"`
+}
+
+type UsuariosBuscarEntity struct {
+	IdUsuario         int     `json:"idUsuario"`
+	NombreCompleto    string  `json:"nombreCompleto"`
+	Imagen            *string `json:"imagen"`
+	CorreoElectronico string  `json:"correoElectronico"`
+	TipoUsuario       string  `json:"tipoUsuario"`
+}
+
+type UsuarioSesionValidarEntity struct {
+	Activo *bool `json:"activo"`
+}
+
+type UsuarioSesionesObtenerEntity struct {
+	IdSesion           int        `json:"idUsuario"`
+	Dispositivo        *string    `json:"dispositivo"`
+	Fabricante         *string    `json:"fabricante"`
+	DireccionIP        *string    `json:"direccionIP"`
+	DireccionMAC       *string    `json:"direccionMAC"`
+	UserAgent          *string    `json:"userAgent"`
+	Navegador          *string    `json:"navegador"`
+	Estatus            string     `json:"estatus"`
+	FechaRegistro      time.Time  `json:"fechaRegistro"`
+	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+}
+
+type UsuarioTematicasObtenerEntity struct {
+	IdTematica int    `json:"idTematica"`
+	Tematica   string `json:"tematica"`
 }
