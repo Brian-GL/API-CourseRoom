@@ -120,6 +120,7 @@ func main() {
 	http.HandleFunc("/api/usuarios/buscar", usuariosController.UsuariosBuscar)
 	http.HandleFunc("/api/usuarios/sesion", usuariosController.UsuarioSesionActualizar)
 	http.HandleFunc("/api/usuarios/sesionregistrar", usuariosController.UsuarioSesionRegistrar)
+	http.HandleFunc("/api/usuarios/sesionvalidar", usuariosController.UsuarioSesionValidar)
 	http.HandleFunc("/api/usuarios/sesiones", usuariosController.UsuarioSesionesObtener)
 	http.HandleFunc("/api/usuarios/tematica", usuariosController.UsuarioTematicaRegistrar)
 	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
