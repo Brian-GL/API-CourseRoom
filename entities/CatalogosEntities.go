@@ -19,6 +19,7 @@ type CursoEstatusObtenerEntity struct {
 type LocalidadesObtenerEntity struct {
 	IdLocalidad int    `json:"idLocalidad"`
 	Localidad   string `json:"localidad"`
+	Estado      string `json:"estado"`
 }
 
 type PreguntaRespuestaEstatusObtenerEntity struct {
