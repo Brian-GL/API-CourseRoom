@@ -29,6 +29,11 @@ type CursoAbandonarActualizarEntity struct {
 	Mensaje string `json:"mensaje"`
 }
 
+type CursoCuestionarioContestarEntity struct {
+	Codigo  int    `json:"codigo"`
+	Mensaje string `json:"mensaje"`
+}
+
 type CursoEstudianteFinalizarActualizarEntity struct {
 	Codigo  int    `json:"codigo"`
 	Mensaje string `json:"mensaje"`

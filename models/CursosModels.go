@@ -31,15 +31,28 @@ type CursoActualizarInputModel struct {
 	Imagen      *string `json:"imagen" validate:"required"`
 }
 
-type CursoCuestionarioAbandonarActualizarInputModel struct {
-	Idcurso   *int    `json:"idCurso" validate:"required"`
+type CursoAbandonarActualizarInputModel struct {
+	IdCurso   *int    `json:"idCurso" validate:"required"`
 	IdUsuario *int    `json:"idUsuario" validate:"required"`
-	Codigo    *int    `json:"curso"`
+	Codigo    *int    `json:"codigo"`
+	Mensaje   *string `json:"mensaje"`
+}
+
+type CursoCuestionarioContestarInputModel struct {
+	IdCurso   *int    `json:"idCurso" validate:"required"`
+	IdUsuario *int    `json:"idUsuario" validate:"required"`
+	Codigo    *int    `json:"codigo"`
+	Mensaje   *string `json:"mensaje"`
+}
+type CursoCuestionarioAbandonarActualizarInputModel struct {
+	IdCurso   *int    `json:"idCurso" validate:"required"`
+	IdUsuario *int    `json:"idUsuario" validate:"required"`
+	Codigo    *int    `json:"codigo"`
 	Mensaje   *string `json:"mensaje"`
 }
 
 type CursoDesempenoObtenerInputModel struct {
-	Idcurso                    *int       `json:"idCurso" validate:"required"`
+	IdCurso                    *int       `json:"idCurso" validate:"required"`
 	IdDesempeno                *int       `json:"idDesempeno"`
 	IdUsuario                  *int       `json:"idUsuario"`
 	NombreCompleto             *string    `json:"nombreCompleto"`
@@ -56,7 +69,7 @@ type CursoDesempenoObtenerInputModel struct {
 	FechaRegistro              *time.Time `json:"fechaRegistro"`
 }
 
-type CursoEstudianteResgistarInputModel struct {
+type CursoEstudianteRegistrarInputModel struct {
 	IdCurso   *int `json:"idCurso" validate:"required"`
 	IdUsuario *int `json:"idUsuario" validate:"required"`
 	Codigo    *int `json:"codigo"`
@@ -97,7 +110,7 @@ type CursoMaterialRegistrarInputModel struct {
 	Mensaje       *string `json:"mensaje"`
 }
 
-type CrusoMaterialRemoverInputModel struct {
+type CursoMaterialRemoverInputModel struct {
 	IdMaterial *int    `json:"idMaterial" validate:"required"`
 	IdCurso    *int    `json:"idCurso" validate:"required"`
 	IdUsuario  *int    `json:"idUsuario" validate:"required"`
@@ -132,7 +145,18 @@ type CursoMensajeRemoverInputModel struct {
 	Mensaje         *string `json:"mensaje"`
 }
 
-type CursoEstudianteRemover struct {
+type CursoMensajesObtenerInputModel struct {
+	IdCurso             *int       `json:"idCurso" validate:"required"`
+	UltimoMensaje       *bool      `json:"ultimoMensaje" validate:"required"`
+	IdMensaje           *int       `json:"idmensaje"`
+	Mensaje             *string    `json:"mensaje"`
+	Archivo             *string    `json:"archivo"`
+	IdUsuarioEmisor     *int       `json:"idUsuarioEmisor"`
+	NombreUsuarioEmisor *string    `json:"nombreUsuarioEmisor"`
+	FechaRegistro       *time.Time `json:"fechaRegistro"`
+}
+
+type CursoEstudianteRemoverInputModel struct {
 	IdCurso    *int    `json:"idCurso" validate:"required"`
 	IdProfesor *int    `json:"idProfesor" validate:"required"`
 	IdUsuario  *int    `json:"idUsuario" validate:"required"`
