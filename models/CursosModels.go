@@ -44,6 +44,7 @@ type CursoCuestionarioContestarInputModel struct {
 	Codigo    *int    `json:"codigo"`
 	Mensaje   *string `json:"mensaje"`
 }
+
 type CursoCuestionarioAbandonarActualizarInputModel struct {
 	IdCurso   *int    `json:"idCurso" validate:"required"`
 	IdUsuario *int    `json:"idUsuario" validate:"required"`

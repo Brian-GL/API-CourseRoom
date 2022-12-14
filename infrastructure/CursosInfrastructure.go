@@ -96,7 +96,7 @@ func CursoGruposObtenerGetAsync(db *gorm.DB, model *models.CursoGruposObtenerInp
 
 }
 
-func CursoActualizarPostAsync(db *gorm.DB, model *models.CursoActualizarInputModel) models.ResponseInfrastructure {
+func CursoActualizarPutAsync(db *gorm.DB, model *models.CursoActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -128,7 +128,7 @@ func CursoActualizarPostAsync(db *gorm.DB, model *models.CursoActualizarInputMod
 
 }
 
-func CursoAbandonarActualizarPostAsync(db *gorm.DB, model *models.CursoAbandonarActualizarInputModel) models.ResponseInfrastructure {
+func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoAbandonarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -160,6 +160,37 @@ func CursoAbandonarActualizarPostAsync(db *gorm.DB, model *models.CursoAbandonar
 
 }
 
+func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoCuestionarioContestarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.Curso_Validar  @IdCurso = ?, @IdUsuario = ?"
+
+		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
 func CursoCuestionarioContestarPostAsync(db *gorm.DB, model *models.CursoCuestionarioContestarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -192,7 +223,7 @@ func CursoCuestionarioContestarPostAsync(db *gorm.DB, model *models.CursoCuestio
 
 }
 
-func CursoDesempenoObtenerPostAsync(db *gorm.DB, model *models.CursoDesempenoObtenerInputModel) models.ResponseInfrastructure {
+func CursoDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoDesempenoObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -256,7 +287,7 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoEstudiant
 
 }
 
-func CursoEstudianteDetalleObtenerPostAsync(db *gorm.DB, model *models.CursoEstudianteDetalleObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteDetalleObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -288,7 +319,7 @@ func CursoEstudianteDetalleObtenerPostAsync(db *gorm.DB, model *models.CursoEstu
 
 }
 
-func CursoFianalizarActualizarPostAsync(db *gorm.DB, model *models.CursoFinalizarActualizarInputModel) models.ResponseInfrastructure {
+func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -416,7 +447,7 @@ func CursoMaterialRemoverDeleteAsync(db *gorm.DB, model *models.CursoMaterialRem
 
 }
 
-func CursoMaterialesObtenerPostAsync(db *gorm.DB, model *models.CursoMaterialesObtenerInputModel) models.ResponseInfrastructure {
+func CursoMaterialesObtenerGetAsync(db *gorm.DB, model *models.CursoMaterialesObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -512,7 +543,7 @@ func CursoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.CursoMensajeRemov
 
 }
 
-func CursoMensajesObtenerPostAsync(db *gorm.DB, model *models.CursoMensajesObtenerInputModel) models.ResponseInfrastructure {
+func CursoMensajesObtenerGetAsync(db *gorm.DB, model *models.CursoMensajesObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -576,7 +607,7 @@ func CursoEstudianteRemoverDeleteAsync(db *gorm.DB, model *models.CursoEstudiant
 
 }
 
-func CursoEstudianteObtenerPostAsync(db *gorm.DB, model *models.CursoEstudianteObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -608,7 +639,7 @@ func CursoEstudianteObtenerPostAsync(db *gorm.DB, model *models.CursoEstudianteO
 
 }
 
-func CursoProfesorDetalleObtenerPostAsync(db *gorm.DB, model *models.CursoProfesorDetalleObtenerInputModel) models.ResponseInfrastructure {
+func CursoProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorDetalleObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -640,7 +671,7 @@ func CursoProfesorDetalleObtenerPostAsync(db *gorm.DB, model *models.CursoProfes
 
 }
 
-func CursoProfesorTareasObtenerPostAsync(db *gorm.DB, model *models.CursoProfesorTareasObtenerInputModel) models.ResponseInfrastructure {
+func CursoProfesorTareasObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorTareasObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -672,7 +703,7 @@ func CursoProfesorTareasObtenerPostAsync(db *gorm.DB, model *models.CursoProfeso
 
 }
 
-func CursoPromedioObtenerPostAsync(db *gorm.DB, model *models.CursoPromedioObtenerInputModel) models.ResponseInfrastructure {
+func CursoPromedioObtenerGetAsync(db *gorm.DB, model *models.CursoPromedioObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -704,7 +735,7 @@ func CursoPromedioObtenerPostAsync(db *gorm.DB, model *models.CursoPromedioObten
 
 }
 
-func CursoBuscarPostAsync(db *gorm.DB, model *models.CursoBuscarInputModel) models.ResponseInfrastructure {
+func CursoBuscarGetAsync(db *gorm.DB, model *models.CursoBuscarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -736,7 +767,7 @@ func CursoBuscarPostAsync(db *gorm.DB, model *models.CursoBuscarInputModel) mode
 
 }
 
-func CursoObtenerPostAsync(db *gorm.DB, model *models.CursoObtenerInputModel) models.ResponseInfrastructure {
+func CursoObtenerGetAsync(db *gorm.DB, model *models.CursoObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
