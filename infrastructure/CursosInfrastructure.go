@@ -160,7 +160,7 @@ func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoAbandonarA
 
 }
 
-func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoCuestionarioContestarInputModel) models.ResponseInfrastructure {
+func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoCuestionarioAbandonarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -799,7 +799,7 @@ func CursoObtenerGetAsync(db *gorm.DB, model *models.CursoObtenerInputModel) mod
 
 }
 
-func CursoNuevoObtenerPostAsync(db *gorm.DB, model *models.CursoNuevoObtenerInputModel) models.ResponseInfrastructure {
+func CursoNuevoObtenerGetAsync(db *gorm.DB, model *models.CursoNuevoObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -831,7 +831,7 @@ func CursoNuevoObtenerPostAsync(db *gorm.DB, model *models.CursoNuevoObtenerInpu
 
 }
 
-func CursoProfesorObtenerPostAsync(db *gorm.DB, model *models.CursoProfesorObtenerInputModel) models.ResponseInfrastructure {
+func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -863,7 +863,7 @@ func CursoProfesorObtenerPostAsync(db *gorm.DB, model *models.CursoProfesorObten
 
 }
 
-func CursoTareasEstudianteObtenerPostAsync(db *gorm.DB, model *models.CursoTareasEstudianteObtenerInputModel) models.ResponseInfrastructure {
+func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoTareasEstudianteObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -959,7 +959,39 @@ func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaRem
 
 }
 
-func CursoEstudianteDesempenoObtenerPostAsync(db *gorm.DB, model *models.CursoEstudianteDesempenoObtenerInputModel) models.ResponseInfrastructure {
+func CursoTematicaObtenerGetAsync(db *gorm.DB, model *models.CursoTematicaObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.Curso_Obtener  @IdProfesor = ?"
+
+		db.Raw(exec, model.IdProfesor).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteDesempenoObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -991,7 +1023,7 @@ func CursoEstudianteDesempenoObtenerPostAsync(db *gorm.DB, model *models.CursoEs
 
 }
 
-func CursoEstudiantesSinGrupoObtenerPostAsync(db *gorm.DB, model *models.CursoEstudiantesSinGrupoObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudiantesSinGrupoObtenerGetAsync(db *gorm.DB, model *models.CursoEstudiantesSinGrupoObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -1023,7 +1055,7 @@ func CursoEstudiantesSinGrupoObtenerPostAsync(db *gorm.DB, model *models.CursoEs
 
 }
 
-func CursoEstudiantesFinalizarActualizarPostAsync(db *gorm.DB, model *models.CursoEstudianteFinalizarActualizarInputModel) models.ResponseInfrastructure {
+func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoEstudianteFinalizarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -1055,7 +1087,7 @@ func CursoEstudiantesFinalizarActualizarPostAsync(db *gorm.DB, model *models.Cur
 
 }
 
-func CursocuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.CursoCuestionarioRespuestaRegistrarInputModel) models.ResponseInfrastructure {
+func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.CursoCuestionarioRespuestaRegistrarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
