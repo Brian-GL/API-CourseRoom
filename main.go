@@ -111,6 +111,13 @@ func main() {
 	http.HandleFunc("/api/grupos/miembro", gruposController.GrupoMiembroRegistrar)
 	http.HandleFunc("/api/grupos/tareapendiente", gruposController.GrupoTareaPendienteActualizar)
 	http.HandleFunc("/api/grupos/tareapendiente", gruposController.GrupoTareaPendienteRegistrar)
+	http.HandleFunc("/api/grupos/gruporegistrar", gruposController.GrupoRegistrar)
+	http.HandleFunc("/api/grupos/gruporemover", gruposController.GrupoRemover)
+	http.HandleFunc("/api/grupos/grupoabandonaractualizar", gruposController.GrupoAbandonarActualizar)
+	http.HandleFunc("/api/grupos/grupoarchivocompartidoremover", gruposController.GrupoArchivoCompartidoRemover)
+	http.HandleFunc("/api/grupos/grupodetalleobtener", gruposController.GrupoDetalleObtener)
+	http.HandleFunc("/api/grupos/grupomensajeregistrar", gruposController.GrupoMensajeRegistrar)
+	http.HandleFunc("/api/grupos/grupomensajeremover", gruposController.GrupoMensajeRemover)
 
 	// #endregion
 

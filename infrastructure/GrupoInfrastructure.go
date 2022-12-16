@@ -36,7 +36,6 @@ func GrupoActualizarPutAsync(db *gorm.DB, model *models.GrupoActualizarInputMode
 	}
 
 	return response
-
 }
 
 func GrupoArchivosCompartidosObtenerGetAsync(db *gorm.DB, model *models.GrupoInputModel) models.ResponseInfrastructure {
@@ -62,7 +61,6 @@ func GrupoArchivosCompartidosObtenerGetAsync(db *gorm.DB, model *models.GrupoInp
 	}
 
 	return response
-
 }
 
 func GrupoArchivoCompartidoRegistrarPostAsync(db *gorm.DB, model *models.GrupoArchivoCompartidoRegistrarInputModel) models.ResponseInfrastructure {
@@ -94,7 +92,6 @@ func GrupoArchivoCompartidoRegistrarPostAsync(db *gorm.DB, model *models.GrupoAr
 	}
 
 	return response
-
 }
 
 func GruposMensajesObtenerGetAsync(db *gorm.DB, model *models.GruposMensajesObtenerInputModel) models.ResponseInfrastructure {
@@ -120,7 +117,6 @@ func GruposMensajesObtenerGetAsync(db *gorm.DB, model *models.GruposMensajesObte
 	}
 
 	return response
-
 }
 
 func GruposObtenerGetAsync(db *gorm.DB, model *models.GruposObtenerInputModel) models.ResponseInfrastructure {
@@ -146,7 +142,6 @@ func GruposObtenerGetAsync(db *gorm.DB, model *models.GruposObtenerInputModel) m
 	}
 
 	return response
-
 }
 
 func GrupoMiembrosObtenerGetAsync(db *gorm.DB, model *models.GrupoMiembrosObtenerInputModel) models.ResponseInfrastructure {
@@ -172,7 +167,6 @@ func GrupoMiembrosObtenerGetAsync(db *gorm.DB, model *models.GrupoMiembrosObtene
 	}
 
 	return response
-
 }
 
 func GrupoTareasPendientesObtenerGetAsync(db *gorm.DB, model *models.GrupoInputModel) models.ResponseInfrastructure {
@@ -198,7 +192,6 @@ func GrupoTareasPendientesObtenerGetAsync(db *gorm.DB, model *models.GrupoInputM
 	}
 
 	return response
-
 }
 
 func GrupoTareaPendienteDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoTareaPendienteDetalleObtenerInputModel) models.ResponseInfrastructure {
@@ -224,7 +217,6 @@ func GrupoTareaPendienteDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoT
 	}
 
 	return response
-
 }
 
 func GrupoTareaPendienteEstatusActualizarPutAsync(db *gorm.DB, model *models.GrupoTareaPendienteEstatusActualizarInputModel) models.ResponseInfrastructure {
@@ -256,7 +248,6 @@ func GrupoTareaPendienteEstatusActualizarPutAsync(db *gorm.DB, model *models.Gru
 	}
 
 	return response
-
 }
 
 func GrupoMiembroRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMiembroRemoverInputModel) models.ResponseInfrastructure {
@@ -288,7 +279,6 @@ func GrupoMiembroRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMiembroRemov
 	}
 
 	return response
-
 }
 
 func GrupoMiembroRegistrarPostAsync(db *gorm.DB, model *models.GrupoMiembroRegistrarInputModel) models.ResponseInfrastructure {
@@ -320,7 +310,6 @@ func GrupoMiembroRegistrarPostAsync(db *gorm.DB, model *models.GrupoMiembroRegis
 	}
 
 	return response
-
 }
 
 func GrupoTareaPendienteActualizarPutAsync(db *gorm.DB, model *models.GrupoTareaPendienteActualizarInputModel) models.ResponseInfrastructure {
@@ -352,7 +341,6 @@ func GrupoTareaPendienteActualizarPutAsync(db *gorm.DB, model *models.GrupoTarea
 	}
 
 	return response
-
 }
 
 func GrupoTareaPendienteRegistrarPostAsync(db *gorm.DB, model *models.GrupoTareaPendienteRegistrarInputModel) models.ResponseInfrastructure {
@@ -384,5 +372,215 @@ func GrupoTareaPendienteRegistrarPostAsync(db *gorm.DB, model *models.GrupoTarea
 	}
 
 	return response
+}
 
+func GrupoRegistrarPostAsync(db *gorm.DB, model *models.GrupoRegistrarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoRegistrar @IdCurso = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
+
+		db.Raw(exec, model.IdCurso, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoRemoverInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoRemover @IdGrupo = ?, @IdProfesor = ?, @IdCurso = ?"
+
+		db.Raw(exec, model.IdGrupo, model.IdProfesor, model.IdCurso).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoAbandonarActualizarPutAsync(db *gorm.DB, model *models.GrupoAbandonarActualizarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoAbandonarActualizar @IdGrupo = ?"
+
+		db.Raw(exec, model.IdGrupo, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoArchivoCompartidoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoArchivoCompartidoRemoverInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoArchivoCompartidoRemover @IdGrupo = ?, @IdArchivoCompartido = ?, @IdUsuario = ?"
+
+		db.Raw(exec, model.IdGrupo, model.IdArchivoCompartido, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoDetalleObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.GrupoTareaPendienteDetalleObtenerEntity
+
+		exec := "EXEC dbo.GrupoDetalleObtener @IdGrupo = ?"
+
+		db.Raw(exec, model.IdGrupo).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoMensajeRegistrarPostAsync(db *gorm.DB, model *models.GrupoMensajeRegistrarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoMensajeRegistrar @IdGrupo = ?, @IdUsuarioEmisor= ?, @Mensaje = ?, @Archivo = ?"
+
+		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.Mensaje, model.Archivo).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func GrupoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMensajeRemoverInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.GrupoRemover @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
+
+		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.IdMensaje).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
 }

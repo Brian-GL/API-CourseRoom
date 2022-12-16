@@ -75,3 +75,44 @@ type GrupoTareaPendienteRegistrarInputModel struct {
 	Descripcion       *string    `json:"descripcion"`
 	FechaFinalizacion *time.Time `json:"fechaFinalizacion"`
 }
+
+type GrupoRegistrarInputModel struct {
+	IdCurso     *int    `json:"idCurso" validate:"required"`
+	Nombre      *string `json:"nombre" validate:"required"`
+	Descripcion *string `json:"descripcion"`
+	Imagen      *string `json:"Imagen"`
+}
+
+type GrupoRemoverInputModel struct {
+	IdGrupo    *int `json:"idGrupo" validate:"required"`
+	IdCurso    *int `json:"idCurso" validate:"required"`
+	IdProfesor *int `json:"idProfesor" validate:"required"`
+}
+
+type GrupoAbandonarActualizarInputModel struct {
+	IdGrupo   *int `json:"idGrupo" validate:"required"`
+	IdUsuario *int `json:"idUsuario" validate:"required"`
+}
+
+type GrupoArchivoCompartidoRemoverInputModel struct {
+	IdArchivoCompartido *int `json:"idArchivocompartido" validate:"required"`
+	IdGrupo             *int `json:"idGrupo" validate:"required"`
+	IdUsuario           *int `json:"idUsuario" validate:"required"`
+}
+
+type GrupoDetalleObtenerInputModel struct {
+	IdGrupo *int `json:"idGrupo" validate:"required"`
+}
+
+type GrupoMensajeRegistrarInputModel struct {
+	IdGrupo         *int    `json:"idGrupo" validate:"required"`
+	IdUsuarioEmisor *int    `json:"idUsuarioEmisor" validate:"required"`
+	Mensaje         *string `json:"mensaje" validate:"required"`
+	Archivo         *string `json:"archivo"`
+}
+
+type GrupoMensajeRemoverInputModel struct {
+	IdGrupo         *int `json:"idGrupo" validate:"required"`
+	IdUsuarioEmisor *int `json:"idUsuarioEmisor" validate:"required"`
+	IdMensaje       *int `json:"idMensaje" validate:"required"`
+}
