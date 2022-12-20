@@ -15,8 +15,8 @@ type CursosController struct {
 	JsonIter   jsoniter.API
 }
 
-func NewCursosController(middleware *middleware.Middleware) GruposController {
-	return GruposController{
+func NewCursosController(middleware *middleware.Middleware) CursosController {
+	return CursosController{
 		Middleware: middleware,
 		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
 }
