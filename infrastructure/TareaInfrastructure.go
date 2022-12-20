@@ -368,3 +368,55 @@ func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *
 
 	return response
 }
+
+func TareaArchivosEntregadosObtenerGetAsync(db *gorm.DB, model *models.TareaArchivosEntregadosObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaArchivosEntregadosObtenerEntity
+
+		exec := "EXEC dbo.TareaArchivosEntregadosObtener @IdTarea = ?, @IdUsuario = ?"
+
+		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaEstudianteObtenerGetAsync(db *gorm.DB, model *models.TareaEstudianteObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaEstudianteObtenerEntity
+
+		exec := "EXEC dbo.TareaEstudianteObtener @IdUsuario = ?"
+
+		db.Raw(exec,.IdUsuario).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
