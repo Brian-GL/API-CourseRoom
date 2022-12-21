@@ -405,7 +405,7 @@ func TareaEstudianteObtenerGetAsync(db *gorm.DB, model *models.TareaEstudianteOb
 
 		exec := "EXEC dbo.TareaEstudianteObtener @IdUsuario = ?"
 
-		db.Raw(exec,.IdUsuario).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
