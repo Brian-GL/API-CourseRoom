@@ -51,7 +51,7 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -187,7 +187,7 @@ func (controller *CatalogoController) EstatusTareaPendiente(res http.ResponseWri
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -323,7 +323,7 @@ func (controller *CatalogoController) CursoEstatus(res http.ResponseWriter, req 
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -459,7 +459,7 @@ func (controller *CatalogoController) Localidades(res http.ResponseWriter, req *
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -595,7 +595,7 @@ func (controller *CatalogoController) PreguntaRespuesta(res http.ResponseWriter,
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -731,7 +731,7 @@ func (controller *CatalogoController) PreguntasCuestionario(res http.ResponseWri
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -867,7 +867,7 @@ func (controller *CatalogoController) TiposUsuario(res http.ResponseWriter, req 
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -1003,7 +1003,7 @@ func (controller *CatalogoController) Tematicas(res http.ResponseWriter, req *ht
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 

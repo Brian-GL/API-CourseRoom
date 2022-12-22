@@ -272,13 +272,13 @@ func UsuarioDesempenoObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputMode
 
 	if db != nil {
 
-		var resultado *entities.UsuarioDesempenoObtenerEntity
+		var resultado []entities.UsuarioDesempenoObtenerEntity
 
 		exec := "EXEC dbo.UsuarioDesempeno_Obtener @IdUsuario = ?"
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
@@ -575,13 +575,13 @@ func UsuarioSesionesObtenerGetAsync(db *gorm.DB, model *models.UsuarioSesionesOb
 
 	if db != nil {
 
-		var resultado *entities.UsuarioSesionesObtenerEntity
+		var resultado []entities.UsuarioSesionesObtenerEntity
 
 		exec := "EXEC dbo.UsuarioSesiones_Obtener @IdUsuario = ?, @Activa = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Activa).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
@@ -644,6 +644,37 @@ func UsuarioTematicaRemoverDeleteAsync(db *gorm.DB, model *models.UsuarioTematic
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
 				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicasObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.UsuarioTematicasObtenerEntity
+
+		exec := "EXEC dbo.UsuarioTematicas_Obtener @IdUsuario = ?"
+
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if len(resultado) > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 			}
 
 		} else {

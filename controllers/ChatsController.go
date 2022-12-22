@@ -593,7 +593,7 @@ func (controller *ChatController) ChatMensajesObtener(res http.ResponseWriter, r
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -729,7 +729,7 @@ func (controller *ChatController) ChatsObtener(res http.ResponseWriter, req *htt
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 
@@ -865,7 +865,7 @@ func (controller *ChatController) ChatsBuscar(res http.ResponseWriter, req *http
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 

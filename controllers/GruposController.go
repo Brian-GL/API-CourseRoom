@@ -468,7 +468,7 @@ func (controller *GruposController) GruposMensajesObtener(res http.ResponseWrite
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GruposMensajesObtenerInputModel
@@ -607,7 +607,7 @@ func (controller *GruposController) GruposObtener(res http.ResponseWriter, req *
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GruposObtenerInputModel
@@ -746,7 +746,7 @@ func (controller *GruposController) GrupoMiembrosObtener(res http.ResponseWriter
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GrupoMiembrosObtenerInputModel
@@ -885,7 +885,7 @@ func (controller *GruposController) GrupoTareasPendientesObtener(res http.Respon
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GrupoInputModel
@@ -1024,7 +1024,7 @@ func (controller *GruposController) GrupoTareaPendienteDetalleObtener(res http.R
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GrupoTareaPendienteDetalleObtenerInputModel
@@ -2414,7 +2414,7 @@ func (controller *GruposController) GrupoDetalleObtener(res http.ResponseWriter,
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.GrupoDetalleObtenerInputModel

@@ -329,7 +329,7 @@ func (controller *CursosController) CursoGruposObtener(res http.ResponseWriter, 
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoGruposObtenerInputModel
@@ -1024,7 +1024,7 @@ func (controller *CursosController) CursoDesempenoObtener(res http.ResponseWrite
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoDesempenoObtenerInputModel
@@ -1302,7 +1302,7 @@ func (controller *CursosController) CursoEstudianteDetalleObtener(res http.Respo
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteDetalleObtenerInputModel
@@ -1858,7 +1858,7 @@ func (controller *CursosController) CursoMaterialesObtener(res http.ResponseWrit
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoMaterialesObtenerInputModel
@@ -2275,7 +2275,7 @@ func (controller *CursosController) CursoMensajesObtener(res http.ResponseWriter
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoMensajesObtenerInputModel
@@ -2553,7 +2553,7 @@ func (controller *CursosController) CursoEstudianteObtener(res http.ResponseWrit
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteObtenerInputModel
@@ -2692,7 +2692,7 @@ func (controller *CursosController) CursoProfesorDetalleObtener(res http.Respons
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorDetalleObtenerInputModel
@@ -2831,7 +2831,7 @@ func (controller *CursosController) CursoProfesorTareasObtener(res http.Response
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorTareasObtenerInputModel
@@ -2970,7 +2970,7 @@ func (controller *CursosController) CursoPromedioObtener(res http.ResponseWriter
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoPromedioObtenerInputModel
@@ -3109,7 +3109,7 @@ func (controller *CursosController) CursoBuscarObtener(res http.ResponseWriter, 
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoBuscarInputModel
@@ -3248,7 +3248,7 @@ func (controller *CursosController) CursoObtener(res http.ResponseWriter, req *h
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoObtenerInputModel
@@ -3387,7 +3387,7 @@ func (controller *CursosController) CursoNuevoObtener(res http.ResponseWriter, r
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoNuevoObtenerInputModel
@@ -3526,7 +3526,7 @@ func (controller *CursosController) CursoProfesorObtener(res http.ResponseWriter
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorObtenerInputModel
@@ -3665,7 +3665,7 @@ func (controller *CursosController) CursoTareasEstudianteObtener(res http.Respon
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoTareasEstudianteObtenerInputModel
@@ -4082,7 +4082,7 @@ func (controller *CursosController) CursoTematicaObtener(res http.ResponseWriter
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoTematicaObtenerInputModel
@@ -4221,7 +4221,7 @@ func (controller *CursosController) CursoEstudianteDesempenoObtener(res http.Res
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteDesempenoObtenerInputModel
@@ -4360,7 +4360,7 @@ func (controller *CursosController) CursoEstudiantesSinGrupoObtener(res http.Res
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudiantesSinGrupoObtenerInputModel
