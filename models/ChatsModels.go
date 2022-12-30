@@ -14,7 +14,7 @@ type ChatMensajeRegistrarInputModel struct {
 	IdChat          *int    `json:"idChat" validate:"required"`
 	IdUsuarioEmisor *int    `json:"idUsuarioEmisor" validate:"required"`
 	Mensaje         *string `json:"mensaje" validate:"required"`
-	Archivo         *string `json:"archivo" validate:"required"`
+	Archivo         *string `json:"archivo"`
 }
 
 type ChatMensajeRemoverInputModel struct {
@@ -25,14 +25,14 @@ type ChatMensajeRemoverInputModel struct {
 
 type ChatMensajesObtenerInputModel struct {
 	IdChat *int    `json:"idChat" validate:"required"`
-	Ultimo *string `json:"idMensaje"`
+	Ultimo *string `json:"idMensaje" validate:"required"`
 }
 
 type ChatsBuscarInputModel struct {
 	IdUsuarioEmisor *int    `json:"idUsuarioEmisor" validate:"required"`
-	Nombre          *string `json:"nombre" validate:"required"`
-	Paterno         *string `json:"paterno" validate:"required"`
-	Materno         *string `json:"materno" validate:"required"`
+	Nombre          *string `json:"nombre"`
+	Paterno         *string `json:"paterno"`
+	Materno         *string `json:"materno"`
 }
 
 type ChatsObtenerInputModel struct {
