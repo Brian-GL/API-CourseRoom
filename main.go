@@ -134,18 +134,17 @@ func main() {
 	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/retroalimentacion", tareasController.TareaRetroalimentacionRegistrar)
 	http.HandleFunc("/api/tareas/calificar", tareasController.TareaCalificarActualizar) //PUT
-	http.HandleFunc("/api/tareas/", tareasController.TareaArchivosEntregadosObtener)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
+	//http.HandleFunc("/api/tareas/", tareasController.TareaArchivosEntregadosObtener)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
+	// http.HandleFunc("/api/tareas/", tareasController.)
 
-	
 	// #endregion
 
 	// #region Usuarios Endpoints
@@ -177,7 +176,7 @@ func main() {
 
 	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
 
-	err := http.ListenAndServe(":1313", nil)
+	err := http.ListenAndServe(":"+middleware.PORT, nil)
 	if err != nil {
 		panic(err)
 	}
