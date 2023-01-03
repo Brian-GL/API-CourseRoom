@@ -25,7 +25,7 @@ type AvisoRegistrarInputModel struct {
 
 type AvisosValidarInputModel struct {
 	IdUsuario          *int       `json:"idUsuario" validate:"required"`
-	FechaVisualizacion *time.Time `json:"fechaVisualizacion"`
+	FechaVisualizacion *time.Time `json:"fechaVisualizacion" validate:"required"`
 }
 
 type AvisoPlagioProfesorRegistrarInputModel struct {

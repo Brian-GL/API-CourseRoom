@@ -193,16 +193,16 @@ func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) mo
 
 	if db != nil {
 
-		var resultado *bool
+		var resultado []entities.AvisosValidarEntity
 
 		exec := "EXEC dbo.Avisos_Validar @IdUsuario = ?, @FechaVisualizacion = ?"
 
 		db.Raw(exec, model.IdUsuario, model.FechaVisualizacion).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió validar los avisos del usuario"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos del usuario"}
 		}
 
 	} else {
