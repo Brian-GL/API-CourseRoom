@@ -12,6 +12,7 @@
             place-content: center;
             color: white;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            min-height: 90vh;
         }
         .fondo{
             background: #b92b27;  /* fallback for old browsers */
@@ -21,9 +22,10 @@
         }
     </style>
   </head>
-  <body class="centrado fondo">
-        <h1>CourseRoom API</h1>  
-        <a style="color: white;" href="/api/hello"> Serverless Function print "Hello World!" </a>
-        <a style="color: white;" href="/api/json"> Serverless Function Json" </a>
+  <body class="fondo">
+      <div class="centrado">
+          <h1>CourseRoom API</h1>
+          <p>CourseRoom ® <script>document.write(/\d{4}/.exec(Date())[0])</script></p>
+      </div>
   </body>
 </html>
