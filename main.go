@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Main() {
+func main() {
 
 	//Creación de middleware:
 	middleware := middleware.NewMiddleware()
