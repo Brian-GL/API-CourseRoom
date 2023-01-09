@@ -2,7 +2,6 @@ package main
 
 import (
 	"api-courseroom/controllers"
-	"api-courseroom/middleware"
 	"fmt"
 	"net/http"
 	"os"
@@ -12,11 +11,11 @@ import (
 func main() {
 
 	//Creación de middleware:
-	middleware := middleware.NewMiddleware()
+	//middleware := middleware.NewMiddleware()
 
 	// Controladores
 	//avisosController := controllers.NewAvisosController(middleware)
-	catalogoController := controllers.NewCatalogoController(middleware)
+	catalogoController := controllers.NewCatalogoController()
 	//chatController := controllers.NewChatController(middleware)
 	//cursosController := controllers.NewCursosController(middleware)
 	//gruposController := controllers.NewGruposController(middleware)

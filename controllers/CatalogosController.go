@@ -3,22 +3,49 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
 type CatalogoController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewCatalogoController(middleware *middleware.Middleware) CatalogoController {
+func NewCatalogoController() CatalogoController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
 	return CatalogoController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
+}
+
+func (controller *CatalogoController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
 }
 
 func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +74,7 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 		return
 	}
 
-	jsonBytes, err := controller.JsonIter.Marshal(controller.Middleware.SECRET_TOKEN)
+	jsonBytes, err := controller.JsonIter.Marshal(controller.SECRET_TOKEN)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		res.Write([]byte(err.Error()))
@@ -60,7 +87,7 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -74,12 +101,12 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.EstadosGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.EstadosGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -196,7 +223,7 @@ func (controller *CatalogoController) EstatusTareaPendiente(res http.ResponseWri
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -223,12 +250,12 @@ func (controller *CatalogoController) EstatusTareaPendiente(res http.ResponseWri
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.EstatusTareaPendienteGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.EstatusTareaPendienteGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -345,7 +372,7 @@ func (controller *CatalogoController) CursoEstatus(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -359,12 +386,12 @@ func (controller *CatalogoController) CursoEstatus(res http.ResponseWriter, req 
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstatusGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstatusGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -481,7 +508,7 @@ func (controller *CatalogoController) Localidades(res http.ResponseWriter, req *
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -495,12 +522,12 @@ func (controller *CatalogoController) Localidades(res http.ResponseWriter, req *
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.LocalidadesGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.LocalidadesGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -617,7 +644,7 @@ func (controller *CatalogoController) PreguntaRespuesta(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -631,12 +658,12 @@ func (controller *CatalogoController) PreguntaRespuesta(res http.ResponseWriter,
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntaRespuestaEstatusGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntaRespuestaEstatusGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -753,7 +780,7 @@ func (controller *CatalogoController) PreguntasCuestionario(res http.ResponseWri
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -767,12 +794,12 @@ func (controller *CatalogoController) PreguntasCuestionario(res http.ResponseWri
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasCuestionarioGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasCuestionarioGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -889,7 +916,7 @@ func (controller *CatalogoController) TiposUsuario(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -903,12 +930,12 @@ func (controller *CatalogoController) TiposUsuario(res http.ResponseWriter, req 
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TiposUsuarioGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TiposUsuarioGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1025,7 +1052,7 @@ func (controller *CatalogoController) Tematicas(res http.ResponseWriter, req *ht
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1039,12 +1066,12 @@ func (controller *CatalogoController) Tematicas(res http.ResponseWriter, req *ht
 				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TematicasGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TematicasGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
