@@ -23,6 +23,8 @@ func NewCatalogoController(middleware *middleware.Middleware) CatalogoController
 
 func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, req *http.Request) {
 
+	req.Close = true
+
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
 
@@ -58,7 +60,7 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 				var modelo *models.EstadosObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -194,7 +196,7 @@ func (controller *CatalogoController) EstatusTareaPendiente(res http.ResponseWri
 				var modelo *models.EstatusTareaPendienteObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -330,7 +332,7 @@ func (controller *CatalogoController) CursoEstatus(res http.ResponseWriter, req 
 				var modelo *models.CursoEstatusObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -466,7 +468,7 @@ func (controller *CatalogoController) Localidades(res http.ResponseWriter, req *
 				var modelo *models.LocalidadesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -602,7 +604,7 @@ func (controller *CatalogoController) PreguntaRespuesta(res http.ResponseWriter,
 				var modelo *models.PreguntaRespuestaEstatusObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -738,7 +740,7 @@ func (controller *CatalogoController) PreguntasCuestionario(res http.ResponseWri
 				var modelo *models.PreguntasCuestionarioObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
@@ -1010,7 +1012,7 @@ func (controller *CatalogoController) Tematicas(res http.ResponseWriter, req *ht
 				var modelo *models.TematicasObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
 					err = controller.Middleware.ValidateModel(modelo)
