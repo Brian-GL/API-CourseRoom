@@ -54,3 +54,10 @@ type CourseRoomCalculator struct {
 	IdTarea    int
 	IdProfesor int
 }
+
+type EmailConfiguration struct {
+	EMAIL_SERVER      string
+	EMAIL_PORT        int
+	EMAIL_ADDRESS     string
+	EMAIL_CREDENTIALS string
+}

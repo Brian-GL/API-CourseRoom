@@ -13,14 +13,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type AvisosController struct {
+type AvisoController struct {
 	DB           *gorm.DB
 	Validator    *validator.Validate
 	SECRET_TOKEN string
 	JsonIter     jsoniter.API
 }
 
-func NewAvisosController() AvisosController {
+func NewAvisoController() AvisoController {
 
 	//godotenv.Load(".env")
 
@@ -37,18 +37,18 @@ func NewAvisosController() AvisosController {
 		PrepareStmt:            true,
 	})
 
-	return AvisosController{
+	return AvisoController{
 		SECRET_TOKEN: secretToken,
 		DB:           db,
 		Validator:    validator.New(),
 		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
-func (controller *AvisosController) ValidateModel(data interface{}) error {
+func (controller *AvisoController) ValidateModel(data interface{}) error {
 	return controller.Validator.Struct(data)
 }
 
-func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisoActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -187,7 +187,7 @@ func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req
 	}
 }
 
-func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -322,7 +322,7 @@ func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req 
 
 }
 
-func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -458,7 +458,7 @@ func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *h
 
 }
 
-func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisoDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -594,7 +594,7 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 
 }
 
-func (controller *AvisosController) AvisoPlagioProfesorRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisoPlagioProfesorRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -729,7 +729,7 @@ func (controller *AvisosController) AvisoPlagioProfesorRegistrar(res http.Respon
 
 }
 
-func (controller *AvisosController) AvisosObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -869,7 +869,7 @@ func (controller *AvisosController) AvisosObtener(res http.ResponseWriter, req *
 
 }
 
-func (controller *AvisosController) AvisosValidar(res http.ResponseWriter, req *http.Request) {
+func (controller *AvisoController) AvisosValidar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")

@@ -3,25 +3,51 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
-type GruposController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+type GrupoController struct {
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewGruposController(middleware *middleware.Middleware) GruposController {
-	return GruposController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+func NewGrupoController() GrupoController {
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
+	return GrupoController{
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
-func (controller *GruposController) GrupoActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
+}
+
+func (controller *GrupoController) GrupoActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -47,7 +73,7 @@ func (controller *GruposController) GrupoActualizar(res http.ResponseWriter, req
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -57,15 +83,15 @@ func (controller *GruposController) GrupoActualizar(res http.ResponseWriter, req
 				var modelo *models.GrupoActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -160,7 +186,7 @@ func (controller *GruposController) GrupoActualizar(res http.ResponseWriter, req
 	}
 }
 
-func (controller *GruposController) GrupoArchivosCompartidosObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoArchivosCompartidosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -186,7 +212,7 @@ func (controller *GruposController) GrupoArchivosCompartidosObtener(res http.Res
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -196,15 +222,15 @@ func (controller *GruposController) GrupoArchivosCompartidosObtener(res http.Res
 				var modelo *models.GrupoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoArchivosCompartidosObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoArchivosCompartidosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -299,7 +325,7 @@ func (controller *GruposController) GrupoArchivosCompartidosObtener(res http.Res
 	}
 }
 
-func (controller *GruposController) GrupoArchivoCompartidoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoArchivoCompartidoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -325,7 +351,7 @@ func (controller *GruposController) GrupoArchivoCompartidoRegistrar(res http.Res
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -335,15 +361,15 @@ func (controller *GruposController) GrupoArchivoCompartidoRegistrar(res http.Res
 				var modelo *models.GrupoArchivoCompartidoRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoArchivoCompartidoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoArchivoCompartidoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -438,7 +464,7 @@ func (controller *GruposController) GrupoArchivoCompartidoRegistrar(res http.Res
 	}
 }
 
-func (controller *GruposController) GruposMensajesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GruposMensajesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -464,7 +490,7 @@ func (controller *GruposController) GruposMensajesObtener(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -474,15 +500,15 @@ func (controller *GruposController) GruposMensajesObtener(res http.ResponseWrite
 				var modelo *models.GruposMensajesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GruposMensajesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GruposMensajesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -577,7 +603,7 @@ func (controller *GruposController) GruposMensajesObtener(res http.ResponseWrite
 	}
 }
 
-func (controller *GruposController) GruposObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GruposObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -603,7 +629,7 @@ func (controller *GruposController) GruposObtener(res http.ResponseWriter, req *
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -613,15 +639,15 @@ func (controller *GruposController) GruposObtener(res http.ResponseWriter, req *
 				var modelo *models.GruposObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GruposObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GruposObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -716,7 +742,7 @@ func (controller *GruposController) GruposObtener(res http.ResponseWriter, req *
 	}
 }
 
-func (controller *GruposController) GrupoMiembrosObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoMiembrosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -742,7 +768,7 @@ func (controller *GruposController) GrupoMiembrosObtener(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -752,15 +778,15 @@ func (controller *GruposController) GrupoMiembrosObtener(res http.ResponseWriter
 				var modelo *models.GrupoMiembrosObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoMiembrosObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoMiembrosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -855,7 +881,7 @@ func (controller *GruposController) GrupoMiembrosObtener(res http.ResponseWriter
 	}
 }
 
-func (controller *GruposController) GrupoTareasPendientesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoTareasPendientesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -881,7 +907,7 @@ func (controller *GruposController) GrupoTareasPendientesObtener(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -891,15 +917,15 @@ func (controller *GruposController) GrupoTareasPendientesObtener(res http.Respon
 				var modelo *models.GrupoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoTareasPendientesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoTareasPendientesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -994,7 +1020,7 @@ func (controller *GruposController) GrupoTareasPendientesObtener(res http.Respon
 	}
 }
 
-func (controller *GruposController) GrupoTareaPendienteDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoTareaPendienteDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1020,7 +1046,7 @@ func (controller *GruposController) GrupoTareaPendienteDetalleObtener(res http.R
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1030,15 +1056,15 @@ func (controller *GruposController) GrupoTareaPendienteDetalleObtener(res http.R
 				var modelo *models.GrupoTareaPendienteDetalleObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoTareaPendienteDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoTareaPendienteDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1133,7 +1159,7 @@ func (controller *GruposController) GrupoTareaPendienteDetalleObtener(res http.R
 	}
 }
 
-func (controller *GruposController) GrupoTareaPendienteEstatusActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoTareaPendienteEstatusActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1159,7 +1185,7 @@ func (controller *GruposController) GrupoTareaPendienteEstatusActualizar(res htt
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1169,15 +1195,15 @@ func (controller *GruposController) GrupoTareaPendienteEstatusActualizar(res htt
 				var modelo *models.GrupoTareaPendienteEstatusActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoTareaPendienteEstatusActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoTareaPendienteEstatusActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1272,7 +1298,7 @@ func (controller *GruposController) GrupoTareaPendienteEstatusActualizar(res htt
 	}
 }
 
-func (controller *GruposController) GrupoMiembroRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoMiembroRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1298,7 +1324,7 @@ func (controller *GruposController) GrupoMiembroRemover(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1308,15 +1334,15 @@ func (controller *GruposController) GrupoMiembroRemover(res http.ResponseWriter,
 				var modelo *models.GrupoMiembroRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoMiembroRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoMiembroRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1411,7 +1437,7 @@ func (controller *GruposController) GrupoMiembroRemover(res http.ResponseWriter,
 	}
 }
 
-func (controller *GruposController) GrupoMiembroRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoMiembroRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1437,7 +1463,7 @@ func (controller *GruposController) GrupoMiembroRegistrar(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1447,15 +1473,15 @@ func (controller *GruposController) GrupoMiembroRegistrar(res http.ResponseWrite
 				var modelo *models.GrupoMiembroRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoMiembroRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoMiembroRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1550,7 +1576,7 @@ func (controller *GruposController) GrupoMiembroRegistrar(res http.ResponseWrite
 	}
 }
 
-func (controller *GruposController) GrupoTareaPendienteActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoTareaPendienteActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1576,7 +1602,7 @@ func (controller *GruposController) GrupoTareaPendienteActualizar(res http.Respo
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1586,15 +1612,15 @@ func (controller *GruposController) GrupoTareaPendienteActualizar(res http.Respo
 				var modelo *models.GrupoTareaPendienteActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoTareaPendienteActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoTareaPendienteActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1689,7 +1715,7 @@ func (controller *GruposController) GrupoTareaPendienteActualizar(res http.Respo
 	}
 }
 
-func (controller *GruposController) GrupoTareaPendienteRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoTareaPendienteRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1715,7 +1741,7 @@ func (controller *GruposController) GrupoTareaPendienteRegistrar(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1725,15 +1751,15 @@ func (controller *GruposController) GrupoTareaPendienteRegistrar(res http.Respon
 				var modelo *models.GrupoTareaPendienteRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoTareaPendienteRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoTareaPendienteRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1828,7 +1854,7 @@ func (controller *GruposController) GrupoTareaPendienteRegistrar(res http.Respon
 	}
 }
 
-func (controller *GruposController) GrupoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1854,7 +1880,7 @@ func (controller *GruposController) GrupoRegistrar(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1864,15 +1890,15 @@ func (controller *GruposController) GrupoRegistrar(res http.ResponseWriter, req 
 				var modelo *models.GrupoRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1967,7 +1993,7 @@ func (controller *GruposController) GrupoRegistrar(res http.ResponseWriter, req 
 	}
 }
 
-func (controller *GruposController) GrupoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1993,7 +2019,7 @@ func (controller *GruposController) GrupoRemover(res http.ResponseWriter, req *h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2003,15 +2029,15 @@ func (controller *GruposController) GrupoRemover(res http.ResponseWriter, req *h
 				var modelo *models.GrupoRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2106,7 +2132,7 @@ func (controller *GruposController) GrupoRemover(res http.ResponseWriter, req *h
 	}
 }
 
-func (controller *GruposController) GrupoAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2132,7 +2158,7 @@ func (controller *GruposController) GrupoAbandonarActualizar(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2142,15 +2168,15 @@ func (controller *GruposController) GrupoAbandonarActualizar(res http.ResponseWr
 				var modelo *models.GrupoAbandonarActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoAbandonarActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoAbandonarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2245,7 +2271,7 @@ func (controller *GruposController) GrupoAbandonarActualizar(res http.ResponseWr
 	}
 }
 
-func (controller *GruposController) GrupoArchivoCompartidoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoArchivoCompartidoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2271,7 +2297,7 @@ func (controller *GruposController) GrupoArchivoCompartidoRemover(res http.Respo
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2281,15 +2307,15 @@ func (controller *GruposController) GrupoArchivoCompartidoRemover(res http.Respo
 				var modelo *models.GrupoArchivoCompartidoRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoArchivoCompartidoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoArchivoCompartidoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2384,7 +2410,7 @@ func (controller *GruposController) GrupoArchivoCompartidoRemover(res http.Respo
 	}
 }
 
-func (controller *GruposController) GrupoDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2410,7 +2436,7 @@ func (controller *GruposController) GrupoDetalleObtener(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2420,15 +2446,15 @@ func (controller *GruposController) GrupoDetalleObtener(res http.ResponseWriter,
 				var modelo *models.GrupoDetalleObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2523,7 +2549,7 @@ func (controller *GruposController) GrupoDetalleObtener(res http.ResponseWriter,
 	}
 }
 
-func (controller *GruposController) GrupoMensajeRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoMensajeRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2549,7 +2575,7 @@ func (controller *GruposController) GrupoMensajeRegistrar(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2559,15 +2585,15 @@ func (controller *GruposController) GrupoMensajeRegistrar(res http.ResponseWrite
 				var modelo *models.GrupoMensajeRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoMensajeRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoMensajeRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2662,7 +2688,7 @@ func (controller *GruposController) GrupoMensajeRegistrar(res http.ResponseWrite
 	}
 }
 
-func (controller *GruposController) GrupoMensajeRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *GrupoController) GrupoMensajeRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2688,7 +2714,7 @@ func (controller *GruposController) GrupoMensajeRemover(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2698,15 +2724,15 @@ func (controller *GruposController) GrupoMensajeRemover(res http.ResponseWriter,
 				var modelo *models.GrupoMensajeRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.GrupoMensajeRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.GrupoMensajeRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

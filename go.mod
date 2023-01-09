@@ -3,7 +3,6 @@ module api-courseroom
 go 1.19
 
 require (
-	github.com/joho/godotenv v1.4.0 // direct
 	gorm.io/driver/sqlserver v1.4.1 // direct
 	gorm.io/gorm v1.24.0 // direct
 )

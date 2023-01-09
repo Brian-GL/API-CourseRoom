@@ -3,25 +3,72 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
+	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
-type UsuariosController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+type UsuarioController struct {
+	DB                    *gorm.DB
+	Validator             *validator.Validate
+	SECRET_TOKEN          string
+	Email_Configuration   models.EmailConfiguration
+	EMAIL_VERIFICATOR_API string
+	QR_SERVER_API         string
+	JsonIter              jsoniter.API
 }
 
-func NewUsuariosController(middleware *middleware.Middleware) UsuariosController {
-	return UsuariosController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+func NewUsuarioController() UsuarioController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+	emailServer := os.Getenv("EMAIL_SERVER")
+	emailAddress := os.Getenv("EMAIL_ADDRESS")
+	emailCredentials := os.Getenv("EMAIL_CREDENTIALS")
+	emailPort, _ := strconv.Atoi(os.Getenv("EMAIL_PORT"))
+	emailAPI := os.Getenv("EmailVerificatorAPI")
+	qrAPI := os.Getenv("QRServerAPI")
+
+	EmailConfiguration := models.EmailConfiguration{
+		EMAIL_SERVER:      emailServer,
+		EMAIL_PORT:        emailPort,
+		EMAIL_ADDRESS:     emailAddress,
+		EMAIL_CREDENTIALS: emailCredentials,
+	}
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
+	return UsuarioController{
+		SECRET_TOKEN:          secretToken,
+		DB:                    db,
+		Validator:             validator.New(),
+		Email_Configuration:   EmailConfiguration,
+		EMAIL_VERIFICATOR_API: emailAPI,
+		QR_SERVER_API:         qrAPI,
+		JsonIter:              jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
-func (controller *UsuariosController) UsuarioActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
+}
+
+func (controller *UsuarioController) UsuarioActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -47,7 +94,7 @@ func (controller *UsuariosController) UsuarioActualizar(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -57,15 +104,15 @@ func (controller *UsuariosController) UsuarioActualizar(res http.ResponseWriter,
 				var modelo *models.UsuarioActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -160,7 +207,7 @@ func (controller *UsuariosController) UsuarioActualizar(res http.ResponseWriter,
 	}
 }
 
-func (controller *UsuariosController) UsuarioRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -186,7 +233,7 @@ func (controller *UsuariosController) UsuarioRegistrar(res http.ResponseWriter, 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -196,15 +243,15 @@ func (controller *UsuariosController) UsuarioRegistrar(res http.ResponseWriter, 
 				var modelo *models.UsuarioRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioRegistrarPostAsync(controller.Middleware, modelo)
+							return infrastructure.UsuarioRegistrarPostAsync(controller.DB, &controller.EMAIL_VERIFICATOR_API, &controller.Email_Configuration, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -295,7 +342,7 @@ func (controller *UsuariosController) UsuarioRegistrar(res http.ResponseWriter, 
 
 }
 
-func (controller *UsuariosController) UsuarioRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -321,7 +368,7 @@ func (controller *UsuariosController) UsuarioRemover(res http.ResponseWriter, re
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -332,15 +379,15 @@ func (controller *UsuariosController) UsuarioRemover(res http.ResponseWriter, re
 				var modelo *models.UsuarioRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -431,7 +478,7 @@ func (controller *UsuariosController) UsuarioRemover(res http.ResponseWriter, re
 
 }
 
-func (controller *UsuariosController) UsuarioAccesoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioAccesoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -457,7 +504,7 @@ func (controller *UsuariosController) UsuarioAccesoObtener(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -468,15 +515,15 @@ func (controller *UsuariosController) UsuarioAccesoObtener(res http.ResponseWrit
 				var modelo *models.UsuarioAccesoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioAccesoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioAccesoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -567,7 +614,7 @@ func (controller *UsuariosController) UsuarioAccesoObtener(res http.ResponseWrit
 
 }
 
-func (controller *UsuariosController) UsuarioCredencialesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioCredencialesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -593,7 +640,7 @@ func (controller *UsuariosController) UsuarioCredencialesObtener(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -603,15 +650,15 @@ func (controller *UsuariosController) UsuarioCredencialesObtener(res http.Respon
 				var modelo *models.UsuarioCredencialObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioCredencialObtenerPostAsync(controller.Middleware, modelo)
+							return infrastructure.UsuarioCredencialObtenerPostAsync(controller.DB, &controller.QR_SERVER_API, &controller.Email_Configuration, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -702,7 +749,7 @@ func (controller *UsuariosController) UsuarioCredencialesObtener(res http.Respon
 
 }
 
-func (controller *UsuariosController) UsuarioCuentaActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioCuentaActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -728,7 +775,7 @@ func (controller *UsuariosController) UsuarioCuentaActualizar(res http.ResponseW
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "PUT":
@@ -738,15 +785,15 @@ func (controller *UsuariosController) UsuarioCuentaActualizar(res http.ResponseW
 				var modelo *models.UsuarioCuentaActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioCuentaActualizarPutAsync(controller.Middleware, modelo)
+							return infrastructure.UsuarioCuentaActualizarPutAsync(controller.DB, &controller.EMAIL_VERIFICATOR_API, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -837,7 +884,7 @@ func (controller *UsuariosController) UsuarioCuentaActualizar(res http.ResponseW
 
 }
 
-func (controller *UsuariosController) UsuarioCuentaObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioCuentaObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -863,7 +910,7 @@ func (controller *UsuariosController) UsuarioCuentaObtener(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -874,15 +921,15 @@ func (controller *UsuariosController) UsuarioCuentaObtener(res http.ResponseWrit
 				var modelo *models.UsuarioInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioCuentaObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioCuentaObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -973,7 +1020,7 @@ func (controller *UsuariosController) UsuarioCuentaObtener(res http.ResponseWrit
 
 }
 
-func (controller *UsuariosController) UsuarioDesempenoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioDesempenoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -999,7 +1046,7 @@ func (controller *UsuariosController) UsuarioDesempenoObtener(res http.ResponseW
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1010,15 +1057,15 @@ func (controller *UsuariosController) UsuarioDesempenoObtener(res http.ResponseW
 				var modelo *models.UsuarioInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioDesempenoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioDesempenoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1109,7 +1156,7 @@ func (controller *UsuariosController) UsuarioDesempenoObtener(res http.ResponseW
 
 }
 
-func (controller *UsuariosController) UsuarioDesempenoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioDesempenoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1135,7 +1182,7 @@ func (controller *UsuariosController) UsuarioDesempenoRegistrar(res http.Respons
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -1145,15 +1192,15 @@ func (controller *UsuariosController) UsuarioDesempenoRegistrar(res http.Respons
 				var modelo *models.UsuarioDesempenoRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioDesempenoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioDesempenoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1244,7 +1291,7 @@ func (controller *UsuariosController) UsuarioDesempenoRegistrar(res http.Respons
 
 }
 
-func (controller *UsuariosController) UsuarioDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1270,7 +1317,7 @@ func (controller *UsuariosController) UsuarioDetalleObtener(res http.ResponseWri
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1281,15 +1328,15 @@ func (controller *UsuariosController) UsuarioDetalleObtener(res http.ResponseWri
 				var modelo *models.UsuarioInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1380,7 +1427,7 @@ func (controller *UsuariosController) UsuarioDetalleObtener(res http.ResponseWri
 
 }
 
-func (controller *UsuariosController) UsuarioNuevaPuntualidadCursoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioNuevaPuntualidadCursoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1406,7 +1453,7 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadCursoObtener(res ht
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1417,15 +1464,15 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadCursoObtener(res ht
 				var modelo *models.UsuarioNuevaPuntualidadCursoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioNuevaPuntualidadCursoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioNuevaPuntualidadCursoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1516,7 +1563,7 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadCursoObtener(res ht
 
 }
 
-func (controller *UsuariosController) UsuarioNuevaPuntualidadGeneralObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioNuevaPuntualidadGeneralObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1542,7 +1589,7 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadGeneralObtener(res 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1553,15 +1600,15 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadGeneralObtener(res 
 				var modelo *models.UsuarioNuevaPuntualidadGeneralObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioNuevaPuntualidadGeneralObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioNuevaPuntualidadGeneralObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1652,7 +1699,7 @@ func (controller *UsuariosController) UsuarioNuevaPuntualidadGeneralObtener(res 
 
 }
 
-func (controller *UsuariosController) UsuarioNuevoPromedioCursoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioNuevoPromedioCursoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1678,7 +1725,7 @@ func (controller *UsuariosController) UsuarioNuevoPromedioCursoObtener(res http.
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1689,15 +1736,15 @@ func (controller *UsuariosController) UsuarioNuevoPromedioCursoObtener(res http.
 				var modelo *models.UsuarioNuevoPromedioCursoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioNuevoPromedioCursoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioNuevoPromedioCursoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1788,7 +1835,7 @@ func (controller *UsuariosController) UsuarioNuevoPromedioCursoObtener(res http.
 
 }
 
-func (controller *UsuariosController) UsuarioNuevoPromedioGeneralObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioNuevoPromedioGeneralObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1814,7 +1861,7 @@ func (controller *UsuariosController) UsuarioNuevoPromedioGeneralObtener(res htt
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1825,15 +1872,15 @@ func (controller *UsuariosController) UsuarioNuevoPromedioGeneralObtener(res htt
 				var modelo *models.UsuarioNuevoPromedioGeneralObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioNuevoPromedioGeneralObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioNuevoPromedioGeneralObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1924,7 +1971,7 @@ func (controller *UsuariosController) UsuarioNuevoPromedioGeneralObtener(res htt
 
 }
 
-func (controller *UsuariosController) UsuariosBuscar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuariosBuscar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1950,7 +1997,7 @@ func (controller *UsuariosController) UsuariosBuscar(res http.ResponseWriter, re
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1961,15 +2008,15 @@ func (controller *UsuariosController) UsuariosBuscar(res http.ResponseWriter, re
 				var modelo *models.UsuariosBuscarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuariosBuscarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuariosBuscarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2060,7 +2107,7 @@ func (controller *UsuariosController) UsuariosBuscar(res http.ResponseWriter, re
 
 }
 
-func (controller *UsuariosController) UsuarioSesionActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioSesionActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2086,7 +2133,7 @@ func (controller *UsuariosController) UsuarioSesionActualizar(res http.ResponseW
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2096,15 +2143,15 @@ func (controller *UsuariosController) UsuarioSesionActualizar(res http.ResponseW
 				var modelo *models.UsuarioSesionInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioSesionActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioSesionActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2199,7 +2246,7 @@ func (controller *UsuariosController) UsuarioSesionActualizar(res http.ResponseW
 	}
 }
 
-func (controller *UsuariosController) UsuarioSesionRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioSesionRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2225,7 +2272,7 @@ func (controller *UsuariosController) UsuarioSesionRegistrar(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2235,15 +2282,15 @@ func (controller *UsuariosController) UsuarioSesionRegistrar(res http.ResponseWr
 				var modelo *models.UsuarioSesionRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioSesionRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioSesionRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2338,7 +2385,7 @@ func (controller *UsuariosController) UsuarioSesionRegistrar(res http.ResponseWr
 	}
 }
 
-func (controller *UsuariosController) UsuarioSesionValidar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioSesionValidar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2364,7 +2411,7 @@ func (controller *UsuariosController) UsuarioSesionValidar(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2374,15 +2421,15 @@ func (controller *UsuariosController) UsuarioSesionValidar(res http.ResponseWrit
 				var modelo *models.UsuarioSesionInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioSesionValidarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioSesionValidarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2477,7 +2524,7 @@ func (controller *UsuariosController) UsuarioSesionValidar(res http.ResponseWrit
 	}
 }
 
-func (controller *UsuariosController) UsuarioSesionesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioSesionesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2503,7 +2550,7 @@ func (controller *UsuariosController) UsuarioSesionesObtener(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2513,15 +2560,15 @@ func (controller *UsuariosController) UsuarioSesionesObtener(res http.ResponseWr
 				var modelo *models.UsuarioSesionesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioSesionesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioSesionesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2616,7 +2663,7 @@ func (controller *UsuariosController) UsuarioSesionesObtener(res http.ResponseWr
 	}
 }
 
-func (controller *UsuariosController) UsuarioTematicaRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioTematicaRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2642,7 +2689,7 @@ func (controller *UsuariosController) UsuarioTematicaRegistrar(res http.Response
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2652,15 +2699,15 @@ func (controller *UsuariosController) UsuarioTematicaRegistrar(res http.Response
 				var modelo *models.UsuarioTematicaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioTematicaRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioTematicaRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2755,7 +2802,7 @@ func (controller *UsuariosController) UsuarioTematicaRegistrar(res http.Response
 	}
 }
 
-func (controller *UsuariosController) UsuarioTematicaRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioTematicaRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2781,7 +2828,7 @@ func (controller *UsuariosController) UsuarioTematicaRemover(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2791,15 +2838,15 @@ func (controller *UsuariosController) UsuarioTematicaRemover(res http.ResponseWr
 				var modelo *models.UsuarioTematicaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioTematicaRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioTematicaRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2894,7 +2941,7 @@ func (controller *UsuariosController) UsuarioTematicaRemover(res http.ResponseWr
 	}
 }
 
-func (controller *UsuariosController) UsuarioTematicasObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioTematicasObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2920,7 +2967,7 @@ func (controller *UsuariosController) UsuarioTematicasObtener(res http.ResponseW
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2930,15 +2977,15 @@ func (controller *UsuariosController) UsuarioTematicasObtener(res http.ResponseW
 				var modelo *models.UsuarioTematicasObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.UsuarioTematicasObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.UsuarioTematicasObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
