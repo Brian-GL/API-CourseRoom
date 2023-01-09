@@ -47,6 +47,17 @@ func (controller *CatalogoController) EstadosObtener(res http.ResponseWriter, re
 		return
 	}
 
+	jsonBytes, err := controller.JsonIter.Marshal(controller.Middleware.SECRET_TOKEN)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte(err.Error()))
+	} else {
+		res.WriteHeader(http.StatusUnauthorized)
+		res.Write(jsonBytes)
+	}
+
+	return
+
 	// Validar que el token sea el correcto:
 
 	if token == controller.Middleware.SECRET_TOKEN {
@@ -194,6 +205,19 @@ func (controller *CatalogoController) EstatusTareaPendiente(res http.ResponseWri
 				//Registrar aviso:
 
 				var modelo *models.EstatusTareaPendienteObtenerInputModel
+
+				// body, err := ioutil.ReadAll(r.Body)
+				// defer req.Body.Close()
+				// if err != nil {
+				// 	// handle error
+				// 	return
+				// }
+
+				// err = json.Unmarshal(body, &model)
+				// if err != nil {
+				// 	// handle error
+				// 	return
+				// }
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
