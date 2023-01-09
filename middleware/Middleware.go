@@ -24,7 +24,6 @@ import (
 type Middleware struct {
 	DB                    *gorm.DB
 	Validator             *validator.Validate
-	PORT                  string
 	SECRET_TOKEN          string
 	EMAIL_SERVER          string
 	EMAIL_PORT            int
@@ -58,7 +57,6 @@ func NewMiddleware() *Middleware {
 	emailPort, _ := strconv.Atoi(os.Getenv("EMAIL_PORT"))
 	qrAPI := os.Getenv("QRServerAPI")
 	courseRoomCalculator := os.Getenv("COURSEROOM_CALCULATOR")
-	port := os.Getenv("PORT")
 
 	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
 
@@ -74,7 +72,6 @@ func NewMiddleware() *Middleware {
 	return &Middleware{
 		DB:                    db,
 		Validator:             validator.New(),
-		PORT:                  port,
 		SECRET_TOKEN:          secretToken,
 		EMAIL_SERVER:          emailServer,
 		EMAIL_ADDRESS:         emailAddress,

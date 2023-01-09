@@ -181,7 +181,7 @@ func main() {
 
 	fmt.Println("\nCourseRoom API Opened At " + time.Now().Format("2006-01-02 15:04:05 Monday"))
 
-	err := http.ListenAndServe(":"+middleware.PORT, nil)
+	err := http.ListenAndServe(":1313", nil)
 	if err != nil {
 		panic(err)
 	}
