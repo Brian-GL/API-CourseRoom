@@ -3,22 +3,49 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
 type ChatController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewChatController(middleware *middleware.Middleware) ChatController {
+func NewChatController() ChatController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
 	return ChatController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
+}
+
+func (controller *ChatController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
 }
 
 func (controller *ChatController) ChatRegistrar(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +74,7 @@ func (controller *ChatController) ChatRegistrar(res http.ResponseWriter, req *ht
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -57,15 +84,15 @@ func (controller *ChatController) ChatRegistrar(res http.ResponseWriter, req *ht
 				var modelo *models.ChatRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -182,7 +209,7 @@ func (controller *ChatController) ChatRemover(res http.ResponseWriter, req *http
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -193,15 +220,15 @@ func (controller *ChatController) ChatRemover(res http.ResponseWriter, req *http
 				var modelo *models.ChatRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -318,7 +345,7 @@ func (controller *ChatController) ChatMensajeRegistrar(res http.ResponseWriter, 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -328,15 +355,15 @@ func (controller *ChatController) ChatMensajeRegistrar(res http.ResponseWriter, 
 				var modelo *models.ChatMensajeRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatMensajeRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatMensajeRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -453,7 +480,7 @@ func (controller *ChatController) ChatMensajeRemover(res http.ResponseWriter, re
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -464,15 +491,15 @@ func (controller *ChatController) ChatMensajeRemover(res http.ResponseWriter, re
 				var modelo *models.ChatMensajeRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatMensajeRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatMensajeRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -589,7 +616,7 @@ func (controller *ChatController) ChatMensajesObtener(res http.ResponseWriter, r
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -600,15 +627,15 @@ func (controller *ChatController) ChatMensajesObtener(res http.ResponseWriter, r
 				var modelo *models.ChatMensajesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatMensajesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatMensajesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -725,7 +752,7 @@ func (controller *ChatController) ChatsObtener(res http.ResponseWriter, req *htt
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -736,15 +763,15 @@ func (controller *ChatController) ChatsObtener(res http.ResponseWriter, req *htt
 				var modelo *models.ChatsObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatsObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatsObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -861,7 +888,7 @@ func (controller *ChatController) ChatsBuscar(res http.ResponseWriter, req *http
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -872,15 +899,15 @@ func (controller *ChatController) ChatsBuscar(res http.ResponseWriter, req *http
 				var modelo *models.ChatsBuscarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ChatsBuscarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ChatsBuscarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

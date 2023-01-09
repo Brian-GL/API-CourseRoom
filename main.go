@@ -14,9 +14,9 @@ func main() {
 	//middleware := middleware.NewMiddleware()
 
 	// Controladores
-	//avisosController := controllers.NewAvisosController(middleware)
+	avisosController := controllers.NewAvisosController()
 	catalogoController := controllers.NewCatalogoController()
-	//chatController := controllers.NewChatController(middleware)
+	chatController := controllers.NewChatController()
 	//cursosController := controllers.NewCursosController(middleware)
 	//gruposController := controllers.NewGruposController(middleware)
 	//tareasController := controllers.NewTareasController(middleware)
@@ -28,13 +28,13 @@ func main() {
 
 	// #region Avisos Endpoints
 
-	// http.HandleFunc("/api/avisos/actualizar", avisosController.AvisoActualizar)
-	// http.HandleFunc("/api/avisos/registrar", avisosController.AvisoRegistrar)
-	// http.HandleFunc("/api/avisos/remover", avisosController.AvisoRemover)
-	// http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
-	// http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
-	// http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
-	// http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
+	http.HandleFunc("/api/avisos/actualizar", avisosController.AvisoActualizar)
+	http.HandleFunc("/api/avisos/registrar", avisosController.AvisoRegistrar)
+	http.HandleFunc("/api/avisos/remover", avisosController.AvisoRemover)
+	http.HandleFunc("/api/avisos/detalle", avisosController.AvisoDetalleObtener)
+	http.HandleFunc("/api/avisos/plagioprofesor", avisosController.AvisoPlagioProfesorRegistrar)
+	http.HandleFunc("/api/avisos/obtener", avisosController.AvisosObtener)
+	http.HandleFunc("/api/avisos/validar", avisosController.AvisosValidar)
 
 	// // #endregion
 
@@ -53,13 +53,13 @@ func main() {
 
 	// // #region Chats Endpoints
 
-	// http.HandleFunc("/api/chats/registrar", chatController.ChatRegistrar)
-	// http.HandleFunc("/api/chats/remover", chatController.ChatRemover)
-	// http.HandleFunc("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
-	// http.HandleFunc("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
-	// http.HandleFunc("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
-	// http.HandleFunc("/api/chats/buscar", chatController.ChatsBuscar)
-	// http.HandleFunc("/api/chats/obtener", chatController.ChatsObtener)
+	http.HandleFunc("/api/chats/registrar", chatController.ChatRegistrar)
+	http.HandleFunc("/api/chats/remover", chatController.ChatRemover)
+	http.HandleFunc("/api/chats/mensajeregistrar", chatController.ChatMensajeRegistrar)
+	http.HandleFunc("/api/chats/mensajeremover", chatController.ChatMensajeRemover)
+	http.HandleFunc("/api/chats/mensajesobtener", chatController.ChatMensajesObtener)
+	http.HandleFunc("/api/chats/buscar", chatController.ChatsBuscar)
+	http.HandleFunc("/api/chats/obtener", chatController.ChatsObtener)
 
 	// // #endregion
 

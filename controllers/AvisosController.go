@@ -3,22 +3,49 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
 type AvisosController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewAvisosController(middleware *middleware.Middleware) AvisosController {
+func NewAvisosController() AvisosController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
 	return AvisosController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
+}
+
+func (controller *AvisosController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
 }
 
 func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +74,7 @@ func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -57,15 +84,15 @@ func (controller *AvisosController) AvisoActualizar(res http.ResponseWriter, req
 				var modelo *models.AvisoAccionInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -186,7 +213,7 @@ func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -196,15 +223,15 @@ func (controller *AvisosController) AvisoRegistrar(res http.ResponseWriter, req 
 				var modelo *models.AvisoRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -321,7 +348,7 @@ func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -332,15 +359,15 @@ func (controller *AvisosController) AvisoRemover(res http.ResponseWriter, req *h
 				var modelo *models.AvisoAccionInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -457,7 +484,7 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -468,15 +495,15 @@ func (controller *AvisosController) AvisoDetalleObtener(res http.ResponseWriter,
 				var modelo *models.AvisoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -593,7 +620,7 @@ func (controller *AvisosController) AvisoPlagioProfesorRegistrar(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -603,15 +630,15 @@ func (controller *AvisosController) AvisoPlagioProfesorRegistrar(res http.Respon
 				var modelo *models.AvisoPlagioProfesorRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoPlagioProfesorRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoPlagioProfesorRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -714,7 +741,7 @@ func (controller *AvisosController) AvisosObtener(res http.ResponseWriter, req *
 	if token == "" {
 
 		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
-
+		defer req.Body.Close()
 		if err != nil {
 			res.WriteHeader(http.StatusInternalServerError)
 			res.Write([]byte(err.Error()))
@@ -728,7 +755,7 @@ func (controller *AvisosController) AvisosObtener(res http.ResponseWriter, req *
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -738,15 +765,15 @@ func (controller *AvisosController) AvisosObtener(res http.ResponseWriter, req *
 				var modelo *models.AvisosObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisosObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -868,7 +895,7 @@ func (controller *AvisosController) AvisosValidar(res http.ResponseWriter, req *
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -878,15 +905,15 @@ func (controller *AvisosController) AvisosValidar(res http.ResponseWriter, req *
 				var modelo *models.AvisosValidarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.AvisoValidarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.AvisoValidarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
