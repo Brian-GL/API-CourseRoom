@@ -24,8 +24,8 @@ type ChatMensajeRemoverInputModel struct {
 }
 
 type ChatMensajesObtenerInputModel struct {
-	IdChat *int    `json:"idChat" validate:"required"`
-	Ultimo *string `json:"idMensaje" validate:"required"`
+	IdChat        *int    `json:"idChat" validate:"required"`
+	UltimoMensaje *string `json:"idMensaje" validate:"required"`
 }
 
 type ChatsBuscarInputModel struct {

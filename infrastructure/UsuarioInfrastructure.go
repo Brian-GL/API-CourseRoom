@@ -243,7 +243,7 @@ func UsuarioAccesoObtenerGetAsync(db *gorm.DB, model *models.UsuarioAccesoObtene
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -386,7 +386,7 @@ func UsuarioCuentaObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel) 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -412,7 +412,7 @@ func UsuarioDesempenoObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputMode
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -470,7 +470,7 @@ func UsuarioDetalleObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel)
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -496,7 +496,7 @@ func UsuarioNuevaPuntualidadCursoObtenerGetAsync(db *gorm.DB, model *models.Usua
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -515,14 +515,14 @@ func UsuarioNuevaPuntualidadGeneralObtenerGetAsync(db *gorm.DB, model *models.Us
 
 		var resultado *entities.UsuarioPuntualidadEntity
 
-		exec := "EXEC dbo.UsuarioNuevaPuntualidadCurso_Obtener @IdUsuario = ?, @Puntualidad = ?"
+		exec := "EXEC dbo.UsuarioNuevaPuntualidadGeneral_Obtener @IdUsuario = ?, @Puntualidad = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Puntualidad).Scan(&resultado)
 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -548,7 +548,7 @@ func UsuarioNuevoPromedioCursoObtenerGetAsync(db *gorm.DB, model *models.Usuario
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -574,7 +574,7 @@ func UsuarioNuevoPromedioGeneralObtenerGetAsync(db *gorm.DB, model *models.Usuar
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -715,7 +715,7 @@ func UsuarioSesionesObtenerGetAsync(db *gorm.DB, model *models.UsuarioSesionesOb
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -809,7 +809,7 @@ func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicas
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {

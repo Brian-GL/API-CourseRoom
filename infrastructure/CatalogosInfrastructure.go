@@ -17,7 +17,7 @@ func CursoEstatusGetAsync(db *gorm.DB, model *models.CursoEstatusObtenerInputMod
 
 		exec := "EXEC dbo.CatalogoCursoEstatus_Obtener @IdEstatusCurso = ?"
 
-		db.Raw(exec, model.IdEstatus).Scan(&resultado)
+		db.Raw(exec, model.IdEstatusCurso).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
