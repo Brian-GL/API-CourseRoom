@@ -513,7 +513,7 @@ func GrupoDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoDetalleObtenerI
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {

@@ -470,7 +470,7 @@ func UsuarioDetalleObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel)
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {

@@ -308,7 +308,7 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoEstud
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {
@@ -660,7 +660,7 @@ func CursoProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoProfeso
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {
