@@ -339,7 +339,6 @@ func (controller *UsuarioController) UsuarioRegistrar(res http.ResponseWriter, r
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioRemover(res http.ResponseWriter, req *http.Request) {
@@ -475,7 +474,6 @@ func (controller *UsuarioController) UsuarioRemover(res http.ResponseWriter, req
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioAccesoObtener(res http.ResponseWriter, req *http.Request) {
@@ -611,10 +609,9 @@ func (controller *UsuarioController) UsuarioAccesoObtener(res http.ResponseWrite
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
-func (controller *UsuarioController) UsuarioCredencialesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *UsuarioController) UsuarioCredencialObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -746,7 +743,6 @@ func (controller *UsuarioController) UsuarioCredencialesObtener(res http.Respons
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioCuentaActualizar(res http.ResponseWriter, req *http.Request) {
@@ -881,7 +877,6 @@ func (controller *UsuarioController) UsuarioCuentaActualizar(res http.ResponseWr
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioCuentaObtener(res http.ResponseWriter, req *http.Request) {
@@ -1017,7 +1012,6 @@ func (controller *UsuarioController) UsuarioCuentaObtener(res http.ResponseWrite
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioDesempenoObtener(res http.ResponseWriter, req *http.Request) {
@@ -1153,7 +1147,6 @@ func (controller *UsuarioController) UsuarioDesempenoObtener(res http.ResponseWr
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioDesempenoRegistrar(res http.ResponseWriter, req *http.Request) {
@@ -1288,7 +1281,6 @@ func (controller *UsuarioController) UsuarioDesempenoRegistrar(res http.Response
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioDetalleObtener(res http.ResponseWriter, req *http.Request) {
@@ -1424,7 +1416,6 @@ func (controller *UsuarioController) UsuarioDetalleObtener(res http.ResponseWrit
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioNuevaPuntualidadCursoObtener(res http.ResponseWriter, req *http.Request) {
@@ -1560,7 +1551,6 @@ func (controller *UsuarioController) UsuarioNuevaPuntualidadCursoObtener(res htt
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioNuevaPuntualidadGeneralObtener(res http.ResponseWriter, req *http.Request) {
@@ -1696,7 +1686,6 @@ func (controller *UsuarioController) UsuarioNuevaPuntualidadGeneralObtener(res h
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioNuevoPromedioCursoObtener(res http.ResponseWriter, req *http.Request) {
@@ -1832,7 +1821,6 @@ func (controller *UsuarioController) UsuarioNuevoPromedioCursoObtener(res http.R
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioNuevoPromedioGeneralObtener(res http.ResponseWriter, req *http.Request) {
@@ -1968,7 +1956,6 @@ func (controller *UsuarioController) UsuarioNuevoPromedioGeneralObtener(res http
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuariosBuscar(res http.ResponseWriter, req *http.Request) {
@@ -2104,7 +2091,6 @@ func (controller *UsuarioController) UsuariosBuscar(res http.ResponseWriter, req
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *UsuarioController) UsuarioSesionActualizar(res http.ResponseWriter, req *http.Request) {

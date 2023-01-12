@@ -319,7 +319,6 @@ func (controller *AvisoController) AvisoRegistrar(res http.ResponseWriter, req *
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *AvisoController) AvisoRemover(res http.ResponseWriter, req *http.Request) {
@@ -455,7 +454,6 @@ func (controller *AvisoController) AvisoRemover(res http.ResponseWriter, req *ht
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *AvisoController) AvisoDetalleObtener(res http.ResponseWriter, req *http.Request) {
@@ -591,7 +589,6 @@ func (controller *AvisoController) AvisoDetalleObtener(res http.ResponseWriter, 
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *AvisoController) AvisoPlagioProfesorRegistrar(res http.ResponseWriter, req *http.Request) {
@@ -726,7 +723,6 @@ func (controller *AvisoController) AvisoPlagioProfesorRegistrar(res http.Respons
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *AvisoController) AvisosObtener(res http.ResponseWriter, req *http.Request) {
@@ -866,7 +862,6 @@ func (controller *AvisoController) AvisosObtener(res http.ResponseWriter, req *h
 			res.Write(jsonBytes)
 		}
 	}
-
 }
 
 func (controller *AvisoController) AvisosValidar(res http.ResponseWriter, req *http.Request) {

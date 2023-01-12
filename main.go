@@ -153,8 +153,7 @@ func main() {
 	http.HandleFunc("/api/usuarios/registrar", usuarioController.UsuarioRegistrar) //POST
 	http.HandleFunc("/api/usuarios/remover", usuarioController.UsuarioRemover)
 	http.HandleFunc("/api/usuarios/acceso", usuarioController.UsuarioAccesoObtener)
-	http.HandleFunc("/api/usuarios/credenciales", usuarioController.UsuarioCredencialesObtener) //POST
-	http.HandleFunc("/api/usuarios/cuenta", usuarioController.UsuarioCuentaActualizar)          //PUT
+	http.HandleFunc("/api/usuarios/cuenta", usuarioController.UsuarioCuentaActualizar) //PUT
 	http.HandleFunc("/api/usuarios/cuentaobtener", usuarioController.UsuarioCuentaObtener)
 	http.HandleFunc("/api/usuarios/desempeno", usuarioController.UsuarioDesempenoObtener)
 	http.HandleFunc("/api/usuarios/desempenoregistrar", usuarioController.UsuarioDesempenoRegistrar)
@@ -171,6 +170,7 @@ func main() {
 	http.HandleFunc("/api/usuarios/tematica", usuarioController.UsuarioTematicaRegistrar)
 	http.HandleFunc("/api/usuarios/tematicaremover", usuarioController.UsuarioTematicaRemover)
 	http.HandleFunc("/api/usuarios/tematicasobtener", usuarioController.UsuarioTematicasObtener)
+	http.HandleFunc("/api/usuarios/credencial", usuarioController.UsuarioCredencialObtener)
 
 	// // #endregion
 
