@@ -21,6 +21,7 @@ func main() {
 	gruposController := controllers.NewGruposController(middleware)
 	tareasController := controllers.NewTareasController(middleware)
 	usuariosController := controllers.NewUsuariosController(middleware)
+	archivoController := controllers.NewArchivoController(middleware)
 
 	// #region Avisos Endpoints
 
@@ -44,6 +45,7 @@ func main() {
 	http.HandleFunc("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
 	http.HandleFunc("/api/catalogos/tematicas", catalogoController.Tematicas)
 	http.HandleFunc("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
+	http.HandleFunc("/api/catalogos/tiposarchivo", catalogoController.TiposArchivo)
 
 	// // #endregion
 
@@ -134,18 +136,17 @@ func main() {
 	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/retroalimentacion", tareasController.TareaRetroalimentacionRegistrar)
 	http.HandleFunc("/api/tareas/calificar", tareasController.TareaCalificarActualizar) //PUT
-	http.HandleFunc("/api/tareas/", tareasController.TareaArchivosEntregadosObtener)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
-	http.HandleFunc("/api/tareas/", tareasController.)
+	http.HandleFunc("/api/tareas/archivosentregados", tareasController.TareaArchivosEntregadosObtener)
+	http.HandleFunc("/api/tareas/estudiante", tareasController.TareaEstudianteObtener)
+	http.HandleFunc("/api/tareas/creadaprofesor", tareasController.TareaCreadaProfesorObtener)
+	http.HandleFunc("/api/tareas/profesordetalle", tareasController.TareaProfesorDetalleObtener)
+	http.HandleFunc("/api/tareas/retroalimentaciones", tareasController.TareaReatroalimentacionesObtener)
+	http.HandleFunc("/api/tareas/calificarobtener", tareasController.TareaCalificarObtener)
+	http.HandleFunc("/api/tareas/entregar", tareasController.TareaEntregarActualizar)
+	http.HandleFunc("/api/tareas/archivoentregado", tareasController.TareaArchivoEntregadoRemover)
+	http.HandleFunc("/api/tareas/archivoadjunto", tareasController.TareaArchivoAdjuntoRemover)
+	http.HandleFunc("/api/tareas/archivoadjuntoregistrar", tareasController.TareaArchivoAdjuntoRegistrar)
 
-	
 	// #endregion
 
 	// #region Usuarios Endpoints
@@ -171,6 +172,18 @@ func main() {
 	http.HandleFunc("/api/usuarios/sesiones", usuariosController.UsuarioSesionesObtener)
 	http.HandleFunc("/api/usuarios/tematica", usuariosController.UsuarioTematicaRegistrar)
 	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
+
+	// #region Archivo Endpoints
+
+	http.HandleFunc("/api/archivo/actualizar", archivoController.ArchivoActualizar)
+
+	// endregion
+
+	// #region preguntasrespuestas Endpoints
+
+	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntasActualizar)
+
+	// endregion
 
 	// // #endregion
 

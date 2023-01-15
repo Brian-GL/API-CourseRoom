@@ -377,7 +377,7 @@ func TareaArchivosEntregadosObtenerGetAsync(db *gorm.DB, model *models.TareaArch
 
 		var resultado []entities.TareaArchivosEntregadosObtenerEntity
 
-		exec := "EXEC dbo.TareaArchivosEntregadosObtener @IdTarea = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.TareaArchivosEntregados_Obtener @IdTarea = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
 
@@ -403,14 +403,246 @@ func TareaEstudianteObtenerGetAsync(db *gorm.DB, model *models.TareaEstudianteOb
 
 		var resultado []entities.TareaEstudianteObtenerEntity
 
-		exec := "EXEC dbo.TareaEstudianteObtener @IdUsuario = ?"
+		exec := "EXEC dbo.TareaEstudiante_Obtener @IdUsuario = ?"
 
-		db.Raw(exec,.IdUsuario).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaCreadaProfesorObtenerGetAsync(db *gorm.DB, model *models.TareaCreadaProfesorObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaCreadaProfesorObtenerEntity
+
+		exec := "EXEC dbo.TareaCreadaProfesor_Obtener @IdProfesor = ?"
+
+		db.Raw(exec, model.IdProfesor).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaProfesorDetalleObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaProfesorDetalleObtenerEntity
+
+		exec := "EXEC dbo.TareaProfesorDetalle_Obtener @IdProfesor = ?, @IdTarea = ?"
+
+		db.Raw(exec, model.IdProfesor, model.IdTarea).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaReatroalimentacionesObtenerGetAsync(db *gorm.DB, model *models.TareaReatroalimentacionesObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaProfesorDetalleObtenerEntity
+
+		exec := "EXEC dbo.TareaReatroalimentaciones_Obtener @IdUsuario = ?, @IdTarea = ?"
+
+		db.Raw(exec, model.IdUsuario, model.IdTarea).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaCalificarObtenerGetAsync(db *gorm.DB, model *models.TareaCalificarObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TareaProfesorDetalleObtenerEntity
+
+		exec := "EXEC dbo.TareaCalificar_Obtener @IdProfesor = ?"
+
+		db.Raw(exec, model.IdProfesor).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaEntregarActualizarAsync(db *gorm.DB, model *models.TareaEntregarActualizarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.TareaEntregar_Actualizar @IdUsuario = ?, @IdTarea = ?"
+
+		db.Raw(exec, model.IdUsuario, model.IdTarea).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaArchivoEntregadoRemoverDeleteAsync(db *gorm.DB, model *models.TareaArchivoEntregadoRemoverInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.TareaArchivoEntregado_Remover @IdTarea = ?, @IdUsuario = ?, @IdArchivoEntregado"
+
+		db.Raw(exec, model.IdTarea, model.IdUsuario, model.IdArchivoEntregado).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaArchivoAdjuntoRemoverDeleteAsync(db *gorm.DB, model *models.TareaArchivoAdjuntoRemoverInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.TareaArchivoAdjunto_Remover @IdTarea = ?, @IdUsuario = ?, @IdArchivoAdjunto"
+
+		db.Raw(exec, model.IdTarea, model.IdUsuario, model.IdArchivoAdjunto).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func TareaArchivoAdjuntoRegistrarPostAsync(db *gorm.DB, model *models.TareaArchivoAdjuntoRegistrarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.TareaArchivoAdjunto_Registrar @IdTarea = ?, @IdProfesor = ?, @NombreArchivo = ?, @Archivo = ?"
+
+		db.Raw(exec, model.IdTarea, model.IdProfesor, model.NombreArchivo, model.Archivo).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
 		}
 
 	} else {

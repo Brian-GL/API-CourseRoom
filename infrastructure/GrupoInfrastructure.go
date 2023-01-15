@@ -382,7 +382,7 @@ func GrupoRegistrarPostAsync(db *gorm.DB, model *models.GrupoRegistrarInputModel
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoRegistrar @IdCurso = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
+		exec := "EXEC dbo.Grupo_Registrar @IdCurso = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
 
 		db.Raw(exec, model.IdCurso, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
 
@@ -413,7 +413,7 @@ func GrupoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoRemoverInputModel) 
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoRemover @IdGrupo = ?, @IdProfesor = ?, @IdCurso = ?"
+		exec := "EXEC dbo.Grupo_Remover @IdGrupo = ?, @IdProfesor = ?, @IdCurso = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdProfesor, model.IdCurso).Scan(&resultado)
 
@@ -444,7 +444,7 @@ func GrupoAbandonarActualizarPutAsync(db *gorm.DB, model *models.GrupoAbandonarA
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoAbandonarActualizar @IdGrupo = ?"
+		exec := "EXEC dbo.GrupoAbandonar_Actualizar @IdGrupo = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdUsuario).Scan(&resultado)
 
@@ -475,7 +475,7 @@ func GrupoArchivoCompartidoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoAr
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoArchivoCompartidoRemover @IdGrupo = ?, @IdArchivoCompartido = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.GrupoArchivoCompartido_Remover @IdGrupo = ?, @IdArchivoCompartido = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdArchivoCompartido, model.IdUsuario).Scan(&resultado)
 
@@ -506,7 +506,7 @@ func GrupoDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoDetalleObtenerI
 
 		var resultado []entities.GrupoTareaPendienteDetalleObtenerEntity
 
-		exec := "EXEC dbo.GrupoDetalleObtener @IdGrupo = ?"
+		exec := "EXEC dbo.GrupoDetalle_Obtener @IdGrupo = ?"
 
 		db.Raw(exec, model.IdGrupo).Scan(&resultado)
 
@@ -531,7 +531,7 @@ func GrupoMensajeRegistrarPostAsync(db *gorm.DB, model *models.GrupoMensajeRegis
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoMensajeRegistrar @IdGrupo = ?, @IdUsuarioEmisor= ?, @Mensaje = ?, @Archivo = ?"
+		exec := "EXEC dbo.GrupoMensaje_Registrar @IdGrupo = ?, @IdUsuarioEmisor= ?, @Mensaje = ?, @Archivo = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.Mensaje, model.Archivo).Scan(&resultado)
 
@@ -562,7 +562,7 @@ func GrupoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMensajeRemov
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoRemover @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
+		exec := "EXEC dbo.GrupoMensaje_Remover @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.IdMensaje).Scan(&resultado)
 

@@ -136,7 +136,7 @@ func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoAbandonarA
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Actualizar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoAbandonar_Actualizar  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -168,7 +168,7 @@ func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.Cur
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Validar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoCuestionarioAbandonar_Actualizar  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -199,7 +199,7 @@ func CursoCuestionarioContestarPostAsync(db *gorm.DB, model *models.CursoCuestio
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Validar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoCuestionarioContestar_Validar  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -231,7 +231,7 @@ func CursoDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoDesempenoObte
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Validar  @IdCurso = ?"
+		exec := "EXEC dbo.CursoDesempeno_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -263,7 +263,7 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoEstudiant
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Registrar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudiante_Registrar  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -295,7 +295,7 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoEstud
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteDetalle_Obtener  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -327,7 +327,7 @@ func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarA
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Actualizar  @IdCurso = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.CursoFinalizar_Actualizar  @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
 
@@ -359,7 +359,7 @@ func CursoGruposObtenerPostAsync(db *gorm.DB, model *models.CursoGruposObtenerIn
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @Activo = ?"
+		exec := "EXEC dbo.CursoGrupos_Obtener  @IdCurso = ?, @Activo = ?"
 
 		db.Raw(exec, model.IdCurso, model.Activo).Scan(&resultado)
 
@@ -391,7 +391,7 @@ func CursoMaterialRegistrarPostAsync(db *gorm.DB, model *models.CursoMaterialReg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Registrar  @IdCurso = ?, @IdUsuario = ?, @NombreArchivo = ?, @Arvhivo = ?"
+		exec := "EXEC dbo.CursoMaterial_Registrar  @IdCurso = ?, @IdUsuario = ?, @NombreArchivo = ?, @Arvhivo = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario, model.NombreArchivo, model.Archivo).Scan(&resultado)
 
@@ -423,7 +423,7 @@ func CursoMaterialRemoverDeleteAsync(db *gorm.DB, model *models.CursoMaterialRem
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Remover @IdMaterial = ?, @Idcurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoMaterial_Remover @IdMaterial = ?, @Idcurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdMaterial, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -455,7 +455,7 @@ func CursoMaterialesObtenerGetAsync(db *gorm.DB, model *models.CursoMaterialesOb
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoMateriales_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -487,7 +487,7 @@ func CursoMensajeRegistrarPostAsync(db *gorm.DB, model *models.CursoMensajeRegis
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Registrar  @IdCurso = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
+		exec := "EXEC dbo.CursoMensaje_Registrar  @IdCurso = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdCurso, model.IdUsuarioEmisor, model.Archivo).Scan(&resultado)
 
@@ -519,7 +519,7 @@ func CursoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.CursoMensajeRemov
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Remover @IdCurso = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
+		exec := "EXEC dbo.CursoMensaje_Remover @IdCurso = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuarioEmisor, model.IdMensaje).Scan(&resultado)
 
@@ -551,7 +551,7 @@ func CursoMensajesObtenerGetAsync(db *gorm.DB, model *models.CursoMensajesObtene
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @UltimoMensaje = ?"
+		exec := "EXEC dbo.CursoMensajes_Obtener  @IdCurso = ?, @UltimoMensaje = ?"
 
 		db.Raw(exec, model.IdCurso, model.UltimoMensaje).Scan(&resultado)
 
@@ -583,7 +583,7 @@ func CursoEstudianteRemoverDeleteAsync(db *gorm.DB, model *models.CursoEstudiant
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Remover @IdCurso = ?, @IdProfesor = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudiante_Remover @IdCurso = ?, @IdProfesor = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor, model.IdUsuario).Scan(&resultado)
 
@@ -615,7 +615,7 @@ func CursoEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteOb
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoEstudiante_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -647,7 +647,7 @@ func CursoProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoProfeso
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoProfesorDetalle_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -679,7 +679,7 @@ func CursoProfesorTareasObtenerGetAsync(db *gorm.DB, model *models.CursoProfesor
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.CursoProfesorTareas_Obtener  @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
 
@@ -711,7 +711,7 @@ func CursoPromedioObtenerGetAsync(db *gorm.DB, model *models.CursoPromedioObtene
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoPromedio_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -807,7 +807,7 @@ func CursoNuevoObtenerGetAsync(db *gorm.DB, model *models.CursoNuevoObtenerInput
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdUsuario = ?,  @NumeroResultdos = ?"
+		exec := "EXEC dbo.CursoNuevo_Obtener  @IdUsuario = ?,  @NumeroResultdos = ?"
 
 		db.Raw(exec, model.IdUsuario, model.NumeroResultados).Scan(&resultado)
 
@@ -839,7 +839,7 @@ func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtene
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdProfesor = ?"
+		exec := "EXEC dbo.CursoProfesor_Obtener  @IdProfesor = ?"
 
 		db.Raw(exec, model.IdProfesor).Scan(&resultado)
 
@@ -871,7 +871,7 @@ func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoTareas
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @IdUsuario"
+		exec := "EXEC dbo.CursoTareasEstudiante_Obtener  @IdCurso = ?, @IdUsuario"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -903,7 +903,7 @@ func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaReg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Registrar  @IdCurso = ?, @IdTematica = ?"
+		exec := "EXEC dbo.CursoTematica_Registrar  @IdCurso = ?, @IdTematica = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdTematica).Scan(&resultado)
 
@@ -935,7 +935,7 @@ func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaRem
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Remover @IdCurso = ?, @IdTematica = ?"
+		exec := "EXEC dbo.CursoTematica_Remover @IdCurso = ?, @IdTematica = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdTematica).Scan(&resultado)
 
@@ -967,7 +967,7 @@ func CursoTematicaObtenerGetAsync(db *gorm.DB, model *models.CursoTematicaObtene
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoTematicas_Obtener @IdCurso = ?, @IdTematica = ?"
+		exec := "EXEC dbo.CursoTematica_Obtener @IdCurso = ?, @IdTematica = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdTematica).Scan(&resultado)
 
@@ -999,7 +999,7 @@ func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteDesempeno_Obtener  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -1031,7 +1031,7 @@ func CursoEstudiantesSinGrupoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoEstudiantesSinGrupo_Obtener  @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -1063,7 +1063,7 @@ func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.Curso
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Actualizar  @IdCurso = ?, IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteFinalizar_Actualizar  @IdCurso = ?, IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -1095,7 +1095,7 @@ func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.Cur
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Actualizar  @IdCurso = ?, IdUsuario = ?, @IdPregunta = ?, @Puntaje"
+		exec := "EXEC dbo.CursoCuestionarioRespuesta_Registrar  @IdCurso = ?, IdUsuario = ?, @IdPregunta = ?, @Puntaje"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario, model.IdPregunta, model.Puntaje).Scan(&resultado)
 

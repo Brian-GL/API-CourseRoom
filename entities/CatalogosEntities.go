@@ -41,3 +41,8 @@ type TiposUsuarioObtenerEntity struct {
 	IdTipoUsuario int    `json:"idTipoUsuario"`
 	TipoUsuario   string `json:"tipoUsuario"`
 }
+
+type TiposArchivoObtenerEntity struct {
+	IdTipoArchivo int    `json:"idTipoUsuario"`
+	TipoArchivo   string `json:"tipoUsuario"`
+}

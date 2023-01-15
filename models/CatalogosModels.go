@@ -32,3 +32,7 @@ type TematicasObtenerInputModel struct {
 type TiposUsuarioObtenerInputModel struct {
 	IdTipoUsuario *int `json:"idTipoUsuario"`
 }
+
+type TiposArchivoObtenerInputModel struct {
+	IdTipoArchivo *int `json:"idTipoArchivo"`
+}
