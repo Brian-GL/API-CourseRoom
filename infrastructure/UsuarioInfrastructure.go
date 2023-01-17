@@ -273,10 +273,12 @@ func UsuarioCredencialObtenerPostAsync(db *gorm.DB, QR_SERVER_API *string, email
 				response = models.ResponseInfrastructure{Status: models.ERROR, Data: err.Error()}
 			} else {
 
-				query := libraries.FormatString(*QR_SERVER_API, decodificacion)
+				password := string(decodificacion)
+				query := libraries.FormatString(*QR_SERVER_API, password)
 
 				dataCredencialesEmail := models.CredencialesEmail{
-					CorreoElectronico: query,
+					CorreoElectronico: *model.CorreoElectronico,
+					QR_URL:            query,
 					Anio:              time.Now().Year()}
 
 				go SendCredencialesEmail(&dataCredencialesEmail, emailConfiguration)
@@ -285,7 +287,7 @@ func UsuarioCredencialObtenerPostAsync(db *gorm.DB, QR_SERVER_API *string, email
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "El correo al que hace referencia no se encuentra registrado"}
 		}
 
 	} else {
