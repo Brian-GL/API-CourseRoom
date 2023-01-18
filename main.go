@@ -181,7 +181,16 @@ func main() {
 
 	// #region preguntasrespuestas Endpoints
 
-	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntasActualizar)
+	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntasRespuestaActualizar)
+	http.HandleFunc("/api/preguntas/registrar", preguntasController.PreguntasRespuestaRegistar)
+	http.HandleFunc("/api/preguntas/remover", preguntasController.PreguntasRespuestaRemover)
+	http.HandleFunc("/api/preguntas/detalle", preguntasController.PreguntasRespuestaDetalleObtener)
+	http.HandleFunc("/api/preguntas/estatus", preguntasController.PreguntasRespuestaEstatusActualizar)
+	http.HandleFunc("/api/preguntas/mensajeregistrar", preguntasController.PreguntasRespuestaMensajeRegistrar)
+	http.HandleFunc("/api/preguntas/mensajeremover", preguntasController.PreguntasRespuestaMensajeRemover)
+	http.HandleFunc("/api/preguntas/mensajeobtener", preguntasController.PreguntasRespuestaMensajesObtener)
+	http.HandleFunc("/api/preguntas/buscar", preguntasController.PreguntasRespuestasBuscar)
+	http.HandleFunc("/api/preguntas/obtener", preguntasController.PreguntasRespuestasObtener)
 
 	// endregion
 
