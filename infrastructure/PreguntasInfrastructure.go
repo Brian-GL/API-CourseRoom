@@ -135,7 +135,7 @@ func PreguntasRespuestaEstatusActualizarPutAsync(db *gorm.DB, model *models.Preg
 
 		exec := "EXEC dbo.PreguntasRespuestaEstatus_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @IdEstatusPregunta = ?"
 
-		db.Raw(exec, model.IdPregunta, model.IdPreguntaRespuesta, model.IdEstatusPregunta).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario, model.IdPreguntaRespuesta, model.IdEstatusPregunta).Scan(&resultado)
 
 		if resultado != nil {
 
