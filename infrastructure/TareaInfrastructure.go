@@ -525,7 +525,7 @@ func TareaCalificarObtenerGetAsync(db *gorm.DB, model *models.TareaCalificarObte
 
 }
 
-func TareaEntregarActualizarAsync(db *gorm.DB, model *models.TareaEntregarActualizarInputModel) models.ResponseInfrastructure {
+func TareaEntregarActualizarPutAsync(db *gorm.DB, model *models.TareaEntregarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 

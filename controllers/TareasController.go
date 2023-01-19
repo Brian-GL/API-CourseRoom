@@ -1549,3 +1549,1393 @@ func (controller *TareasController) TareaCalificarActualizar(res http.ResponseWr
 		}
 	}
 }
+
+func (controller *TareasController) TareaArchivosEntregadosObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaArchivosEntregadosObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaArchivosEntregadosObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaEstudianteObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaEstudianteObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaCreadaProfesorObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaCreadaProfesorObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaCreadaProfesorObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaProfesorDetalleObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaProfesorDetalleObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaProfesorDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaReatroalimentacionesObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaReatroalimentacionesObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaReatroalimentacionesObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaCalificarObtener(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaCalificarObtenerInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaCalificarObtenerGetAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaEntregarActualizar(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "PUT":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaEntregarActualizarInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaEntregarActualizarPutAsync(controller.Middleware, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaArchivoEntregadoRemover(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "DELETE":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaArchivoEntregadoRemoverInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaArchivoEntregadoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaArchivoAdjuntoRemover(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "DELETE":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaArchivoAdjuntoRemoverInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaArchivoAdjuntoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}
+
+func (controller *TareasController) TareaArchivoAdjuntoRegistrar(res http.ResponseWriter, req *http.Request) {
+
+	// Cabecera de respuesta:
+	res.Header().Add("Content-Type", "application/json")
+
+	// Obtener token
+	token := req.Header.Get("Authorization")
+
+	// Validar que el token no se encuentre vacío:
+	if token == "" {
+
+		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+
+		return
+	}
+
+	// Validar que el token sea el correcto:
+
+	if token == controller.Middleware.SECRET_TOKEN {
+
+		switch req.Method {
+
+		case "POST":
+			{
+				//Actualizar grupo:
+				var modelo *models.TareaArchivoAdjuntoRegistrarInputModel
+
+				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
+
+				if err == nil {
+
+					err = controller.Middleware.ValidateModel(modelo)
+
+					if err == nil {
+
+						future := async.Exec(func() interface{} {
+							return infrastructure.TareaArchivoAdjuntoRegistrarPostAsync(controller.Middleware.DB, modelo)
+						})
+
+						response := future.Await().(models.ResponseInfrastructure)
+
+						switch response.Status {
+						case models.SUCCESS:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusOK)
+									res.Write(jsonBytes)
+								}
+							}
+						case models.ALERT:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusConflict)
+									res.Write(jsonBytes)
+								}
+							}
+						default:
+							{
+								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
+								if err != nil {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write([]byte(err.Error()))
+								} else {
+									res.WriteHeader(http.StatusInternalServerError)
+									res.Write(jsonBytes)
+								}
+							}
+						}
+					} else {
+
+						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+						if err != nil {
+							res.WriteHeader(http.StatusInternalServerError)
+							res.Write([]byte(err.Error()))
+						} else {
+							res.WriteHeader(http.StatusBadRequest)
+							res.Write(jsonBytes)
+						}
+					}
+				} else {
+
+					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
+
+					if err != nil {
+						res.WriteHeader(http.StatusInternalServerError)
+						res.Write([]byte(err.Error()))
+					} else {
+						res.WriteHeader(http.StatusConflict)
+						res.Write(jsonBytes)
+					}
+				}
+
+			}
+
+		default:
+			{
+				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
+
+				if err != nil {
+					res.WriteHeader(http.StatusInternalServerError)
+					res.Write([]byte(err.Error()))
+				} else {
+					res.WriteHeader(http.StatusNotImplemented)
+					res.Write(jsonBytes)
+				}
+			}
+		}
+
+	} else {
+
+		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
+
+		if err != nil {
+			res.WriteHeader(http.StatusInternalServerError)
+			res.Write([]byte(err.Error()))
+		} else {
+			res.WriteHeader(http.StatusUnauthorized)
+			res.Write(jsonBytes)
+		}
+	}
+}

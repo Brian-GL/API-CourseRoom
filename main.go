@@ -22,6 +22,7 @@ func main() {
 	tareasController := controllers.NewTareasController(middleware)
 	usuariosController := controllers.NewUsuariosController(middleware)
 	archivoController := controllers.NewArchivoController(middleware)
+	preguntasController := controllers.NewPreguntasController(middleware)
 
 	// #region Avisos Endpoints
 
@@ -181,7 +182,7 @@ func main() {
 
 	// #region preguntasrespuestas Endpoints
 
-	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntasRespuestaActualizar)
+	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntaActualizar)
 	http.HandleFunc("/api/preguntas/registrar", preguntasController.PreguntasRespuestaRegistar)
 	http.HandleFunc("/api/preguntas/remover", preguntasController.PreguntasRespuestaRemover)
 	http.HandleFunc("/api/preguntas/detalle", preguntasController.PreguntasRespuestaDetalleObtener)
