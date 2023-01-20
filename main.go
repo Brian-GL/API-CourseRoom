@@ -46,7 +46,7 @@ func main() {
 	http.HandleFunc("/api/catalogos/preguntascuestionario", catalogoController.PreguntasCuestionario)
 	http.HandleFunc("/api/catalogos/tematicas", catalogoController.Tematicas)
 	http.HandleFunc("/api/catalogos/tiposusuario", catalogoController.TiposUsuario)
-	http.HandleFunc("/api/catalogos/tiposarchivo", catalogoController.TiposArchivo)
+	http.HandleFunc("/api/catalogos/tiposarchivo", catalogoController.TiposArchivoObtener)
 
 	// // #endregion
 
