@@ -2,11 +2,17 @@ package infrastructure
 
 import (
 	"api-courseroom/entities"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
+	"bytes"
+	"crypto/tls"
+	"html/template"
 	"net/rpc"
+	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/k3a/html2text"
+	"gopkg.in/gomail.v2"
 	"gorm.io/gorm"
 )
 
@@ -129,7 +135,7 @@ func TareaRetroalimentacionDetalleObtenerGetAsync(db *gorm.DB, model *models.Tar
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {
@@ -298,11 +304,9 @@ func TareaRetroalimentacionRegistrarPostAsync(db *gorm.DB, model *models.TareaRe
 
 }
 
-func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *models.TareaCalificarActualizarInputModel) models.ResponseInfrastructure {
+func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.EmailConfiguration, COURSEROOM_CALCULATOR *string, model *models.TareaCalificarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
-
-	db := middleware.DB
 
 	if db != nil {
 
@@ -332,12 +336,12 @@ func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *
 						PuntualidadObtenida:  resultado.Puntualidad,
 						Anio:                 time.Now().Year()}
 
-					go middleware.SendCalificacionEmail(&modelEmail)
+					go SendCalificacionEmail(emailConfiguration, &modelEmail)
 				}
 
 				// Send request to rpc courseroom calculator:
 
-				rpc_client, err := rpc.Dial("tcp", middleware.COURSEROOM_CALCULATOR)
+				rpc_client, err := rpc.Dial("tcp", *COURSEROOM_CALCULATOR)
 
 				if err == nil {
 
@@ -367,6 +371,60 @@ func TareaCalificarActualizarPutAsync(middleware *middleware.Middleware, model *
 	}
 
 	return response
+}
+
+func SendCalificacionEmail(emailConfiguration *models.EmailConfiguration, data *models.CalificacionEmail) error {
+
+	smtpPass := emailConfiguration.EMAIL_CREDENTIALS
+	smtpUser := emailConfiguration.EMAIL_ADDRESS
+	smtpHost := emailConfiguration.EMAIL_SERVER
+	smtpPort := emailConfiguration.EMAIL_PORT
+
+	var body bytes.Buffer
+
+	template, err := ParseTemplateDir("app_data")
+	if err != nil {
+		return err
+	}
+
+	template.ExecuteTemplate(&body, "calificacion.html", &data)
+
+	m := gomail.NewMessage()
+
+	m.SetHeader("From", smtpUser)
+	m.SetHeader("To", data.CorreoElectronico)
+	m.SetHeader("Subject", "Nueva tarea calificada")
+	m.SetBody("text/html", body.String())
+	m.AddAlternative("text/plain", html2text.HTML2Text(body.String()))
+
+	d := gomail.NewDialer(smtpHost, smtpPort, smtpUser, smtpPass)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Send Email
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ParseTemplateDir(dir string) (*template.Template, error) {
+	var paths []string
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			paths = append(paths, path)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return template.ParseFiles(paths...)
 }
 
 func TareaArchivosEntregadosObtenerGetAsync(db *gorm.DB, model *models.TareaArchivosEntregadosObtenerInputModel) models.ResponseInfrastructure {

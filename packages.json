@@ -1,0 +1,16 @@
+{
+    "name": "api-courseroom",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/Brian-GL/API-CourseRoom",
+    "author": "CourseRoom Development",
+    "license": "MIT",
+    "dependencies": {
+      "vercel": "^28.4.12"
+    },
+    "scripts": {
+      "setup": "yarn vercel login && yarn vercel link",
+      "start": "yarn vercel dev",
+      "dev": "yarn start"
+    }
+  }

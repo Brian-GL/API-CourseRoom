@@ -109,7 +109,7 @@ func GruposMensajesObtenerGetAsync(db *gorm.DB, model *models.GruposMensajesObte
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -134,7 +134,7 @@ func GruposObtenerGetAsync(db *gorm.DB, model *models.GruposObtenerInputModel) m
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -159,7 +159,7 @@ func GrupoMiembrosObtenerGetAsync(db *gorm.DB, model *models.GrupoMiembrosObtene
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -177,14 +177,14 @@ func GrupoTareasPendientesObtenerGetAsync(db *gorm.DB, model *models.GrupoInputM
 
 		var resultado []entities.GrupoTareasPendientesObtenerEntity
 
-		exec := "EXEC dbo.GrupoMiembros_Obtener @IdGrupo = ?"
+		exec := "EXEC dbo.GrupoTareasPendientes_Obtener @IdGrupo = ?"
 
 		db.Raw(exec, model.IdGrupo).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -200,16 +200,16 @@ func GrupoTareaPendienteDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoT
 
 	if db != nil {
 
-		var resultado []entities.GrupoTareaPendienteDetalleObtenerEntity
+		var resultado *entities.GrupoTareaPendienteDetalleObtenerEntity
 
 		exec := "EXEC dbo.GrupoTareaPendienteDetalle_Obtener @IdTareaPendiente = ?"
 
 		db.Raw(exec, model.IdTareaPendiente).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -504,16 +504,16 @@ func GrupoDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoDetalleObtenerI
 
 	if db != nil {
 
-		var resultado []entities.GrupoTareaPendienteDetalleObtenerEntity
+		var resultado *entities.GrupoTareaPendienteDetalleObtenerEntity
 
 		exec := "EXEC dbo.GrupoDetalle_Obtener @IdGrupo = ?"
 
 		db.Raw(exec, model.IdGrupo).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {

@@ -3,12 +3,17 @@ package infrastructure
 import (
 	"api-courseroom/entities"
 	"api-courseroom/libraries"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
+	"bytes"
+	"crypto/tls"
 	"encoding/base64"
+	"net/http"
 	"strings"
 	"time"
 
+	jsoniter "github.com/json-iterator/go"
+	"github.com/k3a/html2text"
+	"gopkg.in/gomail.v2"
 	"gorm.io/gorm"
 )
 
@@ -44,16 +49,14 @@ func UsuarioActualizarPutAsync(db *gorm.DB, model *models.UsuarioActualizarInput
 
 }
 
-func UsuarioRegistrarPostAsync(middleware *middleware.Middleware, model *models.UsuarioRegistrarInputModel) models.ResponseInfrastructure {
+func UsuarioRegistrarPostAsync(db *gorm.DB, EMAIL_VERIFICATOR_API *string, emailConfiguration *models.EmailConfiguration, model *models.UsuarioRegistrarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	// validar existencia email:
-	responseAPI := middleware.EmailVerificatorAPI(model.CorreoElectronico)
+	responseAPI := EmailVerificatorAPI(EMAIL_VERIFICATOR_API, model.CorreoElectronico)
 
 	if responseAPI.Codigo > 0 {
-
-		db := middleware.DB
 
 		if db != nil {
 
@@ -74,7 +77,7 @@ func UsuarioRegistrarPostAsync(middleware *middleware.Middleware, model *models.
 						Nombre:            *model.Nombre,
 						Anio:              time.Now().Year()}
 
-					go middleware.SendBienvenidaEmail(&dataBienvenidaEmail)
+					go SendBienvenidaEmail(&dataBienvenidaEmail, emailConfiguration)
 
 				} else {
 					response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
@@ -93,6 +96,104 @@ func UsuarioRegistrarPostAsync(middleware *middleware.Middleware, model *models.
 
 	return response
 
+}
+
+func EmailVerificatorAPI(EMAIL_VERIFICATOR_API *string, email *string) entities.AccionEntity {
+
+	var response entities.AccionEntity
+
+	jsonIter := jsoniter.ConfigCompatibleWithStandardLibrary
+
+	query := libraries.FormatString(*EMAIL_VERIFICATOR_API, *email)
+
+	resp, err := http.Get(query)
+
+	if err != nil {
+		response = entities.AccionEntity{
+			Codigo:  -1,
+			Mensaje: err.Error()}
+	} else {
+
+		if resp.StatusCode == 200 {
+
+			var modelo *models.EmailVerificatorAPISuccess
+
+			err := jsonIter.NewDecoder(resp.Body).Decode(&modelo)
+
+			if err != nil {
+				response = entities.AccionEntity{
+					Codigo:  -1,
+					Mensaje: err.Error()}
+			} else {
+
+				success := modelo.Status
+
+				if success {
+					response = entities.AccionEntity{
+						Codigo:  1,
+						Mensaje: "Ok"}
+				} else {
+					response = entities.AccionEntity{
+						Codigo:  -1,
+						Mensaje: "El correo electrónico al que se hace referencia no existe"}
+				}
+
+			}
+
+		} else {
+
+			var modelo *models.EmailVerificatorAPIError
+
+			err := jsonIter.NewDecoder(resp.Body).Decode(&modelo)
+
+			if err != nil {
+				response = entities.AccionEntity{
+					Codigo:  -1,
+					Mensaje: err.Error()}
+			} else {
+				response = entities.AccionEntity{
+					Codigo:  -1,
+					Mensaje: modelo.Error.Message}
+			}
+		}
+	}
+
+	return response
+}
+
+func SendBienvenidaEmail(data *models.BienvenidaEmail, emailConfiguration *models.EmailConfiguration) error {
+
+	smtpPass := emailConfiguration.EMAIL_CREDENTIALS
+	smtpUser := emailConfiguration.EMAIL_ADDRESS
+	smtpHost := emailConfiguration.EMAIL_SERVER
+	smtpPort := emailConfiguration.EMAIL_PORT
+
+	var body bytes.Buffer
+
+	template, err := ParseTemplateDir("app_data")
+	if err != nil {
+		return err
+	}
+
+	template.ExecuteTemplate(&body, "bienvenida.html", &data)
+
+	m := gomail.NewMessage()
+
+	m.SetHeader("From", smtpUser)
+	m.SetHeader("To", data.CorreoElectronico)
+	m.SetHeader("Subject", "Bienvenid@ a la comunidad de CourseRoom®")
+	m.SetBody("text/html", body.String())
+	m.AddAlternative("text/plain", html2text.HTML2Text(body.String()))
+
+	d := gomail.NewDialer(smtpHost, smtpPort, smtpUser, smtpPass)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Send Email
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func UsuarioRemoverDeleteAsync(db *gorm.DB, model *models.UsuarioRemoverInputModel) models.ResponseInfrastructure {
@@ -142,7 +243,7 @@ func UsuarioAccesoObtenerGetAsync(db *gorm.DB, model *models.UsuarioAccesoObtene
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -153,11 +254,9 @@ func UsuarioAccesoObtenerGetAsync(db *gorm.DB, model *models.UsuarioAccesoObtene
 
 }
 
-func UsuarioCredencialObtenerPostAsync(middleware *middleware.Middleware, model *models.UsuarioCredencialObtenerInputModel) models.ResponseInfrastructure {
+func UsuarioCredencialObtenerPostAsync(db *gorm.DB, QR_SERVER_API *string, emailConfiguration *models.EmailConfiguration, model *models.UsuarioCredencialObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
-
-	db := middleware.DB
 
 	if db != nil {
 
@@ -174,20 +273,21 @@ func UsuarioCredencialObtenerPostAsync(middleware *middleware.Middleware, model 
 				response = models.ResponseInfrastructure{Status: models.ERROR, Data: err.Error()}
 			} else {
 
-				query := libraries.FormatString(middleware.QR_SERVER_API, decodificacion)
+				password := string(decodificacion)
+				query := libraries.FormatString(*QR_SERVER_API, password)
 
 				dataCredencialesEmail := models.CredencialesEmail{
-					CorreoElectronico: query,
+					CorreoElectronico: *model.CorreoElectronico,
+					QR_URL:            query,
 					Anio:              time.Now().Year()}
 
-				go middleware.SendCredencialesEmail(&dataCredencialesEmail)
+				go SendCredencialesEmail(&dataCredencialesEmail, emailConfiguration)
 
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: "Se ha enviado el correo electrónico de recuperación de credenciales"}
-
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "El correo al que hace referencia no se encuentra registrado"}
 		}
 
 	} else {
@@ -198,16 +298,49 @@ func UsuarioCredencialObtenerPostAsync(middleware *middleware.Middleware, model 
 
 }
 
-func UsuarioCuentaActualizarPutAsync(middleware *middleware.Middleware, model *models.UsuarioCuentaActualizarInputModel) models.ResponseInfrastructure {
+func SendCredencialesEmail(data *models.CredencialesEmail, emailConfiguration *models.EmailConfiguration) error {
+
+	smtpPass := emailConfiguration.EMAIL_CREDENTIALS
+	smtpUser := emailConfiguration.EMAIL_ADDRESS
+	smtpHost := emailConfiguration.EMAIL_SERVER
+	smtpPort := emailConfiguration.EMAIL_PORT
+
+	var body bytes.Buffer
+
+	template, err := ParseTemplateDir("app_data")
+	if err != nil {
+		return err
+	}
+
+	template.ExecuteTemplate(&body, "credenciales.html", &data)
+
+	m := gomail.NewMessage()
+
+	m.SetHeader("From", smtpUser)
+	m.SetHeader("To", data.CorreoElectronico)
+	m.SetHeader("Subject", "Recuperación de credenciales")
+	m.SetBody("text/html", body.String())
+	m.AddAlternative("text/plain", html2text.HTML2Text(body.String()))
+
+	d := gomail.NewDialer(smtpHost, smtpPort, smtpUser, smtpPass)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Send Email
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UsuarioCuentaActualizarPutAsync(db *gorm.DB, EMAIL_VERIFICATOR_API *string, model *models.UsuarioCuentaActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	// validar existencia email:
-	responseAPI := middleware.EmailVerificatorAPI(model.CorreoElectronico)
+	responseAPI := EmailVerificatorAPI(EMAIL_VERIFICATOR_API, model.CorreoElectronico)
 
 	if responseAPI.Codigo > 0 {
-
-		db := middleware.DB
 
 		if db != nil {
 
@@ -255,7 +388,7 @@ func UsuarioCuentaObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel) 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -272,16 +405,16 @@ func UsuarioDesempenoObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputMode
 
 	if db != nil {
 
-		var resultado *entities.UsuarioDesempenoObtenerEntity
+		var resultado []entities.UsuarioDesempenoObtenerEntity
 
 		exec := "EXEC dbo.UsuarioDesempeno_Obtener @IdUsuario = ?"
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -339,7 +472,7 @@ func UsuarioDetalleObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel)
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
 
 	} else {
@@ -365,7 +498,7 @@ func UsuarioNuevaPuntualidadCursoObtenerGetAsync(db *gorm.DB, model *models.Usua
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -384,14 +517,14 @@ func UsuarioNuevaPuntualidadGeneralObtenerGetAsync(db *gorm.DB, model *models.Us
 
 		var resultado *entities.UsuarioPuntualidadEntity
 
-		exec := "EXEC dbo.UsuarioNuevaPuntualidadCurso_Obtener @IdUsuario = ?, @Puntualidad = ?"
+		exec := "EXEC dbo.UsuarioNuevaPuntualidadGeneral_Obtener @IdUsuario = ?, @Puntualidad = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Puntualidad).Scan(&resultado)
 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -417,7 +550,7 @@ func UsuarioNuevoPromedioCursoObtenerGetAsync(db *gorm.DB, model *models.Usuario
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -443,7 +576,7 @@ func UsuarioNuevoPromedioGeneralObtenerGetAsync(db *gorm.DB, model *models.Usuar
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -575,16 +708,16 @@ func UsuarioSesionesObtenerGetAsync(db *gorm.DB, model *models.UsuarioSesionesOb
 
 	if db != nil {
 
-		var resultado *entities.UsuarioSesionesObtenerEntity
+		var resultado []entities.UsuarioSesionesObtenerEntity
 
 		exec := "EXEC dbo.UsuarioSesiones_Obtener @IdUsuario = ?, @Activa = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Activa).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -648,6 +781,37 @@ func UsuarioTematicaRemoverDeleteAsync(db *gorm.DB, model *models.UsuarioTematic
 
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicasObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.UsuarioTematicasObtenerEntity
+
+		exec := "EXEC dbo.UsuarioTematicas_Obtener @IdUsuario = ?"
+
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if len(resultado) > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {

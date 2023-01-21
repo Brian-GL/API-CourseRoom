@@ -17,7 +17,7 @@ type UsuarioRegistrarInputModel struct {
 	Nombre            *string    `json:"nombre" validate:"required"`
 	Paterno           *string    `json:"paterno" validate:"required"`
 	Materno           *string    `json:"materno"`
-	FechaNacimiento   *time.Time `json:"fechaNacimiento"`
+	FechaNacimiento   *time.Time `json:"fechaNacimiento" validate:"required"`
 	Genero            *string    `json:"genero"`
 	Descripcion       *string    `json:"descripcion"`
 	IdLocalidad       *int       `json:"idLocalidad" validate:"required"`

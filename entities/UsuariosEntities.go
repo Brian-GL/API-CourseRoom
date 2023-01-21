@@ -73,7 +73,7 @@ type UsuarioSesionValidarEntity struct {
 }
 
 type UsuarioSesionesObtenerEntity struct {
-	IdSesion           int        `json:"idUsuario"`
+	IdSesion           int        `json:"idSesion"`
 	Dispositivo        *string    `json:"dispositivo"`
 	Fabricante         *string    `json:"fabricante"`
 	DireccionIP        *string    `json:"direccionIP"`

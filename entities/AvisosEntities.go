@@ -20,5 +20,8 @@ type AvisoDetalleObtenerEntity struct {
 }
 
 type AvisosValidarEntity struct {
-	Validacion bool `json:"validacion"`
+	IdAviso       int       `json:"idAviso"`
+	TipoAviso     string    `json:"tipoAviso"`
+	Aviso         string    `json:"aviso"`
+	FechaRegistro time.Time `json:"fechaRegistro"`
 }

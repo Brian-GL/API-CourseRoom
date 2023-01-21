@@ -3,25 +3,52 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
-type CursosController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+type CursoController struct {
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewCursosController(middleware *middleware.Middleware) CursosController {
-	return CursosController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+func NewCursoController() CursoController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
+	return CursoController{
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
 }
 
-func (controller *CursosController) CursoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
+}
+
+func (controller *CursoController) CursoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -47,7 +74,7 @@ func (controller *CursosController) CursoRemover(res http.ResponseWriter, req *h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -57,15 +84,15 @@ func (controller *CursosController) CursoRemover(res http.ResponseWriter, req *h
 				var modelo *models.CursoRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -160,7 +187,7 @@ func (controller *CursosController) CursoRemover(res http.ResponseWriter, req *h
 	}
 }
 
-func (controller *CursosController) CursoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -186,7 +213,7 @@ func (controller *CursosController) CursoRegistrar(res http.ResponseWriter, req 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -196,15 +223,15 @@ func (controller *CursosController) CursoRegistrar(res http.ResponseWriter, req 
 				var modelo *models.CursoRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -299,7 +326,7 @@ func (controller *CursosController) CursoRegistrar(res http.ResponseWriter, req 
 	}
 }
 
-func (controller *CursosController) CursoGruposObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoGruposObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -325,25 +352,25 @@ func (controller *CursosController) CursoGruposObtener(res http.ResponseWriter, 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoGruposObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoGruposObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoGruposObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -438,7 +465,7 @@ func (controller *CursosController) CursoGruposObtener(res http.ResponseWriter, 
 	}
 }
 
-func (controller *CursosController) CursoActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -464,7 +491,7 @@ func (controller *CursosController) CursoActualizar(res http.ResponseWriter, req
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -474,15 +501,15 @@ func (controller *CursosController) CursoActualizar(res http.ResponseWriter, req
 				var modelo *models.CursoActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -577,7 +604,7 @@ func (controller *CursosController) CursoActualizar(res http.ResponseWriter, req
 	}
 }
 
-func (controller *CursosController) CursoAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -603,7 +630,7 @@ func (controller *CursosController) CursoAbandonarActualizar(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -613,15 +640,15 @@ func (controller *CursosController) CursoAbandonarActualizar(res http.ResponseWr
 				var modelo *models.CursoAbandonarActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoAbandonarActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoAbandonarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -716,7 +743,7 @@ func (controller *CursosController) CursoAbandonarActualizar(res http.ResponseWr
 	}
 }
 
-func (controller *CursosController) CursoCuestionarioContestar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoCuestionarioContestar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -742,7 +769,7 @@ func (controller *CursosController) CursoCuestionarioContestar(res http.Response
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -752,15 +779,15 @@ func (controller *CursosController) CursoCuestionarioContestar(res http.Response
 				var modelo *models.CursoCuestionarioContestarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoCuestionarioContestarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoCuestionarioContestarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -855,7 +882,7 @@ func (controller *CursosController) CursoCuestionarioContestar(res http.Response
 	}
 }
 
-func (controller *CursosController) CursoCuestionarioAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoCuestionarioAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -881,7 +908,7 @@ func (controller *CursosController) CursoCuestionarioAbandonarActualizar(res htt
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -891,15 +918,15 @@ func (controller *CursosController) CursoCuestionarioAbandonarActualizar(res htt
 				var modelo *models.CursoCuestionarioAbandonarActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoCuestionarioAbandonarActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoCuestionarioAbandonarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -994,7 +1021,7 @@ func (controller *CursosController) CursoCuestionarioAbandonarActualizar(res htt
 	}
 }
 
-func (controller *CursosController) CursoDesempenoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoDesempenoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1020,25 +1047,25 @@ func (controller *CursosController) CursoDesempenoObtener(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoDesempenoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoDesempenoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoDesempenoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1133,7 +1160,7 @@ func (controller *CursosController) CursoDesempenoObtener(res http.ResponseWrite
 	}
 }
 
-func (controller *CursosController) CursoEstudianteRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1159,7 +1186,7 @@ func (controller *CursosController) CursoEstudianteRegistrar(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1169,15 +1196,15 @@ func (controller *CursosController) CursoEstudianteRegistrar(res http.ResponseWr
 				var modelo *models.CursoEstudianteRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1272,7 +1299,7 @@ func (controller *CursosController) CursoEstudianteRegistrar(res http.ResponseWr
 	}
 }
 
-func (controller *CursosController) CursoEstudianteDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1298,25 +1325,25 @@ func (controller *CursosController) CursoEstudianteDetalleObtener(res http.Respo
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteDetalleObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1411,7 +1438,7 @@ func (controller *CursosController) CursoEstudianteDetalleObtener(res http.Respo
 	}
 }
 
-func (controller *CursosController) CursoFinalizarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoFinalizarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1437,7 +1464,7 @@ func (controller *CursosController) CursoFinalizarActualizar(res http.ResponseWr
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1447,15 +1474,15 @@ func (controller *CursosController) CursoFinalizarActualizar(res http.ResponseWr
 				var modelo *models.CursoFinalizarActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoFinalizarActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoFinalizarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1550,7 +1577,7 @@ func (controller *CursosController) CursoFinalizarActualizar(res http.ResponseWr
 	}
 }
 
-func (controller *CursosController) CursoMaterialRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMaterialRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1576,7 +1603,7 @@ func (controller *CursosController) CursoMaterialRegistrar(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1586,15 +1613,15 @@ func (controller *CursosController) CursoMaterialRegistrar(res http.ResponseWrit
 				var modelo *models.CursoMaterialRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMaterialRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMaterialRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1689,7 +1716,7 @@ func (controller *CursosController) CursoMaterialRegistrar(res http.ResponseWrit
 	}
 }
 
-func (controller *CursosController) CursoMaterialRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMaterialRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1715,7 +1742,7 @@ func (controller *CursosController) CursoMaterialRemover(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1725,15 +1752,15 @@ func (controller *CursosController) CursoMaterialRemover(res http.ResponseWriter
 				var modelo *models.CursoMaterialRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMaterialRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMaterialRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1828,7 +1855,7 @@ func (controller *CursosController) CursoMaterialRemover(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoMaterialesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMaterialesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1854,25 +1881,25 @@ func (controller *CursosController) CursoMaterialesObtener(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoMaterialesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMaterialesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMaterialesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1967,7 +1994,7 @@ func (controller *CursosController) CursoMaterialesObtener(res http.ResponseWrit
 	}
 }
 
-func (controller *CursosController) CursoMensajeRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMensajeRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1993,7 +2020,7 @@ func (controller *CursosController) CursoMensajeRegistrar(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2003,15 +2030,15 @@ func (controller *CursosController) CursoMensajeRegistrar(res http.ResponseWrite
 				var modelo *models.CursoMensajeRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMensajeRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMensajeRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2106,7 +2133,7 @@ func (controller *CursosController) CursoMensajeRegistrar(res http.ResponseWrite
 	}
 }
 
-func (controller *CursosController) CursoMensajeRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMensajeRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2132,7 +2159,7 @@ func (controller *CursosController) CursoMensajeRemover(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2142,15 +2169,15 @@ func (controller *CursosController) CursoMensajeRemover(res http.ResponseWriter,
 				var modelo *models.CursoMensajeRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMensajeRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMensajeRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2245,7 +2272,7 @@ func (controller *CursosController) CursoMensajeRemover(res http.ResponseWriter,
 	}
 }
 
-func (controller *CursosController) CursoMensajesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoMensajesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2271,25 +2298,25 @@ func (controller *CursosController) CursoMensajesObtener(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoMensajesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoMensajesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoMensajesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2384,7 +2411,7 @@ func (controller *CursosController) CursoMensajesObtener(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoEstudianteRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2410,7 +2437,7 @@ func (controller *CursosController) CursoEstudianteRemover(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2420,15 +2447,15 @@ func (controller *CursosController) CursoEstudianteRemover(res http.ResponseWrit
 				var modelo *models.CursoEstudianteRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2523,7 +2550,7 @@ func (controller *CursosController) CursoEstudianteRemover(res http.ResponseWrit
 	}
 }
 
-func (controller *CursosController) CursoEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2549,25 +2576,25 @@ func (controller *CursosController) CursoEstudianteObtener(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2662,7 +2689,7 @@ func (controller *CursosController) CursoEstudianteObtener(res http.ResponseWrit
 	}
 }
 
-func (controller *CursosController) CursoProfesorDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoProfesorDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2688,25 +2715,25 @@ func (controller *CursosController) CursoProfesorDetalleObtener(res http.Respons
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorDetalleObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoProfesorDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoProfesorDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2801,7 +2828,7 @@ func (controller *CursosController) CursoProfesorDetalleObtener(res http.Respons
 	}
 }
 
-func (controller *CursosController) CursoProfesorTareasObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoProfesorTareasObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2827,25 +2854,25 @@ func (controller *CursosController) CursoProfesorTareasObtener(res http.Response
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorTareasObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoProfesorTareasObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoProfesorTareasObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2940,7 +2967,7 @@ func (controller *CursosController) CursoProfesorTareasObtener(res http.Response
 	}
 }
 
-func (controller *CursosController) CursoPromedioObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoPromedioObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2966,25 +2993,25 @@ func (controller *CursosController) CursoPromedioObtener(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoPromedioObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoPromedioObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoPromedioObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3079,7 +3106,7 @@ func (controller *CursosController) CursoPromedioObtener(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoBuscarObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoBuscarObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3105,25 +3132,25 @@ func (controller *CursosController) CursoBuscarObtener(res http.ResponseWriter, 
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoBuscarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoBuscarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoBuscarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3218,7 +3245,7 @@ func (controller *CursosController) CursoBuscarObtener(res http.ResponseWriter, 
 	}
 }
 
-func (controller *CursosController) CursoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3244,25 +3271,25 @@ func (controller *CursosController) CursoObtener(res http.ResponseWriter, req *h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3357,7 +3384,7 @@ func (controller *CursosController) CursoObtener(res http.ResponseWriter, req *h
 	}
 }
 
-func (controller *CursosController) CursoNuevoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoNuevoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3383,25 +3410,25 @@ func (controller *CursosController) CursoNuevoObtener(res http.ResponseWriter, r
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoNuevoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoNuevoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoNuevoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3496,7 +3523,7 @@ func (controller *CursosController) CursoNuevoObtener(res http.ResponseWriter, r
 	}
 }
 
-func (controller *CursosController) CursoProfesorObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoProfesorObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3522,25 +3549,25 @@ func (controller *CursosController) CursoProfesorObtener(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoProfesorObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoProfesorObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoProfesorObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3635,7 +3662,7 @@ func (controller *CursosController) CursoProfesorObtener(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoTareasEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoTareasEstudianteObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3661,25 +3688,25 @@ func (controller *CursosController) CursoTareasEstudianteObtener(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoTareasEstudianteObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoTareasEstudianteObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoTareasEstudianteObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3774,7 +3801,7 @@ func (controller *CursosController) CursoTareasEstudianteObtener(res http.Respon
 	}
 }
 
-func (controller *CursosController) CursoTematicaRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoTematicaRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3800,7 +3827,7 @@ func (controller *CursosController) CursoTematicaRegistrar(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -3810,15 +3837,15 @@ func (controller *CursosController) CursoTematicaRegistrar(res http.ResponseWrit
 				var modelo *models.CursoTematicaRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoTematicaRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoTematicaRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3913,7 +3940,7 @@ func (controller *CursosController) CursoTematicaRegistrar(res http.ResponseWrit
 	}
 }
 
-func (controller *CursosController) CursoTematicaRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoTematicaRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3939,7 +3966,7 @@ func (controller *CursosController) CursoTematicaRemover(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -3949,15 +3976,15 @@ func (controller *CursosController) CursoTematicaRemover(res http.ResponseWriter
 				var modelo *models.CursoTematicaRemoverInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoTematicaRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoTematicaRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4052,7 +4079,7 @@ func (controller *CursosController) CursoTematicaRemover(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoTematicaObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoTematicaObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4078,25 +4105,25 @@ func (controller *CursosController) CursoTematicaObtener(res http.ResponseWriter
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoTematicaObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoTematicaObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoTematicaObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4191,7 +4218,7 @@ func (controller *CursosController) CursoTematicaObtener(res http.ResponseWriter
 	}
 }
 
-func (controller *CursosController) CursoEstudianteDesempenoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteDesempenoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4217,25 +4244,25 @@ func (controller *CursosController) CursoEstudianteDesempenoObtener(res http.Res
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudianteDesempenoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteDesempenoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteDesempenoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4330,7 +4357,7 @@ func (controller *CursosController) CursoEstudianteDesempenoObtener(res http.Res
 	}
 }
 
-func (controller *CursosController) CursoEstudiantesSinGrupoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudiantesSinGrupoObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4356,25 +4383,25 @@ func (controller *CursosController) CursoEstudiantesSinGrupoObtener(res http.Res
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Actualizar grupo:
 				var modelo *models.CursoEstudiantesSinGrupoObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudiantesSinGrupoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudiantesSinGrupoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4469,7 +4496,7 @@ func (controller *CursosController) CursoEstudiantesSinGrupoObtener(res http.Res
 	}
 }
 
-func (controller *CursosController) CursoEstudianteFinalizarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudianteFinalizarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4495,7 +4522,7 @@ func (controller *CursosController) CursoEstudianteFinalizarActualizar(res http.
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -4505,15 +4532,15 @@ func (controller *CursosController) CursoEstudianteFinalizarActualizar(res http.
 				var modelo *models.CursoEstudianteFinalizarActualizarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteFinalizarActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoEstudianteFinalizarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4608,7 +4635,7 @@ func (controller *CursosController) CursoEstudianteFinalizarActualizar(res http.
 	}
 }
 
-func (controller *CursosController) CursoCuestionarioRespuestaRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoCuestionarioRespuestaRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4634,7 +4661,7 @@ func (controller *CursosController) CursoCuestionarioRespuestaRegistrar(res http
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -4644,15 +4671,15 @@ func (controller *CursosController) CursoCuestionarioRespuestaRegistrar(res http
 				var modelo *models.CursoCuestionarioRespuestaRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-
+				defer req.Body.Close()
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoCuestionarioRespuestaRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.CursoCuestionarioRespuestaRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

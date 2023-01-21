@@ -120,7 +120,7 @@ type TareaReatroalimentacionesObtenerEntity struct {
 }
 
 type TareaCalificarObtenerEntity struct {
-	IdProfesor       int       `json:"idProfesor`
+	IdProfesor       int       `json:"idProfesor"`
 	IdTarea          int       `json:"idTarea"`
 	Nombre           string    `json:"nombre"`
 	IdCurso          int       `json:"idCurso"`
