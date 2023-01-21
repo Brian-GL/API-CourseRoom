@@ -3,22 +3,49 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
 type ArchivosController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewArchivoController(middleware *middleware.Middleware) ArchivosController {
+func NewArchivosController() ArchivosController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
 	return ArchivosController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
+}
+
+func (controller *ArchivosController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
 }
 
 func (controller *ArchivosController) ArchivoActualizar(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +74,7 @@ func (controller *ArchivosController) ArchivoActualizar(res http.ResponseWriter,
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -60,12 +87,12 @@ func (controller *ArchivosController) ArchivoActualizar(res http.ResponseWriter,
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.ArchivoActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.ArchivoActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

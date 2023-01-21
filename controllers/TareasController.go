@@ -23,7 +23,7 @@ type TareaController struct {
 	JsonIter              jsoniter.API
 }
 
-func NewTareaController() TareaController {
+func NewTareasController() TareaController {
 
 	//godotenv.Load(".env")
 
@@ -1594,7 +1594,7 @@ func (controller *TareaController) TareaCalificarActualizar(res http.ResponseWri
 	}
 }
 
-func (controller *TareasController) TareaArchivosEntregadosObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaArchivosEntregadosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1620,7 +1620,7 @@ func (controller *TareasController) TareaArchivosEntregadosObtener(res http.Resp
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1633,12 +1633,12 @@ func (controller *TareasController) TareaArchivosEntregadosObtener(res http.Resp
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaArchivosEntregadosObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaArchivosEntregadosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1733,7 +1733,7 @@ func (controller *TareasController) TareaArchivosEntregadosObtener(res http.Resp
 	}
 }
 
-func (controller *TareasController) TareaEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaEstudianteObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1759,7 +1759,7 @@ func (controller *TareasController) TareaEstudianteObtener(res http.ResponseWrit
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1772,12 +1772,12 @@ func (controller *TareasController) TareaEstudianteObtener(res http.ResponseWrit
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaEstudianteObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaEstudianteObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1872,7 +1872,7 @@ func (controller *TareasController) TareaEstudianteObtener(res http.ResponseWrit
 	}
 }
 
-func (controller *TareasController) TareaCreadaProfesorObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaCreadaProfesorObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1898,7 +1898,7 @@ func (controller *TareasController) TareaCreadaProfesorObtener(res http.Response
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1911,12 +1911,12 @@ func (controller *TareasController) TareaCreadaProfesorObtener(res http.Response
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaCreadaProfesorObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaCreadaProfesorObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2011,7 +2011,7 @@ func (controller *TareasController) TareaCreadaProfesorObtener(res http.Response
 	}
 }
 
-func (controller *TareasController) TareaProfesorDetalleObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaProfesorDetalleObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2037,7 +2037,7 @@ func (controller *TareasController) TareaProfesorDetalleObtener(res http.Respons
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2050,12 +2050,12 @@ func (controller *TareasController) TareaProfesorDetalleObtener(res http.Respons
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaProfesorDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaProfesorDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2150,7 +2150,7 @@ func (controller *TareasController) TareaProfesorDetalleObtener(res http.Respons
 	}
 }
 
-func (controller *TareasController) TareaReatroalimentacionesObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaReatroalimentacionesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2176,7 +2176,7 @@ func (controller *TareasController) TareaReatroalimentacionesObtener(res http.Re
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2189,12 +2189,12 @@ func (controller *TareasController) TareaReatroalimentacionesObtener(res http.Re
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaReatroalimentacionesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaReatroalimentacionesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2289,7 +2289,7 @@ func (controller *TareasController) TareaReatroalimentacionesObtener(res http.Re
 	}
 }
 
-func (controller *TareasController) TareaCalificarObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaCalificarObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2315,7 +2315,7 @@ func (controller *TareasController) TareaCalificarObtener(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2328,12 +2328,12 @@ func (controller *TareasController) TareaCalificarObtener(res http.ResponseWrite
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaCalificarObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaCalificarObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2428,7 +2428,7 @@ func (controller *TareasController) TareaCalificarObtener(res http.ResponseWrite
 	}
 }
 
-func (controller *TareasController) TareaEntregarActualizar(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaEntregarActualizar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2454,7 +2454,7 @@ func (controller *TareasController) TareaEntregarActualizar(res http.ResponseWri
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2467,12 +2467,12 @@ func (controller *TareasController) TareaEntregarActualizar(res http.ResponseWri
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaEntregarActualizarPutAsync(controller.Middleware, modelo)
+							return infrastructure.TareaEntregarActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2567,7 +2567,7 @@ func (controller *TareasController) TareaEntregarActualizar(res http.ResponseWri
 	}
 }
 
-func (controller *TareasController) TareaArchivoEntregadoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaArchivoEntregadoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2593,7 +2593,7 @@ func (controller *TareasController) TareaArchivoEntregadoRemover(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2606,12 +2606,12 @@ func (controller *TareasController) TareaArchivoEntregadoRemover(res http.Respon
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaArchivoEntregadoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaArchivoEntregadoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2706,7 +2706,7 @@ func (controller *TareasController) TareaArchivoEntregadoRemover(res http.Respon
 	}
 }
 
-func (controller *TareasController) TareaArchivoAdjuntoRemover(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaArchivoAdjuntoRemover(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2732,7 +2732,7 @@ func (controller *TareasController) TareaArchivoAdjuntoRemover(res http.Response
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2745,12 +2745,12 @@ func (controller *TareasController) TareaArchivoAdjuntoRemover(res http.Response
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaArchivoAdjuntoRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaArchivoAdjuntoRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2845,7 +2845,7 @@ func (controller *TareasController) TareaArchivoAdjuntoRemover(res http.Response
 	}
 }
 
-func (controller *TareasController) TareaArchivoAdjuntoRegistrar(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareaArchivoAdjuntoRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2871,7 +2871,7 @@ func (controller *TareasController) TareaArchivoAdjuntoRegistrar(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -2884,12 +2884,12 @@ func (controller *TareasController) TareaArchivoAdjuntoRegistrar(res http.Respon
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaArchivoAdjuntoRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TareaArchivoAdjuntoRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

@@ -24,7 +24,7 @@ type UsuarioController struct {
 	JsonIter              jsoniter.API
 }
 
-func NewUsuarioController() UsuarioController {
+func NewUsuariosController() UsuarioController {
 
 	//godotenv.Load(".env")
 

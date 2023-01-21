@@ -3,22 +3,49 @@ package controllers
 import (
 	"api-courseroom/async"
 	"api-courseroom/infrastructure"
-	"api-courseroom/middleware"
 	"api-courseroom/models"
 	"net/http"
+	"os"
 
+	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 )
 
 type PreguntasController struct {
-	Middleware *middleware.Middleware
-	JsonIter   jsoniter.API
+	DB           *gorm.DB
+	Validator    *validator.Validate
+	SECRET_TOKEN string
+	JsonIter     jsoniter.API
 }
 
-func NewPreguntasController(middleware *middleware.Middleware) PreguntasController {
+func NewPreguntasController() PreguntasController {
+
+	//godotenv.Load(".env")
+
+	server := os.Getenv("SERVER")
+	user := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	databaseName := os.Getenv("DATABASE")
+	secretToken := os.Getenv("SECRET_TOKEN")
+
+	dsn := "sqlserver://" + user + ":" + password + "@" + server + "?database=" + databaseName
+
+	db, _ := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
+
 	return PreguntasController{
-		Middleware: middleware,
-		JsonIter:   jsoniter.ConfigCompatibleWithStandardLibrary}
+		SECRET_TOKEN: secretToken,
+		DB:           db,
+		Validator:    validator.New(),
+		JsonIter:     jsoniter.ConfigCompatibleWithStandardLibrary}
+}
+
+func (controller *PreguntasController) ValidateModel(data interface{}) error {
+	return controller.Validator.Struct(data)
 }
 
 func (controller *PreguntasController) PreguntaActualizar(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +74,7 @@ func (controller *PreguntasController) PreguntaActualizar(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -60,12 +87,12 @@ func (controller *PreguntasController) PreguntaActualizar(res http.ResponseWrite
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -186,7 +213,7 @@ func (controller *PreguntasController) PreguntasRespuestaRegistar(res http.Respo
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -199,12 +226,12 @@ func (controller *PreguntasController) PreguntasRespuestaRegistar(res http.Respo
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaRegistarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaRegistarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -320,7 +347,7 @@ func (controller *PreguntasController) PreguntasRespuestaRemover(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -334,12 +361,12 @@ func (controller *PreguntasController) PreguntasRespuestaRemover(res http.Respon
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -455,7 +482,7 @@ func (controller *PreguntasController) PreguntasRespuestaDetalleObtener(res http
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -469,12 +496,12 @@ func (controller *PreguntasController) PreguntasRespuestaDetalleObtener(res http
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaDetalleObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaDetalleObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -590,7 +617,7 @@ func (controller *PreguntasController) PreguntasRespuestaEstatusActualizar(res h
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -603,12 +630,12 @@ func (controller *PreguntasController) PreguntasRespuestaEstatusActualizar(res h
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaEstatusActualizarPutAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaEstatusActualizarPutAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -729,7 +756,7 @@ func (controller *PreguntasController) PreguntasRespuestaMensajeRegistrar(res ht
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 		case "POST":
@@ -742,12 +769,12 @@ func (controller *PreguntasController) PreguntasRespuestaMensajeRegistrar(res ht
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaMensajeRegistrarPostAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaMensajeRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -863,7 +890,7 @@ func (controller *PreguntasController) PreguntasRespuestaMensajeRemover(res http
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -877,12 +904,12 @@ func (controller *PreguntasController) PreguntasRespuestaMensajeRemover(res http
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaMensajeRemoverDeleteAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaMensajeRemoverDeleteAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -998,7 +1025,7 @@ func (controller *PreguntasController) PreguntasRespuestaMensajesObtener(res htt
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1012,12 +1039,12 @@ func (controller *PreguntasController) PreguntasRespuestaMensajesObtener(res htt
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaMensajesObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestaMensajesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1133,7 +1160,7 @@ func (controller *PreguntasController) PreguntasRespuestasBuscar(res http.Respon
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1147,12 +1174,12 @@ func (controller *PreguntasController) PreguntasRespuestasBuscar(res http.Respon
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestasBuscarGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestasBuscarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1269,7 +1296,7 @@ func (controller *PreguntasController) PreguntasRespuestasObtener(res http.Respo
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1283,12 +1310,12 @@ func (controller *PreguntasController) PreguntasRespuestasObtener(res http.Respo
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestasObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.PreguntasRespuestasObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

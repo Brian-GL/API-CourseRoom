@@ -20,7 +20,7 @@ type AvisoController struct {
 	JsonIter     jsoniter.API
 }
 
-func NewAvisoController() AvisoController {
+func NewAvisosController() AvisoController {
 
 	//godotenv.Load(".env")
 

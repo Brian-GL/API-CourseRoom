@@ -1164,7 +1164,7 @@ func (controller *CatalogoController) TiposArchivoObtener(res http.ResponseWrite
 
 	// Validar que el token sea el correcto:
 
-	if token == controller.Middleware.SECRET_TOKEN {
+	if token == controller.SECRET_TOKEN {
 
 		switch req.Method {
 
@@ -1178,12 +1178,12 @@ func (controller *CatalogoController) TiposArchivoObtener(res http.ResponseWrite
 
 				if err == nil {
 
-					err = controller.Middleware.ValidateModel(modelo)
+					err = controller.ValidateModel(modelo)
 
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TiposArchivoObtenerGetAsync(controller.Middleware.DB, modelo)
+							return infrastructure.TiposArchivoObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

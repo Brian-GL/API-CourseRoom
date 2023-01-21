@@ -20,7 +20,7 @@ type GrupoController struct {
 	JsonIter     jsoniter.API
 }
 
-func NewGrupoController() GrupoController {
+func NewGruposController() GrupoController {
 	//godotenv.Load(".env")
 
 	server := os.Getenv("SERVER")

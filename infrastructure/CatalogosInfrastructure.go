@@ -214,3 +214,29 @@ func TiposUsuarioGetAsync(db *gorm.DB, model *models.TiposUsuarioObtenerInputMod
 	return response
 
 }
+
+func TiposArchivoObtenerGetAsync(db *gorm.DB, model *models.TiposArchivoObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.TiposUsuarioObtenerEntity
+
+		exec := "EXEC dbo.CatalogoTiposArchivo_Obtener @IdTipoArchivo = ?"
+
+		db.Raw(exec, model.IdTipoArchivo).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}

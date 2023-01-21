@@ -11,22 +11,15 @@ import (
 func main() {
 
 	// Controladores
-	avisosController := controllers.NewAvisosController(middleware)
-	catalogoController := controllers.NewCatalogoController(middleware)
-	chatController := controllers.NewChatController(middleware)
-	cursosController := controllers.NewCursosController(middleware)
-	gruposController := controllers.NewGruposController(middleware)
-	tareasController := controllers.NewTareasController(middleware)
-	usuariosController := controllers.NewUsuariosController(middleware)
-	archivoController := controllers.NewArchivoController(middleware)
-	preguntasController := controllers.NewPreguntasController(middleware)
-	avisosController := controllers.NewAvisoController()
+	avisosController := controllers.NewAvisosController()
 	catalogoController := controllers.NewCatalogoController()
 	chatController := controllers.NewChatController()
-	cursosController := controllers.NewCursoController()
-	gruposController := controllers.NewGrupoController()
-	tareaController := controllers.NewTareaController()
-	usuarioController := controllers.NewUsuarioController()
+	cursosController := controllers.NewCursosController()
+	gruposController := controllers.NewGruposController()
+	tareasController := controllers.NewTareasController()
+	usuariosController := controllers.NewUsuariosController()
+	archivoController := controllers.NewArchivosController()
+	preguntasController := controllers.NewPreguntasController()
 
 	// Main route:
 
@@ -141,8 +134,6 @@ func main() {
 	http.HandleFunc("/api/tareas/retroalimentaciondetalle", tareasController.TareaRetroalimentacionDetalleObtener)
 	http.HandleFunc("/api/tareas/actualizar", tareasController.TareaActualizar)
 	http.HandleFunc("/api/tareas/archivoentregado", tareasController.TareaArchivoEntregadoRegistrar)
-	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
-	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/retroalimentacion", tareasController.TareaRetroalimentacionRegistrar)
 	http.HandleFunc("/api/tareas/calificar", tareasController.TareaCalificarActualizar) //PUT
 	http.HandleFunc("/api/tareas/archivosentregados", tareasController.TareaArchivosEntregadosObtener)
@@ -155,53 +146,35 @@ func main() {
 	http.HandleFunc("/api/tareas/archivoentregado", tareasController.TareaArchivoEntregadoRemover)
 	http.HandleFunc("/api/tareas/archivoadjunto", tareasController.TareaArchivoAdjuntoRemover)
 	http.HandleFunc("/api/tareas/archivoadjuntoregistrar", tareasController.TareaArchivoAdjuntoRegistrar)
-	http.HandleFunc("/api/tareas/archivosadjuntos", tareaController.TareaArchivosAdjuntosObtener)
-	http.HandleFunc("/api/tareas/estudiantedetalle", tareaController.TareaEstudianteDetalleObtener)
-	http.HandleFunc("/api/tareas/mes", tareaController.TareasMesObtener)
-	http.HandleFunc("/api/tareas/imagenesentregadas", tareaController.TareaImagenesEntregadasObtener)
-	http.HandleFunc("/api/tareas/retroalimentaciondetalle", tareaController.TareaRetroalimentacionDetalleObtener)
-	http.HandleFunc("/api/tareas/actualizar", tareaController.TareaActualizar)
-	http.HandleFunc("/api/tareas/archivoentregado", tareaController.TareaArchivoEntregadoRegistrar)
-	http.HandleFunc("/api/tareas/remover", tareaController.TareaRemover)
-	http.HandleFunc("/api/tareas/registrar", tareaController.TareaRemover)
-	http.HandleFunc("/api/tareas/retroalimentacion", tareaController.TareaRetroalimentacionRegistrar)
-	http.HandleFunc("/api/tareas/calificar", tareaController.TareaCalificarActualizar) //PUT
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
-	// http.HandleFunc("/api/tareas/", tareaController.)
+	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
+	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRegistrar)
 
 	// #endregion
 
 	// #region Usuarios Endpoints
 
-	http.HandleFunc("/api/usuarios/actualizar", usuarioController.UsuarioActualizar)
-	http.HandleFunc("/api/usuarios/registrar", usuarioController.UsuarioRegistrar) //POST
-	http.HandleFunc("/api/usuarios/remover", usuarioController.UsuarioRemover)
-	http.HandleFunc("/api/usuarios/acceso", usuarioController.UsuarioAccesoObtener)
-	http.HandleFunc("/api/usuarios/cuenta", usuarioController.UsuarioCuentaActualizar) //PUT
-	http.HandleFunc("/api/usuarios/cuentaobtener", usuarioController.UsuarioCuentaObtener)
-	http.HandleFunc("/api/usuarios/desempeno", usuarioController.UsuarioDesempenoObtener)
-	http.HandleFunc("/api/usuarios/desempenoregistrar", usuarioController.UsuarioDesempenoRegistrar)
-	http.HandleFunc("/api/usuarios/detalle", usuarioController.UsuarioDetalleObtener)
-	http.HandleFunc("/api/usuarios/nuevapuntualidad", usuarioController.UsuarioNuevaPuntualidadCursoObtener)
-	http.HandleFunc("/api/usuarios/nuevapuntualidadgeneral", usuarioController.UsuarioNuevaPuntualidadGeneralObtener)
-	http.HandleFunc("/api/usuarios/nuevopromedio", usuarioController.UsuarioNuevoPromedioCursoObtener)
-	http.HandleFunc("/api/usuarios/nuevopromediogeneral", usuarioController.UsuarioNuevoPromedioGeneralObtener)
-	http.HandleFunc("/api/usuarios/buscar", usuarioController.UsuariosBuscar)
-	http.HandleFunc("/api/usuarios/sesion", usuarioController.UsuarioSesionActualizar)
-	http.HandleFunc("/api/usuarios/sesionregistrar", usuarioController.UsuarioSesionRegistrar)
-	http.HandleFunc("/api/usuarios/sesionvalidar", usuarioController.UsuarioSesionValidar)
-	http.HandleFunc("/api/usuarios/sesiones", usuarioController.UsuarioSesionesObtener)
-	http.HandleFunc("/api/usuarios/tematica", usuarioController.UsuarioTematicaRegistrar)
-	http.HandleFunc("/api/usuarios/tematicaremover", usuarioController.UsuarioTematicaRemover)
-	http.HandleFunc("/api/usuarios/tematicasobtener", usuarioController.UsuarioTematicasObtener)
-	http.HandleFunc("/api/usuarios/credencial", usuarioController.UsuarioCredencialObtener)
+	http.HandleFunc("/api/usuarios/actualizar", usuariosController.UsuarioActualizar)
+	http.HandleFunc("/api/usuarios/registrar", usuariosController.UsuarioRegistrar) //POST
+	http.HandleFunc("/api/usuarios/remover", usuariosController.UsuarioRemover)
+	http.HandleFunc("/api/usuarios/acceso", usuariosController.UsuarioAccesoObtener)
+	http.HandleFunc("/api/usuarios/cuenta", usuariosController.UsuarioCuentaActualizar) //PUT
+	http.HandleFunc("/api/usuarios/cuentaobtener", usuariosController.UsuarioCuentaObtener)
+	http.HandleFunc("/api/usuarios/desempeno", usuariosController.UsuarioDesempenoObtener)
+	http.HandleFunc("/api/usuarios/desempenoregistrar", usuariosController.UsuarioDesempenoRegistrar)
+	http.HandleFunc("/api/usuarios/detalle", usuariosController.UsuarioDetalleObtener)
+	http.HandleFunc("/api/usuarios/nuevapuntualidad", usuariosController.UsuarioNuevaPuntualidadCursoObtener)
+	http.HandleFunc("/api/usuarios/nuevapuntualidadgeneral", usuariosController.UsuarioNuevaPuntualidadGeneralObtener)
+	http.HandleFunc("/api/usuarios/nuevopromedio", usuariosController.UsuarioNuevoPromedioCursoObtener)
+	http.HandleFunc("/api/usuarios/nuevopromediogeneral", usuariosController.UsuarioNuevoPromedioGeneralObtener)
+	http.HandleFunc("/api/usuarios/buscar", usuariosController.UsuariosBuscar)
+	http.HandleFunc("/api/usuarios/sesion", usuariosController.UsuarioSesionActualizar)
+	http.HandleFunc("/api/usuarios/sesionregistrar", usuariosController.UsuarioSesionRegistrar)
+	http.HandleFunc("/api/usuarios/sesionvalidar", usuariosController.UsuarioSesionValidar)
+	http.HandleFunc("/api/usuarios/sesiones", usuariosController.UsuarioSesionesObtener)
+	http.HandleFunc("/api/usuarios/tematica", usuariosController.UsuarioTematicaRegistrar)
+	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
+	http.HandleFunc("/api/usuarios/tematicasobtener", usuariosController.UsuarioTematicasObtener)
+	http.HandleFunc("/api/usuarios/credencial", usuariosController.UsuarioCredencialObtener)
 
 	// #region Archivo Endpoints
 

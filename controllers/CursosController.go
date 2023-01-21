@@ -20,7 +20,7 @@ type CursoController struct {
 	JsonIter     jsoniter.API
 }
 
-func NewCursoController() CursoController {
+func NewCursosController() CursoController {
 
 	//godotenv.Load(".env")
 
