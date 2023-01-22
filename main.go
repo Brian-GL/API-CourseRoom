@@ -143,7 +143,7 @@ func main() {
 	http.HandleFunc("/api/tareas/retroalimentaciones", tareasController.TareaReatroalimentacionesObtener)
 	http.HandleFunc("/api/tareas/calificarobtener", tareasController.TareaCalificarObtener)
 	http.HandleFunc("/api/tareas/entregar", tareasController.TareaEntregarActualizar)
-	http.HandleFunc("/api/tareas/archivoentregado", tareasController.TareaArchivoEntregadoRemover)
+	http.HandleFunc("/api/tareas/archivoentregadoremover", tareasController.TareaArchivoEntregadoRemover)
 	http.HandleFunc("/api/tareas/archivoadjunto", tareasController.TareaArchivoAdjuntoRemover)
 	http.HandleFunc("/api/tareas/archivoadjuntoregistrar", tareasController.TareaArchivoAdjuntoRegistrar)
 	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
