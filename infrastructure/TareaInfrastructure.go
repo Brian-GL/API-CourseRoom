@@ -459,7 +459,7 @@ func TareaEstudianteObtenerGetAsync(db *gorm.DB, model *models.TareaEstudianteOb
 
 	if db != nil {
 
-		var resultado []entities.TareaEstudianteObtenerEntity
+		var resultado []entities.TareasEstudianteObtenerEntity
 
 		exec := "EXEC dbo.TareaEstudiante_Obtener @IdUsuario = ?"
 
@@ -485,7 +485,7 @@ func TareaCreadaProfesorObtenerGetAsync(db *gorm.DB, model *models.TareaCreadaPr
 
 	if db != nil {
 
-		var resultado []entities.TareaCreadaProfesorObtenerEntity
+		var resultado []entities.TareasCreadasProfesorObtenerEntity
 
 		exec := "EXEC dbo.TareaCreadaProfesor_Obtener @IdProfesor = ?"
 

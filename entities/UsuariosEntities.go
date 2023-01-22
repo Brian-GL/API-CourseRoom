@@ -57,7 +57,7 @@ type UsuarioPuntualidadEntity struct {
 }
 
 type UsuarioPromedioEntity struct {
-	NuevaPromedio *float64 `json:"nuevaPromedio"`
+	NuevoPromedio *float64 `json:"nuevoPromedio"`
 }
 
 type UsuariosBuscarEntity struct {

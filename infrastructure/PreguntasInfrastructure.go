@@ -106,7 +106,7 @@ func PreguntasRespuestaDetalleObtenerGetAsync(db *gorm.DB, model *models.Pregunt
 
 	if db != nil {
 
-		var resultado []entities.PreguntasRespuestaDetalleObtenerEntity
+		var resultado []entities.PreguntaRespuestaDetalleObtenerEntity
 
 		exec := "EXEC dbo.PreguntasRespuestaDetalle_Obtener @IdPreguntaRespuesta = ?"
 
@@ -224,7 +224,7 @@ func PreguntasRespuestaMensajesObtenerGetAsync(db *gorm.DB, model *models.Pregun
 
 	if db != nil {
 
-		var resultado []entities.PreguntasRespuestaMensajesObtenerEntity
+		var resultado []entities.PreguntaRespuestaMensajesObtenerEntity
 
 		exec := "EXEC dbo.PreguntasRespuestaMensajes_Obtener @IdPreguntaRespuesta = ?, @UltimoMensaje = ?"
 

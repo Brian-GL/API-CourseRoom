@@ -11,6 +11,17 @@ type GrupoArchivosCompartidosObtenerEntity struct {
 	FechaRegistro       time.Time `json:"fechaRegistro"`
 }
 
+type GrupoDetalleObtenerEntity struct {
+	Nombre             string     `json:"nombre"`
+	Descripcion        string     `json:"descripcion"`
+	Imagen             *string    `json:"imagen"`
+	IdCurso            int        `json:"idCurso"`
+	Curso              string     `json:"curso"`
+	ImagenCurso        *string    `json:"imagenCurso"`
+	FechaRegistro      time.Time  `json:"fechaRegistro"`
+	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+}
+
 type GruposMensajesObtenerEntity struct {
 	IdMensaje           int       `json:"idMensaje"`
 	Mensaje             string    `json:"mensaje"`
@@ -65,57 +76,4 @@ type GrupoTareaPendienteDetalleObtenerEntity struct {
 	FechaFinalizacion        *time.Time `json:"fechaFinalizacion"`
 	FechaActualizacion       *time.Time `json:"fechaActualizacion"`
 	Estatus                  string     `json:"estatus"`
-}
-
-type GrupoRegistrarEntity struct {
-	IdCurso     *int    `json:"idCurso"`
-	Nombre      *string `json:"nombre"`
-	Descripcion *string `json:"descripcion"`
-	Imagen      *string `json:"Imagen"`
-	Codigo      *int    `json:"Codigo"`
-	Mensaje     *string `json:"Mensaje"`
-}
-
-type GrupoRemoverEntity struct {
-	IdGrupo    *int    `json:"idGrupo"`
-	IdCurso    *int    `json:"idCurso"`
-	IdProfesor *int    `json:"idProfesor"`
-	Codigo     *int    `json:"Codigo"`
-	Mensaje    *string `json:"Mensaje"`
-}
-
-type GrupoAbandonarActualizarEntity struct {
-	IdArchivoCompartido *int    `json:"idArchivoCompartido"`
-	IdGrupo             *int    `json:"idGrupo"`
-	IdUsuario           *int    `json:"idUsuario"`
-	Codigo              *int    `json:"Codigo"`
-	Mensaje             *string `json:"Mensaje"`
-}
-
-type GrupoDetalleObtenerEntity struct {
-	IdGrupo            *int       `json:"idGrupo"`
-	Nombre             string     `json:"nombre"`
-	Descripcion        *string    `json:"descripcion"`
-	Imagen             *string    `json:"imagen"`
-	IdCurso            *int       `json:"idCurso"`
-	Curso              string     `json:"curso"`
-	ImagenCurso        *string    `json:"imagenCurso"`
-	FechaRegistro      time.Time  `json:"fechaRegistro"`
-	FechaActualizacion *time.Time `json:"fechaActualizacion"`
-}
-
-type GrupoMensajeRegistrarEntity struct {
-	IdGrupo         *int    `json:"idGrupo"`
-	IdUsuarioEmisor *int    `json:"idUsuarioEmisor"`
-	Mensaje         *string `json:"mensaje"`
-	Arvhivo         *string `json:"archivo"`
-	Codigo          *int    `json:"codigo"`
-}
-
-type GrupoMensajeRemoverEntity struct {
-	IdGrupo         *int    `json:"idGrupo"`
-	IdUsuarioEmisor *int    `json:"idUsuarioEmisor"`
-	IdMensaje       *string `json:"idMensaje"`
-	Arvhivo         *string `json:"archivo"`
-	Codigo          *int    `json:"codigo"`
 }

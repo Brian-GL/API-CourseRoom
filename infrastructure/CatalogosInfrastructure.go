@@ -65,7 +65,7 @@ func EstatusTareaPendienteGetAsync(db *gorm.DB, model *models.EstatusTareaPendie
 
 	if db != nil {
 
-		var resultado []entities.EstatusTareasPendienteObtenerEntity
+		var resultado []entities.EstatusTareaPendienteObtenerEntity
 
 		exec := "EXEC dbo.CatalogoTareaPendienteEstatus_Obtener @IdEstatusTareaPendiente = ?"
 

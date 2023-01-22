@@ -2,14 +2,6 @@ package entities
 
 import "time"
 
-type AvisosObtenerEntity struct {
-	IdAviso       int       `json:"idAviso"`
-	FechaRegistro time.Time `json:"fechaRegistro"`
-	Aviso         string    `json:"aviso"`
-	Estatus       string    `json:"estatus"`
-	TipoAviso     string    `json:"tipoAviso"`
-}
-
 type AvisoDetalleObtenerEntity struct {
 	Aviso              string     `json:"aviso"`
 	Descripcion        string     `json:"descripcion"`
@@ -17,6 +9,14 @@ type AvisoDetalleObtenerEntity struct {
 	TipoAviso          string     `json:"tipoAviso"`
 	FechaRegistro      time.Time  `json:"fechaRegistro"`
 	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+}
+
+type AvisosObtenerEntity struct {
+	IdAviso       int       `json:"idAviso"`
+	Aviso         string    `json:"aviso"`
+	Estatus       string    `json:"estatus"`
+	FechaRegistro time.Time `json:"fechaRegistro"`
+	TipoAviso     string    `json:"tipoAviso"`
 }
 
 type AvisosValidarEntity struct {
