@@ -304,7 +304,7 @@ func TareaRetroalimentacionRegistrarPostAsync(db *gorm.DB, model *models.TareaRe
 
 }
 
-func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.EmailConfiguration, COURSEROOM_CALCULATOR *string, model *models.TareaCalificarActualizarInputModel) models.ResponseInfrastructure {
+func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.EmailConfiguration, COURSEROOM_CALCULATOR *string, SECRET_TOKEN *string, model *models.TareaCalificarActualizarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -330,10 +330,10 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 
 					modelEmail := models.CalificacionEmail{
 						CorreoElectronico:    usuario.CorreoElectronico,
-						NombreTarea:          resultado.NombreTarea,
+						NombreTarea:          *resultado.NombreTarea,
 						FechaCalificacion:    time.Now().Format("10-10-2022 12:00 p.m"),
 						CalificacionObtenida: *model.Calificacion,
-						PuntualidadObtenida:  resultado.Puntualidad,
+						PuntualidadObtenida:  *resultado.Puntualidad,
 						Anio:                 time.Now().Year()}
 
 					go SendCalificacionEmail(emailConfiguration, &modelEmail)
@@ -345,14 +345,17 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 
 				if err == nil {
 
-					var message string
-
 					modelCalculator := models.CourseRoomCalculator{
-						IdUsuario:  *model.IdUsuario,
-						IdTarea:    *model.IdTarea,
-						IdProfesor: *model.IdProfesor}
+						IdUsuario:    *model.IdUsuario,
+						IdTarea:      *model.IdTarea,
+						IdCurso:      *model.IdCurso,
+						Calificacion: *model.Calificacion,
+						Puntualidad:  *resultado.Puntualidad,
+						SECRET_TOKEN: *SECRET_TOKEN}
 
-					_ = rpc_client.Call("Server.Calificacion", &modelCalculator, &message)
+					var reply *byte
+					go rpc_client.Call("Server.Calificacion", &modelCalculator, &reply)
+
 				}
 
 				defer rpc_client.Close()

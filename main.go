@@ -160,7 +160,6 @@ func main() {
 	http.HandleFunc("/api/usuarios/cuenta", usuariosController.UsuarioCuentaActualizar) //PUT
 	http.HandleFunc("/api/usuarios/cuentaobtener", usuariosController.UsuarioCuentaObtener)
 	http.HandleFunc("/api/usuarios/desempeno", usuariosController.UsuarioDesempenoObtener)
-	http.HandleFunc("/api/usuarios/desempenoregistrar", usuariosController.UsuarioDesempenoRegistrar)
 	http.HandleFunc("/api/usuarios/detalle", usuariosController.UsuarioDetalleObtener)
 	http.HandleFunc("/api/usuarios/nuevapuntualidad", usuariosController.UsuarioNuevaPuntualidadCursoObtener)
 	http.HandleFunc("/api/usuarios/nuevapuntualidadgeneral", usuariosController.UsuarioNuevaPuntualidadGeneralObtener)

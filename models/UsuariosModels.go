@@ -56,24 +56,6 @@ type UsuarioCuentaActualizarInputModel struct {
 	Imagen            *string `json:"imagen"`
 }
 
-type UsuarioDesempenoRegistrarInputModel struct {
-	IdUsuario                    *int     `json:"idUsuario" validate:"required"`
-	IdTarea                      *int     `json:"idTarea" validate:"required"`
-	Calificacion                 *float64 `json:"calificacion" validate:"required"`
-	PromedioCurso                *float64 `json:"promedioCurso" validate:"required"`
-	PrediccionPromedioCurso      *float64 `json:"prediccionPromedioCurso"`
-	RumboPromedioCurso           *string  `json:"rumboPromedioCurso"`
-	PromedioGeneral              *float64 `json:"promedioGeneral" validate:"required"`
-	PrediccionPromedioGeneral    *float64 `json:"prediccionPromedioGeneral"`
-	RumboPromedioGeneral         *string  `json:"rumboPromedioGeneral"`
-	PuntualidadCurso             *float64 `json:"puntualidadCurso" validate:"required"`
-	PrediccionPuntualidadCurso   *float64 `json:"prediccionPuntualidadCurso"`
-	RumboPuntualidadCurso        *string  `json:"rumboPuntualidadCurso"`
-	PuntualidadGeneral           *float64 `json:"puntualidadGeneral" validate:"required"`
-	PrediccionPuntualidadGeneral *float64 `json:"prediccionPuntualidadGeneral"`
-	RumboPuntualidadGeneral      *string  `json:"rumboPuntualidadGeneral"`
-}
-
 type UsuarioNuevaPuntualidadCursoObtenerInputModel struct {
 	IdCurso     *int     `json:"idCurso" validate:"required"`
 	IdUsuario   *int     `json:"idUsuario" validate:"required"`

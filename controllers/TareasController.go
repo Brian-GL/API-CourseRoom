@@ -1499,7 +1499,7 @@ func (controller *TareaController) TareaCalificarActualizar(res http.ResponseWri
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaCalificarActualizarPutAsync(controller.DB, &controller.Email_Configuration, &controller.COURSEROOM_CALCULATOR, modelo)
+							return infrastructure.TareaCalificarActualizarPutAsync(controller.DB, &controller.Email_Configuration, &controller.COURSEROOM_CALCULATOR, &controller.SECRET_TOKEN, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

@@ -425,38 +425,6 @@ func UsuarioDesempenoObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputMode
 
 }
 
-func UsuarioDesempenoRegistrarPostAsync(db *gorm.DB, model *models.UsuarioDesempenoRegistrarInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AccionEntity
-
-		exec := "EXEC dbo.UsuarioDesempeno_Registrar @IdUsuario = ?, @IdTarea = ?, @Calificacion = ?, @PromedioCurso = ?, @PrediccionPromedioCurso = ?, @RumboPromedioCurso = ?, @PromedioGeneral = ?, @PrediccionPromedioGeneral = ?, @RumboPromedioGeneral = ?, @PuntualidadCurso = ?, @PrediccionPuntualidadCurso = ?, @RumboPuntualidadCurso = ?, @PuntualidadGeneral = ?, @PrediccionPuntualidadGeneral = ?, @RumboPuntualidadGeneral = ?"
-
-		db.Raw(exec, model.IdUsuario, model.IdTarea, model.Calificacion, model.PromedioCurso, model.PrediccionPromedioCurso, model.RumboPromedioCurso, model.PromedioGeneral, model.PrediccionPromedioGeneral, model.RumboPromedioGeneral, model.PuntualidadCurso, model.PrediccionPuntualidadCurso, model.RumboPuntualidadCurso, model.PuntualidadGeneral, model.PrediccionPuntualidadGeneral, model.RumboPuntualidadGeneral).Scan(&resultado)
-
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
-			}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
 func UsuarioDetalleObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
