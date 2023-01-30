@@ -43,7 +43,6 @@ type PreguntasRespuestaMensajeRemoverInputModel struct {
 
 type PreguntasRespuestaMensajesObtenerInputModel struct {
 	IdPreguntaRespuesta *int `json:"idPreguntaRespuesta" validate:"required"`
-	UltimoMensaje       *int `json:"ultimoMensaje" validate:"required"`
 }
 
 type PreguntasRespuestasBuscarInputModel struct {

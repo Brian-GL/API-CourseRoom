@@ -5,6 +5,7 @@ import (
 	"api-courseroom/models"
 	"bytes"
 	"crypto/tls"
+	"fmt"
 	"html/template"
 	"net/rpc"
 	"os"
@@ -353,8 +354,12 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 						Puntualidad:  *resultado.Puntualidad,
 						SECRET_TOKEN: *SECRET_TOKEN}
 
-					var reply *byte
-					go rpc_client.Call("Server.Calificacion", &modelCalculator, &reply)
+					go func() {
+						err := rpc_client.Call("Server.Calificacion", modelCalculator, nil)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+					}()
 
 				}
 

@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type ChatRegistrarInputModel struct {
 	IdUsuarioEmisor   *int `json:"idUsuarioEmisor" validate:"required"`
 	IdUsuarioReceptor *int `json:"idUsuarioReceptor" validate:"required"`
@@ -24,8 +26,8 @@ type ChatMensajeRemoverInputModel struct {
 }
 
 type ChatMensajesObtenerInputModel struct {
-	IdChat        *int    `json:"idChat" validate:"required"`
-	UltimoMensaje *string `json:"idMensaje" validate:"required"`
+	IdChat             *int       `json:"idChat" validate:"required"`
+	FechaVisualizacion *time.Time `json:"fechaVisualizacion"`
 }
 
 type ChatsBuscarInputModel struct {

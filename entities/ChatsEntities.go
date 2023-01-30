@@ -8,6 +8,7 @@ type ChatMensajesObtenerEntity struct {
 	Archivo             *string   `json:"archivo"`
 	IdUsuarioEmisor     int       `json:"idUsuarioEmisor"`
 	NombreUsuarioEmisor string    `json:"nombreUsuarioEmisor"`
+	ImagenEmisor        string    `json:"imagenEmisor"`
 	FechaRegistro       time.Time `json:"fechaRegistro"`
 }
 
