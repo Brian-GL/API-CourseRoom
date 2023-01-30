@@ -195,9 +195,9 @@ func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) mo
 
 		var resultado []entities.AvisosValidarEntity
 
-		exec := "EXEC dbo.Avisos_Validar @IdUsuario = ?, @FechaVisualizacion = ?"
+		exec := "EXEC dbo.Avisos_Validar @IdUsuario = ?"
 
-		db.Raw(exec, model.IdUsuario, model.FechaVisualizacion).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}

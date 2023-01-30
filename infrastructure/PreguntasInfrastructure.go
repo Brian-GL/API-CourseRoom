@@ -226,9 +226,9 @@ func PreguntasRespuestaMensajesObtenerGetAsync(db *gorm.DB, model *models.Pregun
 
 		var resultado []entities.PreguntaRespuestaMensajesObtenerEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaMensajes_Obtener @IdPreguntaRespuesta = ?, @UltimoMensaje = ?"
+		exec := "EXEC dbo.PreguntasRespuestaMensajes_Obtener @IdPreguntaRespuesta = ?"
 
-		db.Raw(exec, model.IdPreguntaRespuesta, model.UltimoMensaje).Scan(&resultado)
+		db.Raw(exec, model.IdPreguntaRespuesta).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}

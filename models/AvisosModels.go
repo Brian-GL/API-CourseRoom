@@ -1,7 +1,5 @@
 package models
 
-import "time"
-
 type AvisosObtenerInputModel struct {
 	IdUsuario *int  `json:"idUsuario" validate:"required"`
 	Leido     *bool `json:"leido"`
@@ -24,8 +22,7 @@ type AvisoRegistrarInputModel struct {
 }
 
 type AvisosValidarInputModel struct {
-	IdUsuario          *int       `json:"idUsuario" validate:"required"`
-	FechaVisualizacion *time.Time `json:"fechaVisualizacion" validate:"required"`
+	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
 
 type AvisoPlagioProfesorRegistrarInputModel struct {

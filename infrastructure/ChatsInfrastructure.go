@@ -143,9 +143,9 @@ func ChatMensajesObtenerGetAsync(db *gorm.DB, model *models.ChatMensajesObtenerI
 
 		var resultado []entities.ChatMensajesObtenerEntity
 
-		exec := "EXEC dbo.ChatMensajes_Obtener @IdChat = ?, @UltimoMensaje = ?"
+		exec := "EXEC dbo.ChatMensajes_Obtener @IdChat = ?, @FechaVisualizacion = ?"
 
-		db.Raw(exec, model.IdChat, model.UltimoMensaje).Scan(&resultado)
+		db.Raw(exec, model.IdChat, model.FechaVisualizacion).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
