@@ -21,6 +21,7 @@ type GrupoController struct {
 }
 
 func NewGruposController() GrupoController {
+
 	//godotenv.Load(".env")
 
 	server := os.Getenv("SERVER")

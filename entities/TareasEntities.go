@@ -120,8 +120,7 @@ type TareasCalificarObtenerEntity struct {
 }
 
 type TareaCalificarActualizarEntity struct {
-	Codigo      int      `json:"codigo"`
-	Puntualidad *float32 `json:"puntualidad"`
-	NombreTarea *string  `json:"nombreTarea"`
-	Mensaje     string   `json:"mensaje"`
+	Codigo      int     `json:"codigo"`
+	NombreTarea *string `json:"nombreTarea"`
+	Mensaje     string  `json:"mensaje"`
 }

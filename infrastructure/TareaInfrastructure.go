@@ -334,7 +334,6 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 						NombreTarea:          *resultado.NombreTarea,
 						FechaCalificacion:    time.Now().Format("10-10-2022 12:00 p.m"),
 						CalificacionObtenida: *model.Calificacion,
-						PuntualidadObtenida:  *resultado.Puntualidad,
 						Anio:                 time.Now().Year()}
 
 					go SendCalificacionEmail(emailConfiguration, &modelEmail)
@@ -348,10 +347,7 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 
 					modelCalculator := models.CourseRoomCalculator{
 						IdUsuario:    *model.IdUsuario,
-						IdTarea:      *model.IdTarea,
-						IdCurso:      *model.IdCurso,
-						Calificacion: *model.Calificacion,
-						Puntualidad:  *resultado.Puntualidad,
+						IdDesempeno:  resultado.Codigo,
 						SECRET_TOKEN: *SECRET_TOKEN}
 
 					go func() {

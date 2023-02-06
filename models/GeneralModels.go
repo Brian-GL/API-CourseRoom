@@ -25,7 +25,6 @@ type CalificacionEmail struct {
 	NombreTarea          string
 	FechaCalificacion    string
 	CalificacionObtenida float32
-	PuntualidadObtenida  float32
 	Anio                 int
 }
 
@@ -51,10 +50,7 @@ type EmailVerificatorAPISuccess struct {
 
 type CourseRoomCalculator struct {
 	IdUsuario    int
-	IdTarea      int
-	IdCurso      int
-	Calificacion float32
-	Puntualidad  float32
+	IdDesempeno  int
 	SECRET_TOKEN string
 }
 
