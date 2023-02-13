@@ -30,7 +30,6 @@ type UsuarioDesempenoObtenerEntity struct {
 	PromedioPuntualidadCurso    float32   `json:"promedioPuntualidadCurso"`
 	MedianaPuntualidadCurso     float32   `json:"medianaPuntualidadCurso"`
 	ResultadoPuntualidadCurso   float32   `json:"resultadoPuntualidadCurso"`
-	PrediccionPuntualidadCurso  *float32  `json:"prediccionPuntualidadCurso"`
 	FechaRegistro               time.Time `json:"fechaRegistro"`
 }
 

@@ -341,7 +341,7 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 
 				// Send request to rpc courseroom calculator:
 
-				rpc_client, err := rpc.Dial("tcp", *COURSEROOM_CALCULATOR)
+				rpc_client, err := rpc.DialHTTP("tcp", *COURSEROOM_CALCULATOR)
 
 				if err == nil {
 

@@ -13,7 +13,6 @@ type CursoDesempenoObtenerEntity struct {
 	PrediccionCalificacionCurso *float32 `json:"prediccionCalificacionCurso"`
 	Puntualidad                 float32  `json:"puntualidad"`
 	PromedioPuntualidadCurso    float32  `json:"promedioPuntualidadCurso"`
-	PrediccionPuntualidadCurso  *float32 `json:"prediccionPuntualidadCurso"`
 	FechaRegistro               string   `json:"fechaRegistro"`
 }
 
@@ -168,7 +167,6 @@ type CursoEstudianteDesempenoObtenerEntity struct {
 	PrediccionCalificacionCurso *float32  `json:"prediccionCalificacionCurso"`
 	Puntualidad                 float32   `json:"puntualidad"`
 	PromedioPuntualidadCurso    float32   `json:"promedioPuntualidadCurso"`
-	PrediccionPuntualidadCurso  *float32  `json:"prediccionPuntualidadCurso"`
 	FechaRegistro               time.Time `json:"fechaRegistro"`
 }
 
