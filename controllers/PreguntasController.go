@@ -1164,7 +1164,7 @@ func (controller *PreguntasController) PreguntasRespuestasBuscar(res http.Respon
 
 		switch req.Method {
 
-		case "GET":
+		case "POST":
 			{
 				//Registrar aviso:
 

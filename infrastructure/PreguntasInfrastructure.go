@@ -115,7 +115,7 @@ func PreguntasRespuestaDetalleObtenerGetAsync(db *gorm.DB, model *models.Pregunt
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información de la pregunta"}
 		}
 
 	} else {
@@ -233,7 +233,7 @@ func PreguntasRespuestaMensajesObtenerGetAsync(db *gorm.DB, model *models.Pregun
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron respuestas"}
 		}
 
 	} else {
@@ -284,7 +284,7 @@ func PreguntasRespuestasObtenerGetAsync(db *gorm.DB, model *models.PreguntasResp
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron preguntas"}
 		}
 
 	} else {
