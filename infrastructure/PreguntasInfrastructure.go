@@ -106,13 +106,13 @@ func PreguntasRespuestaDetalleObtenerGetAsync(db *gorm.DB, model *models.Pregunt
 
 	if db != nil {
 
-		var resultado []entities.PreguntaRespuestaDetalleObtenerEntity
+		var resultado *entities.PreguntaRespuestaDetalleObtenerEntity
 
 		exec := "EXEC dbo.PreguntasRespuestaDetalle_Obtener @IdPreguntaRespuesta = ?"
 
 		db.Raw(exec, model.IdPreguntaRespuesta).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información de la pregunta"}
