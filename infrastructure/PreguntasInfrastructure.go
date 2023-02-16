@@ -15,9 +15,9 @@ func PreguntasRespuestaActualizarPutAsync(db *gorm.DB, model *models.PreguntasRe
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuesta_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @IdPregunta = ?, @Descripcion = ?"
+		exec := "EXEC dbo.PreguntasRespuesta_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @Pregunta = ?, @Descripcion = ?"
 
-		db.Raw(exec, model.IdPregunta, model.IdUsuario, model.IdPreguntaRespuesta, model.Descripcion).Scan(&resultado)
+		db.Raw(exec, model.Pregunta, model.IdUsuario, model.IdPreguntaRespuesta, model.Descripcion).Scan(&resultado)
 
 		if resultado != nil {
 
@@ -46,9 +46,9 @@ func PreguntasRespuestaRegistarPostAsync(db *gorm.DB, model *models.PreguntasRes
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuesta_Registar @IdUsuario = ?, @IdPregunta = ?, @Descripcion = ?"
+		exec := "EXEC dbo.PreguntasRespuesta_Registar @IdUsuario = ?, @Pregunta = ?, @Descripcion = ?"
 
-		db.Raw(exec, model.IdUsuario, model.IdPregunta, model.Descripcion).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario, model.Pregunta, model.Descripcion).Scan(&resultado)
 
 		if resultado != nil {
 
@@ -233,7 +233,7 @@ func PreguntasRespuestaMensajesObtenerGetAsync(db *gorm.DB, model *models.Pregun
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron respuestas"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron mensajes"}
 		}
 
 	} else {
