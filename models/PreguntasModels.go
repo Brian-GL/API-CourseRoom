@@ -9,7 +9,7 @@ type PreguntasRespuestaActualizarInputModel struct {
 
 type PreguntasRespuestaRegistarInputModel struct {
 	IdUsuario   *int    `json:"idUsuario" validate:"required"`
-	Pregunta    *string `json:"idPregunta" validate:"required"`
+	Pregunta    *string `json:"pregunta" validate:"required"`
 	Descripcion *string `json:"descripcion" validate:"required"`
 }
 
