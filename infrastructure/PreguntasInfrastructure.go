@@ -15,7 +15,7 @@ func PreguntasRespuestaActualizarPutAsync(db *gorm.DB, model *models.PreguntasRe
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuesta_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @Pregunta = ?, @Descripcion = ?"
+		exec := "EXEC dbo.PreguntaRespuesta_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @Pregunta = ?, @Descripcion = ?"
 
 		db.Raw(exec, model.Pregunta, model.IdUsuario, model.IdPreguntaRespuesta, model.Descripcion).Scan(&resultado)
 
@@ -46,7 +46,7 @@ func PreguntasRespuestaRegistarPostAsync(db *gorm.DB, model *models.PreguntasRes
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuesta_Registar @IdUsuario = ?, @Pregunta = ?, @Descripcion = ?"
+		exec := "EXEC dbo.PreguntaRespuesta_Registar @IdUsuario = ?, @Pregunta = ?, @Descripcion = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Pregunta, model.Descripcion).Scan(&resultado)
 
@@ -77,7 +77,7 @@ func PreguntasRespuestaRemoverDeleteAsync(db *gorm.DB, model *models.PreguntasRe
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuesta_Remover @IdUsuario = ?, @IdPreguntaRespuesta = ?"
+		exec := "EXEC dbo.PreguntaRespuesta_Remover @IdUsuario = ?, @IdPreguntaRespuesta = ?"
 
 		db.Raw(exec, model.IdUsuario, model.IdPreguntaRespuesta).Scan(&resultado)
 
@@ -108,7 +108,7 @@ func PreguntasRespuestaDetalleObtenerGetAsync(db *gorm.DB, model *models.Pregunt
 
 		var resultado *entities.PreguntaRespuestaDetalleObtenerEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaDetalle_Obtener @IdPreguntaRespuesta = ?"
+		exec := "EXEC dbo.PreguntaRespuestaDetalle_Obtener @IdPreguntaRespuesta = ?"
 
 		db.Raw(exec, model.IdPreguntaRespuesta).Scan(&resultado)
 
@@ -133,7 +133,7 @@ func PreguntasRespuestaEstatusActualizarPutAsync(db *gorm.DB, model *models.Preg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaEstatus_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @IdEstatusPregunta = ?"
+		exec := "EXEC dbo.PreguntaRespuestaEstatus_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @IdEstatusPregunta = ?"
 
 		db.Raw(exec, model.IdUsuario, model.IdPreguntaRespuesta, model.IdEstatusPregunta).Scan(&resultado)
 
@@ -164,7 +164,7 @@ func PreguntasRespuestaMensajeRegistrarPostAsync(db *gorm.DB, model *models.Preg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaMensaje_Registrar @IdPreguntaRespuesta = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
+		exec := "EXEC dbo.PreguntaRespuestaMensaje_Registrar @IdPreguntaRespuesta = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
 
 		db.Raw(exec, model.IdPreguntaRespuesta, model.IdUsuarioEmisor, model.Mensaje, model.Archivo).Scan(&resultado)
 
@@ -195,7 +195,7 @@ func PreguntasRespuestaMensajeRemoverDeleteAsync(db *gorm.DB, model *models.Preg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaMensaje_Remover @IdPreguntaRespuesta = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
+		exec := "EXEC dbo.PreguntaRespuestaMensaje_Remover @IdPreguntaRespuesta = ?, @IdUsuarioEmisor = ?, @IdMensaje = ?"
 
 		db.Raw(exec, model.IdPreguntaRespuesta, model.IdUsuarioEmisor, model.IdMensaje).Scan(&resultado)
 
@@ -226,7 +226,7 @@ func PreguntasRespuestaMensajesObtenerGetAsync(db *gorm.DB, model *models.Pregun
 
 		var resultado []entities.PreguntaRespuestaMensajesObtenerEntity
 
-		exec := "EXEC dbo.PreguntasRespuestaMensajes_Obtener @IdPreguntaRespuesta = ?"
+		exec := "EXEC dbo.PreguntaRespuestaMensajes_Obtener @IdPreguntaRespuesta = ?"
 
 		db.Raw(exec, model.IdPreguntaRespuesta).Scan(&resultado)
 
@@ -251,7 +251,7 @@ func PreguntasRespuestasBuscarGetAsync(db *gorm.DB, model *models.PreguntasRespu
 
 		var resultado []entities.PreguntasRespuestasBuscarEntity
 
-		exec := "EXEC dbo.PreguntasRespuestas_Buscar @Busqueda = ?"
+		exec := "EXEC dbo.PreguntaRespuestas_Buscar @Busqueda = ?"
 
 		db.Raw(exec, model.Busqueda).Scan(&resultado)
 
@@ -277,7 +277,7 @@ func PreguntasRespuestasObtenerGetAsync(db *gorm.DB, model *models.PreguntasResp
 
 		var resultado []entities.PreguntasRespuestasObtenerEntity
 
-		exec := "EXEC dbo.PreguntasRespuestas_Obtener @IdUsuario = ?"
+		exec := "EXEC dbo.PreguntaRespuestas_Obtener @IdUsuario = ?"
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
