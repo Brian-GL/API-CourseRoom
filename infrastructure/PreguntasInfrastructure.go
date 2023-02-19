@@ -46,7 +46,7 @@ func PreguntasRespuestaRegistarPostAsync(db *gorm.DB, model *models.PreguntasRes
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.PreguntaRespuesta_Registar @IdUsuario = ?, @Pregunta = ?, @Descripcion = ?"
+		exec := "EXEC dbo.PreguntaRespuesta_Registrar @IdUsuario = ?, @Pregunta = ?, @Descripcion = ?"
 
 		db.Raw(exec, model.IdUsuario, model.Pregunta, model.Descripcion).Scan(&resultado)
 
@@ -251,7 +251,7 @@ func PreguntasRespuestasBuscarGetAsync(db *gorm.DB, model *models.PreguntasRespu
 
 		var resultado []entities.PreguntasRespuestasBuscarEntity
 
-		exec := "EXEC dbo.PreguntaRespuestas_Buscar @Busqueda = ?"
+		exec := "EXEC dbo.PreguntasRespuestas_Buscar @Busqueda = ?"
 
 		db.Raw(exec, model.Busqueda).Scan(&resultado)
 
@@ -277,7 +277,7 @@ func PreguntasRespuestasObtenerGetAsync(db *gorm.DB, model *models.PreguntasResp
 
 		var resultado []entities.PreguntasRespuestasObtenerEntity
 
-		exec := "EXEC dbo.PreguntaRespuestas_Obtener @IdUsuario = ?"
+		exec := "EXEC dbo.PreguntasRespuestas_Obtener @IdUsuario = ?"
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
