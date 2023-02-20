@@ -17,7 +17,7 @@ func PreguntasRespuestaActualizarPutAsync(db *gorm.DB, model *models.PreguntasRe
 
 		exec := "EXEC dbo.PreguntaRespuesta_Actualizar @IdUsuario = ?, @IdPreguntaRespuesta = ?, @Pregunta = ?, @Descripcion = ?"
 
-		db.Raw(exec, model.Pregunta, model.IdUsuario, model.IdPreguntaRespuesta, model.Descripcion).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario, model.IdPreguntaRespuesta, model.Pregunta, model.Descripcion).Scan(&resultado)
 
 		if resultado != nil {
 

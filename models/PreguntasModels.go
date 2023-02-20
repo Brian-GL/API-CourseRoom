@@ -3,7 +3,7 @@ package models
 type PreguntasRespuestaActualizarInputModel struct {
 	IdUsuario           *int    `json:"idUsuario" validate:"required"`
 	IdPreguntaRespuesta *int    `json:"idPreguntaRespuesta" validate:"required"`
-	Pregunta            *string `json:"idPregunta" validate:"required"`
+	Pregunta            *string `json:"pregunta" validate:"required"`
 	Descripcion         *string `json:"descripcion" validate:"required"`
 }
 
@@ -23,16 +23,16 @@ type PreguntasRespuestaDetalleObtenerInputModel struct {
 }
 
 type PreguntasRespuestaEstatusActualizarInputModel struct {
-	IdUsuario           *int    `json:"idUsuario" validate:"required"`
-	IdPreguntaRespuesta *int    `json:"idPreguntaRespuesta" validate:"required"`
-	IdEstatusPregunta   *string `json:"idEstatusPregunta" validate:"required"`
+	IdUsuario           *int `json:"idUsuario" validate:"required"`
+	IdPreguntaRespuesta *int `json:"idPreguntaRespuesta" validate:"required"`
+	IdEstatusPregunta   *int `json:"idEstatusPregunta" validate:"required"`
 }
 
 type PreguntasRespuestaMensajeRegistrarInputModel struct {
 	IdPreguntaRespuesta *int    `json:"idPreguntaRespuesta" validate:"required"`
 	IdUsuarioEmisor     *int    `json:"idUsuarioEmisor" validate:"required"`
 	Mensaje             *string `json:"mensaje" validate:"required"`
-	Archivo             *string `json:"archivo" validate:"required"`
+	Archivo             *string `json:"archivo"`
 }
 
 type PreguntasRespuestaMensajeRemoverInputModel struct {
