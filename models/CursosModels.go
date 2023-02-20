@@ -221,43 +221,18 @@ type CursoBuscarInputModel struct {
 }
 
 type CursoObtenerInputModel struct {
-	IdUsuario        *int       `json:"idUsuario" validate:"required"`
-	IdEstatusUsuario *int       `json:"idEstatusUsuario" validate:"required"`
-	IdCurso          *int       `json:"idCurso"`
-	Curso            *string    `json:"curso"`
-	ImagenCurso      *string    `json:"imagenCurso"`
-	IdProfesor       *int       `json:"idProfesor"`
-	Profesor         *string    `json:"profesor"`
-	ImagenProfesor   *string    `json:"imagenProfesor"`
-	ListaTematicas   *string    `json:"listaTematicas"`
-	FechaRegistro    *time.Time `json:"fechaRegistro"`
-	Puntaje          *float32   `json:"puntaje"`
-	FechaIngreso     *time.Time `json:"fechaIngreso"`
-	Estatus          *string    `json:"estatus"`
+	IdUsuario        *int `json:"idUsuario" validate:"required"`
+	IdEstatusUsuario *int `json:"idEstatusUsuario" validate:"required"`
 }
 
 type CursoNuevoObtenerInputModel struct {
-	IdUsuario        *int       `json:"idUsuario" validate:"required"`
-	NumeroResultados *int       `json:"numeroResultados" validate:"required"`
-	IdCurso          *int       `json:"idCurso"`
-	Curso            *string    `json:"curso"`
-	ImagenCurso      *string    `json:"imagenCurso"`
-	IdProfesor       *int       `json:"idProfesor"`
-	Profesor         *string    `json:"profesor"`
-	ListaTematicas   *string    `json:"listaTematica"`
-	FechaRegistro    *time.Time `json:"fechaRegistro"`
-	Puntaje          *float32   `json:"puntaje"`
+	IdUsuario        *int `json:"idUsuario" validate:"required"`
+	NumeroResultados *int `json:"numeroResultados" validate:"required"`
 }
 
 type CursoProfesorObtenerInputModel struct {
-	IdProfesor     *int       `json:"idProfesor" validate:"required"`
-	IdCurso        *int       `json:"idCurso"`
-	Curso          *string    `json:"curso"`
-	Imagen         *string    `json:"imagen"`
-	ListaTematicas *string    `json:"listaTematicas"`
-	Estatus        *string    `json:"estatus"`
-	FechaRegistro  *time.Time `json:"fechaRegistro"`
-	Puntaje        *float32   `json:"puntaje"`
+	IdProfesor *int  `json:"idProfesor" validate:"required"`
+	Finalizado *bool `json:"finalizado"`
 }
 
 type CursoTareasEstudianteObtenerInputModel struct {

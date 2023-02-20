@@ -567,7 +567,7 @@ func TareaCalificarObtenerGetAsync(db *gorm.DB, model *models.TareaCalificarObte
 
 	if db != nil {
 
-		var resultado []entities.TareaProfesorDetalleObtenerEntity
+		var resultado []entities.TareasCalificarObtenerEntity
 
 		exec := "EXEC dbo.TareaCalificar_Obtener @IdProfesor = ?"
 
