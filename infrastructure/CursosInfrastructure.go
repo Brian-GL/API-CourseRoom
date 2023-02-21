@@ -825,9 +825,9 @@ func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtene
 
 	if db != nil {
 
-		var resultado []entities.CursoPromedioObtenerEntity
+		var resultado []entities.CursosProfesorObtenerEntity
 
-		exec := "EXEC dbo.CursosProfesor_Obtener  @IdProfesor = ?, @Finalizado = ?"
+		exec := "EXEC dbo.CursosProfesor_Obtener @IdProfesor = ?, @Finalizado = ?"
 
 		db.Raw(exec, model.IdProfesor, model.Finalizado).Scan(&resultado)
 
