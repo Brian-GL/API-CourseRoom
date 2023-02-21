@@ -33,20 +33,20 @@ type CursoEstudianteDetalleObtenerEntity struct {
 }
 
 type CursoGruposObtenerEntity struct {
-	IdGrupo           int     `json:"idGrupo"`
-	Nombre            string  `json:"nombre"`
-	Imagen            *string `json:"imagen"`
-	NumeroIntegrantes *int    `json:"numeroIntegrantes"`
+	IdGrupo           int       `json:"idGrupo"`
+	Nombre            string    `json:"nombre"`
+	Imagen            *string   `json:"imagen"`
+	NumeroIntegrantes *int      `json:"numeroIntegrantes"`
+	FechaRegistro     time.Time `json:"fechaRegistro"`
 }
 
 type CursoMaterialesObtenerEntity struct {
-	IdMaterialSubido    int        `json:"idMaterialsubido"`
-	Nombre              string     `json:"nombre"`
-	Archivo             string     `json:"archivo"`
-	FechaActualizacion  *time.Time `json:"fechaActualizacion"`
-	IdUsuarioemisor     int        `json:"idUsuarioEmisor"`
-	NombreUsuarioEmisor string     `json:"nombreUsuarioEmisor"`
-	FechaRegistro       time.Time  `json:"fechaRegistro"`
+	IdMaterialSubido    int       `json:"idMaterialSubido"`
+	Nombre              string    `json:"nombre"`
+	Archivo             string    `json:"archivo"`
+	IdUsuarioEmisor     int       `json:"idUsuarioEmisor"`
+	NombreUsuarioEmisor string    `json:"nombreUsuarioEmisor"`
+	FechaRegistro       time.Time `json:"fechaRegistro"`
 }
 
 type CursoMensajesObtenerEntity struct {
@@ -59,12 +59,11 @@ type CursoMensajesObtenerEntity struct {
 }
 
 type CursoEstudiantesObtenerEntity struct {
-	IdUsuario          int        `json:"idUsuario"`
-	NombreCompleto     string     `json:"nombreCompleto"`
-	Imagen             *string    `json:"imagen"`
-	FechaRegistro      time.Time  `json:"fechaRegistro"`
-	FechaActualizacion *time.Time `json:"fechaActualizacion"`
-	Estatus            string     `json:"estatus"`
+	IdUsuario      int       `json:"idUsuario"`
+	NombreCompleto string    `json:"nombreCompleto"`
+	Imagen         *string   `json:"imagen"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+	Estatus        string    `json:"estatus"`
 }
 
 type CursoProfesorDetalleObtenerEntity struct {
