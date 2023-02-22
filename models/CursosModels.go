@@ -15,12 +15,8 @@ type CursoRegistrarInputModel struct {
 }
 
 type CursoGruposObtenerInputModel struct {
-	IdCurso           *int    `json:"idCurso" validate:"required"`
-	Activo            *bool   `json:"activo" validate:"required"`
-	IdGrupo           *int    `json:"idGrupo"`
-	Nombre            *string `json:"nombre"`
-	Imagen            *string `json:"imagen"`
-	NumeroIntegrantes *int    `json:"numeroIntegrantes"`
+	IdCurso *int  `json:"idCurso" validate:"required"`
+	Activo  *bool `json:"activo" validate:"required"`
 }
 
 type CursoActualizarInputModel struct {
@@ -53,21 +49,7 @@ type CursoCuestionarioAbandonarActualizarInputModel struct {
 }
 
 type CursoDesempenoObtenerInputModel struct {
-	IdCurso                    *int       `json:"idCurso" validate:"required"`
-	IdDesempeno                *int       `json:"idDesempeno"`
-	IdUsuario                  *int       `json:"idUsuario"`
-	NombreCompleto             *string    `json:"nombreCompleto"`
-	Imagen                     *string    `json:"imagen"`
-	IdTarea                    *int       `json:"idTarea"`
-	Tarea                      *string    `json:"tarea"`
-	Calificacion               *float32   `json:"calificacion"`
-	PromedioCurso              *float32   `json:"promedioCurso"`
-	PredeccionPromedioCurso    *float32   `json:"prediccionPromedioCurso"`
-	RumboPromedioCurso         *string    `json:"rumboPromedioCurso"`
-	PuntualidadCurso           *float32   `json:"puntualidadcurso"`
-	PrediccionPuntualidadCurso *float32   `json:"prediccionPuntualidadCurso"`
-	RumboPuntualidadCurso      *string    `json:"rumboPuntualidadCurso"`
-	FechaRegistro              *time.Time `json:"fechaRegistro"`
+	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
 type CursoEstudianteRegistrarInputModel struct {
@@ -120,14 +102,7 @@ type CursoMaterialRemoverInputModel struct {
 }
 
 type CursoMaterialesObtenerInputModel struct {
-	IdCurso             *int       `json:"idCurso" validate:"required"`
-	IdMaterialSubido    *int       `json:"idMaterialSubido"`
-	Nombre              *string    `json:"nombre"`
-	Archivo             *string    `json:"archivo"`
-	FechaActualizacion  *time.Time `json:"fechaActualizacion"`
-	IdUsuarioEmisor     *int       `json:"idUsuarioEmisor"`
-	NombreUsuarioEmisor *string    `json:"nombreUsuarioEmisor"`
-	FechaRegistro       *time.Time `json:"fechaRegistro"`
+	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
 type CursoMensajeRegistrarInputModel struct {
@@ -166,13 +141,7 @@ type CursoEstudianteRemoverInputModel struct {
 }
 
 type CursoEstudianteObtenerInputModel struct {
-	IdCurso            *int       `json:"idCurso" validate:"required"`
-	IdUsuario          *int       `json:"idUsuario"`
-	NombreCompleto     *string    `json:"nombreCompleto"`
-	Imagen             *string    `json:"imagen"`
-	FechaRegistro      *time.Time `json:"fecharegistro"`
-	FechaActualizacion *time.Time `json:"fechaActualizacion"`
-	Estatus            *string    `json:"estatus"`
+	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
 type CursoProfesorDetalleObtenerInputModel struct {
@@ -190,13 +159,8 @@ type CursoProfesorDetalleObtenerInputModel struct {
 }
 
 type CursoProfesorTareasObtenerInputModel struct {
-	IdCurso        *int    `json:"idCurso" validate:"required"`
-	IdProfesor     *int    `json:"idProfesor" validate:"required"`
-	IdTarea        *int    `json:"idTarea"`
-	Tarea          *string `json:"tarea"`
-	FechaRegistro  *string `json:"fechaResgistro"`
-	FechaEntrega   *string `json:"fechaEntrega"`
-	EstatusEntrega *string `json:"estatusEntrega"`
+	IdCurso    *int `json:"idCurso" validate:"required"`
+	IdProfesor *int `json:"idProfesor" validate:"required"`
 }
 
 type CursoPromedioObtenerInputModel struct {
@@ -236,13 +200,8 @@ type CursoProfesorObtenerInputModel struct {
 }
 
 type CursoTareasEstudianteObtenerInputModel struct {
-	IdCurso        *int       `json:"idCurso" validate:"required"`
-	IdUsuario      *int       `json:"idUsuario" validate:"required"`
-	IdTarea        *int       `json:"idTarea"`
-	Nombre         *string    `json:"nombre"`
-	FechaRegistro  *time.Time `json:"fechaRegistro"`
-	FechaEntrega   *time.Time `json:"fechaEntrega"`
-	FechaEntregada *time.Time `json:"fechaEntregada"`
+	IdCurso   *int `json:"idCurso" validate:"required"`
+	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
 
 type CursoTematicaRegistrarInputModel struct {
@@ -266,19 +225,8 @@ type CursoTematicaObtenerInputModel struct {
 }
 
 type CursoEstudianteDesempenoObtenerInputModel struct {
-	IdCurso                    *int       `json:"idCurso" validate:"required"`
-	IdUsuario                  *int       `json:"idUsuario" validate:"required"`
-	IdDesempeno                *int       `json:"idDesempeno"`
-	IdTarea                    *int       `json:"idTarea"`
-	Tarea                      *string    `json:"tarea"`
-	Calificacion               *float32   `json:"calificacion"`
-	PromedioCurso              *float32   `json:"promedioCurso"`
-	PrediccionPromedioCurso    *float32   `json:"prediccionPromedioCurso"`
-	RumboPromedioCurso         *string    `json:"rumboPromedioCurso"`
-	PuntualidadCurso           *float32   `json:"puntualidadCurso"`
-	PrediccionPuntualidadCurso *float32   `json:"prediccionPuntualidadCurso"`
-	RumboPuntualidadCurso      *string    `json:"rumboPuntualidadCurso"`
-	FechaRegistro              *time.Time `json:"fechaRegistro"`
+	IdCurso   *int `json:"idCurso" validate:"required"`
+	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
 
 type CursoEstudiantesSinGrupoObtenerInputModel struct {

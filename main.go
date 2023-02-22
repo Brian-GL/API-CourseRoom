@@ -78,6 +78,7 @@ func main() {
 	http.HandleFunc("/api/cursos/finalizaractualizar", cursosController.CursoFinalizarActualizar)
 	http.HandleFunc("/api/cursos/materialregistrar", cursosController.CursoMaterialRegistrar)
 	http.HandleFunc("/api/cursos/materialremover", cursosController.CursoMaterialRemover)
+	http.HandleFunc("/api/cursos/materialesobtener", cursosController.CursoMaterialesObtener)
 	http.HandleFunc("/api/cursos/mensajeregistrar", cursosController.CursoMensajeRegistrar)
 	http.HandleFunc("/api/cursos/mensajeremover", cursosController.CursoMensajeRemover)
 	http.HandleFunc("/api/cursos/mensajesobtener", cursosController.CursoMensajesObtener)
