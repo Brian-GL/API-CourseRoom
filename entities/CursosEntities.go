@@ -59,11 +59,12 @@ type CursoMensajesObtenerEntity struct {
 }
 
 type CursoEstudiantesObtenerEntity struct {
-	IdUsuario      int       `json:"idUsuario"`
-	NombreCompleto string    `json:"nombreCompleto"`
-	Imagen         *string   `json:"imagen"`
-	FechaRegistro  time.Time `json:"fechaRegistro"`
-	Estatus        string    `json:"estatus"`
+	IdUsuario          int        `json:"idUsuario"`
+	NombreCompleto     string     `json:"nombreCompleto"`
+	Imagen             *string    `json:"imagen"`
+	FechaRegistro      time.Time  `json:"fechaRegistro"`
+	FechaActualizacion *time.Time `json:"fechaActualizacion"`
+	Estatus            string     `json:"estatus"`
 }
 
 type CursoProfesorDetalleObtenerEntity struct {
