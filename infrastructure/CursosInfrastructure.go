@@ -287,20 +287,14 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoEstud
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado *entities.CursoEstudianteDetalleObtenerEntity
 
 		exec := "EXEC dbo.CursoEstudianteDetalle_Obtener  @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
 		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
 		}
@@ -936,22 +930,16 @@ func CursoEstudiantesSinGrupoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado []entities.CursoEstudiantesSinGrupoObtenerEntity
 
-		exec := "EXEC dbo.CursoEstudiantesSinGrupo_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoEstudiantesSinGrupo_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {

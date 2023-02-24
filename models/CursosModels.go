@@ -230,10 +230,7 @@ type CursoEstudianteDesempenoObtenerInputModel struct {
 }
 
 type CursoEstudiantesSinGrupoObtenerInputModel struct {
-	IdCurso      *int       `json:"idCurso" validate:"required"`
-	IdUsuario    *int       `json:"idUsuario"`
-	Estudiante   *string    `json:"estudiante"`
-	FechaIngreso *time.Time `json:"fechaIngreso"`
+	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
 type CursoEstudianteFinalizarActualizarInputModel struct {
