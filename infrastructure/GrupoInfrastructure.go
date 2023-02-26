@@ -15,9 +15,9 @@ func GrupoActualizarPutAsync(db *gorm.DB, model *models.GrupoActualizarInputMode
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Grupo_Actualizar @IdGrupo = ?, @IdCurso = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
+		exec := "EXEC dbo.Grupo_Actualizar @IdGrupo = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
 
-		db.Raw(exec, model.IdGrupo, model.IdCurso, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
+		db.Raw(exec, model.IdGrupo, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
 
 		if resultado != nil {
 

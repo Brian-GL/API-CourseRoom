@@ -8,7 +8,6 @@ type GrupoInputModel struct {
 
 type GrupoActualizarInputModel struct {
 	IdGrupo     *int    `json:"idGrupo" validate:"required"`
-	IdCurso     *int    `json:"idCurso" validate:"required"`
 	Nombre      *string `json:"nombre" validate:"required"`
 	Descripcion *string `json:"descripcion"`
 	Imagen      *string `json:"imagen"`
