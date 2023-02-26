@@ -313,9 +313,9 @@ func GruposMensajesObtenerGetAsync(db *gorm.DB, model *models.GruposMensajesObte
 
 		var resultado []entities.GruposMensajesObtenerEntity
 
-		exec := "EXEC dbo.GruposMensajes_Obtener @IdGrupo = ?, @UltimoMensaje = ?"
+		exec := "EXEC dbo.GruposMensajes_Obtener @IdGrupo = ?"
 
-		db.Raw(exec, model.IdGrupo, model.UltimoMensaje).Scan(&resultado)
+		db.Raw(exec, model.IdGrupo).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
