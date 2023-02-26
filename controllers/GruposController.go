@@ -2444,7 +2444,7 @@ func (controller *GrupoController) GrupoDetalleObtener(res http.ResponseWriter, 
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.GrupoDetalleObtenerInputModel
+				var modelo *models.GrupoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()

@@ -1627,7 +1627,7 @@ func (controller *TareaController) TareaArchivosEntregadosObtener(res http.Respo
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaArchivosEntregadosObtenerInputModel
+				var modelo *models.TareaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -1733,7 +1733,7 @@ func (controller *TareaController) TareaArchivosEntregadosObtener(res http.Respo
 	}
 }
 
-func (controller *TareaController) TareaEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareasEstudianteObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1766,7 +1766,7 @@ func (controller *TareaController) TareaEstudianteObtener(res http.ResponseWrite
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaEstudianteObtenerInputModel
+				var modelo *models.TareasEstudianteObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -1777,7 +1777,7 @@ func (controller *TareaController) TareaEstudianteObtener(res http.ResponseWrite
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaEstudianteObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.TareasEstudianteObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1872,7 +1872,7 @@ func (controller *TareaController) TareaEstudianteObtener(res http.ResponseWrite
 	}
 }
 
-func (controller *TareaController) TareaCreadaProfesorObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareasCreadasProfesorObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -1905,7 +1905,7 @@ func (controller *TareaController) TareaCreadaProfesorObtener(res http.ResponseW
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaCreadaProfesorObtenerInputModel
+				var modelo *models.TareasCreadasProfesorObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -1916,7 +1916,7 @@ func (controller *TareaController) TareaCreadaProfesorObtener(res http.ResponseW
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaCreadaProfesorObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.TareasCreadasProfesorObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2183,7 +2183,7 @@ func (controller *TareaController) TareaReatroalimentacionesObtener(res http.Res
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaReatroalimentacionesObtenerInputModel
+				var modelo *models.TareaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -2289,7 +2289,7 @@ func (controller *TareaController) TareaReatroalimentacionesObtener(res http.Res
 	}
 }
 
-func (controller *TareaController) TareaCalificarObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *TareaController) TareasCalificarObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2322,7 +2322,7 @@ func (controller *TareaController) TareaCalificarObtener(res http.ResponseWriter
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaCalificarObtenerInputModel
+				var modelo *models.TareasCalificarObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -2333,7 +2333,7 @@ func (controller *TareaController) TareaCalificarObtener(res http.ResponseWriter
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.TareaCalificarObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.TareasCalificarObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -2461,7 +2461,7 @@ func (controller *TareaController) TareaEntregarActualizar(res http.ResponseWrit
 		case "PUT":
 			{
 				//Actualizar grupo:
-				var modelo *models.TareaEntregarActualizarInputModel
+				var modelo *models.TareaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 

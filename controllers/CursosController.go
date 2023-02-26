@@ -637,7 +637,7 @@ func (controller *CursoController) CursoAbandonarActualizar(res http.ResponseWri
 		case "PUT":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoAbandonarActualizarInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -743,7 +743,7 @@ func (controller *CursoController) CursoAbandonarActualizar(res http.ResponseWri
 	}
 }
 
-func (controller *CursoController) CursoCuestionarioContestar(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoCuestionarioContestarValidar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -776,7 +776,7 @@ func (controller *CursoController) CursoCuestionarioContestar(res http.ResponseW
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoCuestionarioContestarInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -787,146 +787,7 @@ func (controller *CursoController) CursoCuestionarioContestar(res http.ResponseW
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoCuestionarioContestarPostAsync(controller.DB, modelo)
-						})
-
-						response := future.Await().(models.ResponseInfrastructure)
-
-						switch response.Status {
-						case models.SUCCESS:
-							{
-								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
-								if err != nil {
-									res.WriteHeader(http.StatusInternalServerError)
-									res.Write([]byte(err.Error()))
-								} else {
-									res.WriteHeader(http.StatusOK)
-									res.Write(jsonBytes)
-								}
-							}
-						case models.ALERT:
-							{
-								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
-								if err != nil {
-									res.WriteHeader(http.StatusInternalServerError)
-									res.Write([]byte(err.Error()))
-								} else {
-									res.WriteHeader(http.StatusConflict)
-									res.Write(jsonBytes)
-								}
-							}
-						default:
-							{
-								jsonBytes, err := controller.JsonIter.Marshal(response.Data)
-								if err != nil {
-									res.WriteHeader(http.StatusInternalServerError)
-									res.Write([]byte(err.Error()))
-								} else {
-									res.WriteHeader(http.StatusInternalServerError)
-									res.Write(jsonBytes)
-								}
-							}
-						}
-					} else {
-
-						jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
-
-						if err != nil {
-							res.WriteHeader(http.StatusInternalServerError)
-							res.Write([]byte(err.Error()))
-						} else {
-							res.WriteHeader(http.StatusBadRequest)
-							res.Write(jsonBytes)
-						}
-					}
-				} else {
-
-					jsonBytes, err := controller.JsonIter.Marshal("El parámetro de entrada no cuenta con un formato adecuado")
-
-					if err != nil {
-						res.WriteHeader(http.StatusInternalServerError)
-						res.Write([]byte(err.Error()))
-					} else {
-						res.WriteHeader(http.StatusConflict)
-						res.Write(jsonBytes)
-					}
-				}
-
-			}
-
-		default:
-			{
-				jsonBytes, err := controller.JsonIter.Marshal("Ruta inválida")
-
-				if err != nil {
-					res.WriteHeader(http.StatusInternalServerError)
-					res.Write([]byte(err.Error()))
-				} else {
-					res.WriteHeader(http.StatusNotImplemented)
-					res.Write(jsonBytes)
-				}
-			}
-		}
-
-	} else {
-
-		jsonBytes, err := controller.JsonIter.Marshal("Token inválido")
-
-		if err != nil {
-			res.WriteHeader(http.StatusInternalServerError)
-			res.Write([]byte(err.Error()))
-		} else {
-			res.WriteHeader(http.StatusUnauthorized)
-			res.Write(jsonBytes)
-		}
-	}
-}
-
-func (controller *CursoController) CursoCuestionarioAbandonarActualizar(res http.ResponseWriter, req *http.Request) {
-
-	// Cabecera de respuesta:
-	res.Header().Add("Content-Type", "application/json")
-
-	// Obtener token
-	token := req.Header.Get("Authorization")
-
-	// Validar que el token no se encuentre vacío:
-	if token == "" {
-
-		jsonBytes, err := controller.JsonIter.Marshal("El token es necesario para acceder a este recurso")
-
-		if err != nil {
-			res.WriteHeader(http.StatusInternalServerError)
-			res.Write([]byte(err.Error()))
-		} else {
-			res.WriteHeader(http.StatusUnauthorized)
-			res.Write(jsonBytes)
-		}
-
-		return
-	}
-
-	// Validar que el token sea el correcto:
-
-	if token == controller.SECRET_TOKEN {
-
-		switch req.Method {
-
-		case "PUT":
-			{
-				//Actualizar grupo:
-				var modelo *models.CursoCuestionarioAbandonarActualizarInputModel
-
-				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
-				defer req.Body.Close()
-				if err == nil {
-
-					err = controller.ValidateModel(modelo)
-
-					if err == nil {
-
-						future := async.Exec(func() interface{} {
-							return infrastructure.CursoCuestionarioAbandonarActualizarPutAsync(controller.DB, modelo)
+							return infrastructure.CursoCuestionarioContestarValidarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -1193,7 +1054,7 @@ func (controller *CursoController) CursoEstudianteRegistrar(res http.ResponseWri
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoEstudianteRegistrarInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -1332,7 +1193,7 @@ func (controller *CursoController) CursoEstudianteDetalleObtener(res http.Respon
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoEstudianteDetalleObtenerInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -2550,7 +2411,7 @@ func (controller *CursoController) CursoEstudianteRemover(res http.ResponseWrite
 	}
 }
 
-func (controller *CursoController) CursoEstudianteObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoEstudiantesObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -2583,7 +2444,7 @@ func (controller *CursoController) CursoEstudianteObtener(res http.ResponseWrite
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoEstudianteObtenerInputModel
+				var modelo *models.CursoEstudiantesObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -2594,7 +2455,7 @@ func (controller *CursoController) CursoEstudianteObtener(res http.ResponseWrite
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoEstudianteObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.CursoEstudiantesObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3106,7 +2967,7 @@ func (controller *CursoController) CursoPromedioObtener(res http.ResponseWriter,
 	}
 }
 
-func (controller *CursoController) CursoBuscarObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursosBuscarObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3139,7 +3000,7 @@ func (controller *CursoController) CursoBuscarObtener(res http.ResponseWriter, r
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoBuscarInputModel
+				var modelo *models.CursosBuscarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3150,7 +3011,7 @@ func (controller *CursoController) CursoBuscarObtener(res http.ResponseWriter, r
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoBuscarGetAsync(controller.DB, modelo)
+							return infrastructure.CursosBuscarGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3245,7 +3106,7 @@ func (controller *CursoController) CursoBuscarObtener(res http.ResponseWriter, r
 	}
 }
 
-func (controller *CursoController) CursoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3278,7 +3139,7 @@ func (controller *CursoController) CursoObtener(res http.ResponseWriter, req *ht
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoObtenerInputModel
+				var modelo *models.CursosObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3289,7 +3150,7 @@ func (controller *CursoController) CursoObtener(res http.ResponseWriter, req *ht
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.CursosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3384,7 +3245,7 @@ func (controller *CursoController) CursoObtener(res http.ResponseWriter, req *ht
 	}
 }
 
-func (controller *CursoController) CursoNuevoObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursosNuevosObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3417,7 +3278,7 @@ func (controller *CursoController) CursoNuevoObtener(res http.ResponseWriter, re
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoNuevoObtenerInputModel
+				var modelo *models.CursosNuevosObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3428,7 +3289,7 @@ func (controller *CursoController) CursoNuevoObtener(res http.ResponseWriter, re
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoNuevoObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.CursosNuevosObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3523,7 +3384,7 @@ func (controller *CursoController) CursoNuevoObtener(res http.ResponseWriter, re
 	}
 }
 
-func (controller *CursoController) CursoProfesorObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursosProfesorObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -3556,7 +3417,7 @@ func (controller *CursoController) CursoProfesorObtener(res http.ResponseWriter,
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoProfesorObtenerInputModel
+				var modelo *models.CursosProfesorObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3567,7 +3428,7 @@ func (controller *CursoController) CursoProfesorObtener(res http.ResponseWriter,
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoProfesorObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.CursosProfesorObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -3695,7 +3556,7 @@ func (controller *CursoController) CursoTareasEstudianteObtener(res http.Respons
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoTareasEstudianteObtenerInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3834,7 +3695,7 @@ func (controller *CursoController) CursoTematicaRegistrar(res http.ResponseWrite
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoTematicaRegistrarInputModel
+				var modelo *models.CursoTematicaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -3973,7 +3834,7 @@ func (controller *CursoController) CursoTematicaRemover(res http.ResponseWriter,
 		case "DELETE":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoTematicaRemoverInputModel
+				var modelo *models.CursoTematicaInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -4079,7 +3940,7 @@ func (controller *CursoController) CursoTematicaRemover(res http.ResponseWriter,
 	}
 }
 
-func (controller *CursoController) CursoTematicaObtener(res http.ResponseWriter, req *http.Request) {
+func (controller *CursoController) CursoTematicasObtener(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -4112,7 +3973,7 @@ func (controller *CursoController) CursoTematicaObtener(res http.ResponseWriter,
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoTematicaObtenerInputModel
+				var modelo *models.CursoTematicasObtenerInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -4123,7 +3984,7 @@ func (controller *CursoController) CursoTematicaObtener(res http.ResponseWriter,
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.CursoTematicaObtenerGetAsync(controller.DB, modelo)
+							return infrastructure.CursoTematicasObtenerGetAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)
@@ -4251,7 +4112,7 @@ func (controller *CursoController) CursoEstudianteDesempenoObtener(res http.Resp
 		case "POST":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoEstudianteDesempenoObtenerInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()
@@ -4529,7 +4390,7 @@ func (controller *CursoController) CursoEstudianteFinalizarActualizar(res http.R
 		case "PUT":
 			{
 				//Actualizar grupo:
-				var modelo *models.CursoEstudianteFinalizarActualizarInputModel
+				var modelo *models.CursoInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 				defer req.Body.Close()

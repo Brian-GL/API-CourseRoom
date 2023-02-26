@@ -7,6 +7,70 @@ import (
 	"gorm.io/gorm"
 )
 
+func CursoActualizarPutAsync(db *gorm.DB, model *models.CursoActualizarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.Curso_Actualizar @IdCurso = ?, @IdProfesor = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
+
+		db.Raw(exec, model.IdCurso, model.IdProfesor, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
+func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.AccionEntity
+
+		exec := "EXEC dbo.Curso_Registrar @Nombre = ?, @Descripcion = ?, @Imagen = ?, @IdProfesor = ?"
+
+		db.Raw(exec, model.Nombre, model.Descripcion, model.Imagen, model.IdProfesor).Scan(&resultado)
+
+		if resultado != nil {
+
+			if resultado.Codigo > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
 func CursoRemoverDeleteAsync(db *gorm.DB, model *models.CursoRemoverInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -39,7 +103,7 @@ func CursoRemoverDeleteAsync(db *gorm.DB, model *models.CursoRemoverInputModel) 
 
 }
 
-func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel) models.ResponseInfrastructure {
+func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -47,96 +111,7 @@ func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.Curso_Registrar  @Nombre = ?, @Descripcion = ?, @Imagen = ?, @IdProfesor = ?"
-
-		db.Raw(exec, model.Nombre, model.Descripcion, model.Imagen, model.IdProfesor).Scan(&resultado)
-
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-func CursoGruposObtenerGetAsync(db *gorm.DB, model *models.CursoGruposObtenerInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado []entities.CursoGruposObtenerEntity
-
-		exec := "EXEC dbo.CursoGrupos_Obtener @IdCurso = ?, @Activo = ?"
-
-		db.Raw(exec, model.IdCurso, model.Activo).Scan(&resultado)
-
-		if len(resultado) > 0 {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func CursoActualizarPutAsync(db *gorm.DB, model *models.CursoActualizarInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AccionEntity
-
-		exec := "EXEC dbo.Curso_Actualizar  @IdCurso = ?, @IdProfesor = ?, @Nombre = ?, @Descripcion = ?, @Imagen = ?"
-
-		db.Raw(exec, model.IdCurso, model.IdProfesor, model.Nombre, model.Descripcion, model.Imagen).Scan(&resultado)
-
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoAbandonarActualizarInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AccionEntity
-
-		exec := "EXEC dbo.CursoAbandonar_Actualizar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoAbandonar_Actualizar @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -160,7 +135,7 @@ func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoAbandonarA
 
 }
 
-func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoCuestionarioAbandonarActualizarInputModel) models.ResponseInfrastructure {
+func CursoCuestionarioContestarValidarGetAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -168,38 +143,7 @@ func CursoCuestionarioAbandonarActualizarPutAsync(db *gorm.DB, model *models.Cur
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoCuestionarioAbandonar_Actualizar  @IdCurso = ?, @IdUsuario = ?"
-
-		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
-
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-func CursoCuestionarioContestarPostAsync(db *gorm.DB, model *models.CursoCuestionarioContestarInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AccionEntity
-
-		exec := "EXEC dbo.CursoCuestionarioContestar_Validar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoCuestionarioContestar_Validar @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -231,7 +175,7 @@ func CursoDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoDesempenoObte
 
 		var resultado []entities.CursoDesempenoObtenerEntity
 
-		exec := "EXEC dbo.CursoDesempeno_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoDesempeno_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -249,7 +193,7 @@ func CursoDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoDesempenoObte
 
 }
 
-func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoEstudianteRegistrarInputModel) models.ResponseInfrastructure {
+func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -257,7 +201,7 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoEstudiant
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoEstudiante_Registrar  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudiante_Registrar @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -281,15 +225,15 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoEstudiant
 
 }
 
-func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteDetalleObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado *entities.CursoEstudianteDetalleObtenerEntity
+		var resultado []entities.CursoEstudianteDetalleObtenerEntity
 
-		exec := "EXEC dbo.CursoEstudianteDetalle_Obtener  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteDetalle_Obtener @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -315,7 +259,7 @@ func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarA
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoFinalizar_Actualizar  @IdCurso = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.CursoFinalizar_Actualizar @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
 
@@ -339,6 +283,32 @@ func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarA
 
 }
 
+func CursoGruposObtenerGetAsync(db *gorm.DB, model *models.CursoGruposObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.CursoGruposObtenerEntity
+
+		exec := "EXEC dbo.CursoGrupos_Obtener @IdCurso = ?, @Activo = ?"
+
+		db.Raw(exec, model.IdCurso, model.Activo).Scan(&resultado)
+
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos de curso"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+
+}
+
 func CursoMaterialRegistrarPostAsync(db *gorm.DB, model *models.CursoMaterialRegistrarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -347,7 +317,7 @@ func CursoMaterialRegistrarPostAsync(db *gorm.DB, model *models.CursoMaterialReg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoMaterial_Registrar  @IdCurso = ?, @IdUsuario = ?, @NombreArchivo = ?, @Arvhivo = ?"
+		exec := "EXEC dbo.CursoMaterial_Registrar @IdCurso = ?, @IdUsuario = ?, @NombreArchivo = ?, @Archivo = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario, model.NombreArchivo, model.Archivo).Scan(&resultado)
 
@@ -379,7 +349,7 @@ func CursoMaterialRemoverDeleteAsync(db *gorm.DB, model *models.CursoMaterialRem
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoMaterial_Remover @IdMaterial = ?, @Idcurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoMaterial_Remover @IdMaterial = ?, @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdMaterial, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -411,7 +381,7 @@ func CursoMaterialesObtenerGetAsync(db *gorm.DB, model *models.CursoMaterialesOb
 
 		var resultado []entities.CursoMaterialesObtenerEntity
 
-		exec := "EXEC dbo.CursoMateriales_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoMateriales_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -437,9 +407,9 @@ func CursoMensajeRegistrarPostAsync(db *gorm.DB, model *models.CursoMensajeRegis
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoMensaje_Registrar  @IdCurso = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
+		exec := "EXEC dbo.CursoMensaje_Registrar @IdCurso = ?, @IdUsuarioEmisor = ?, @Mensaje = ?, @Archivo = ?"
 
-		db.Raw(exec, model.IdCurso, model.IdCurso, model.IdUsuarioEmisor, model.Archivo).Scan(&resultado)
+		db.Raw(exec, model.IdCurso, model.IdUsuarioEmisor, model.Mensaje, model.Archivo).Scan(&resultado)
 
 		if resultado != nil {
 
@@ -499,22 +469,16 @@ func CursoMensajesObtenerGetAsync(db *gorm.DB, model *models.CursoMensajesObtene
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado []entities.CursoMensajesObtenerEntity
 
-		exec := "EXEC dbo.CursoMensajes_Obtener  @IdCurso = ?, @UltimoMensaje = ?"
+		exec := "EXEC dbo.CursoMensajes_Obtener @IdCurso = ?, @UltimoMensaje = ?"
 
 		db.Raw(exec, model.IdCurso, model.UltimoMensaje).Scan(&resultado)
 
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -557,7 +521,7 @@ func CursoEstudianteRemoverDeleteAsync(db *gorm.DB, model *models.CursoEstudiant
 
 }
 
-func CursoEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudiantesObtenerGetAsync(db *gorm.DB, model *models.CursoEstudiantesObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -565,7 +529,7 @@ func CursoEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteOb
 
 		var resultado []entities.CursoEstudiantesObtenerEntity
 
-		exec := "EXEC dbo.CursoEstudiantes_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoEstudiantes_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -591,7 +555,7 @@ func CursoProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoProfeso
 
 		var resultado *entities.CursoProfesorDetalleObtenerEntity
 
-		exec := "EXEC dbo.CursoProfesorDetalle_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoProfesorDetalle_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
@@ -617,7 +581,7 @@ func CursoProfesorTareasObtenerGetAsync(db *gorm.DB, model *models.CursoProfesor
 
 		var resultado []entities.CursoProfesorTareasObtenerEntity
 
-		exec := "EXEC dbo.CursoProfesorTareas_Obtener  @IdCurso = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.CursoProfesorTareas_Obtener @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
 
@@ -641,22 +605,16 @@ func CursoPromedioObtenerGetAsync(db *gorm.DB, model *models.CursoPromedioObtene
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado []entities.CursoPromedioObtenerEntity
 
-		exec := "EXEC dbo.CursoPromedio_Obtener  @IdCurso = ?"
+		exec := "EXEC dbo.CursoPromedio_Obtener @IdCurso = ?"
 
 		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -667,28 +625,22 @@ func CursoPromedioObtenerGetAsync(db *gorm.DB, model *models.CursoPromedioObtene
 
 }
 
-func CursoBuscarGetAsync(db *gorm.DB, model *models.CursoBuscarInputModel) models.ResponseInfrastructure {
+func CursosBuscarGetAsync(db *gorm.DB, model *models.CursosBuscarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado []entities.CursosBuscarEntity
 
-		exec := "EXEC dbo.Curso_Buscar  @busqueda = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.Cursos_Buscar @busqueda = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.Busqueda, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -699,7 +651,7 @@ func CursoBuscarGetAsync(db *gorm.DB, model *models.CursoBuscarInputModel) model
 
 }
 
-func CursoObtenerGetAsync(db *gorm.DB, model *models.CursoObtenerInputModel) models.ResponseInfrastructure {
+func CursosObtenerGetAsync(db *gorm.DB, model *models.CursosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -725,7 +677,7 @@ func CursoObtenerGetAsync(db *gorm.DB, model *models.CursoObtenerInputModel) mod
 
 }
 
-func CursoNuevoObtenerGetAsync(db *gorm.DB, model *models.CursoNuevoObtenerInputModel) models.ResponseInfrastructure {
+func CursosNuevosObtenerGetAsync(db *gorm.DB, model *models.CursosNuevosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -733,7 +685,7 @@ func CursoNuevoObtenerGetAsync(db *gorm.DB, model *models.CursoNuevoObtenerInput
 
 		var resultado []entities.CursosNuevosObtenerEntity
 
-		exec := "EXEC dbo.CursosNuevo_Obtener @IdUsuario = ?,  @NumeroResultados = ?"
+		exec := "EXEC dbo.CursosNuevos_Obtener @IdUsuario = ?, @NumeroResultados = ?"
 
 		db.Raw(exec, model.IdUsuario, model.NumeroResultados).Scan(&resultado)
 
@@ -751,7 +703,7 @@ func CursoNuevoObtenerGetAsync(db *gorm.DB, model *models.CursoNuevoObtenerInput
 
 }
 
-func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtenerInputModel) models.ResponseInfrastructure {
+func CursosProfesorObtenerGetAsync(db *gorm.DB, model *models.CursosProfesorObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -759,9 +711,9 @@ func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtene
 
 		var resultado []entities.CursosProfesorObtenerEntity
 
-		exec := "EXEC dbo.CursosProfesor_Obtener @IdProfesor = ?, @Finalizado = ?"
+		exec := "EXEC dbo.CursosProfesor_Obtener @IdProfesor = ?"
 
-		db.Raw(exec, model.IdProfesor, model.Finalizado).Scan(&resultado)
+		db.Raw(exec, model.IdProfesor).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
@@ -776,7 +728,7 @@ func CursoProfesorObtenerGetAsync(db *gorm.DB, model *models.CursoProfesorObtene
 
 }
 
-func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoTareasEstudianteObtenerInputModel) models.ResponseInfrastructure {
+func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -784,7 +736,7 @@ func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoTareas
 
 		var resultado []entities.CursoTareasEstudianteObtenerEntity
 
-		exec := "EXEC dbo.CursoTareasEstudiante_Obtener  @IdCurso = ?, @IdUsuario"
+		exec := "EXEC dbo.CursoTareasEstudiante_Obtener @IdCurso = ?, @IdUsuario"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -802,7 +754,7 @@ func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoTareas
 
 }
 
-func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaRegistrarInputModel) models.ResponseInfrastructure {
+func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -810,7 +762,7 @@ func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaReg
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoTematica_Registrar  @IdCurso = ?, @IdTematica = ?"
+		exec := "EXEC dbo.CursoTematica_Registrar @IdCurso = ?, @IdTematica = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdTematica).Scan(&resultado)
 
@@ -834,7 +786,7 @@ func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaReg
 
 }
 
-func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaRemoverInputModel) models.ResponseInfrastructure {
+func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -866,28 +818,22 @@ func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaRem
 
 }
 
-func CursoTematicaObtenerGetAsync(db *gorm.DB, model *models.CursoTematicaObtenerInputModel) models.ResponseInfrastructure {
+func CursoTematicasObtenerGetAsync(db *gorm.DB, model *models.CursoTematicasObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
 	if db != nil {
 
-		var resultado *entities.AccionEntity
+		var resultado []entities.CursoTematicasObtenerEntity
 
-		exec := "EXEC dbo.CursoTematica_Obtener @IdCurso = ?, @IdTematica = ?"
+		exec := "EXEC dbo.CursoTematicas_Obtener @IdCurso = ?"
 
-		db.Raw(exec, model.IdCurso, model.IdTematica).Scan(&resultado)
+		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
 
 	} else {
@@ -898,7 +844,7 @@ func CursoTematicaObtenerGetAsync(db *gorm.DB, model *models.CursoTematicaObtene
 
 }
 
-func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoEstudianteDesempenoObtenerInputModel) models.ResponseInfrastructure {
+func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -906,7 +852,7 @@ func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 
 		var resultado []entities.CursoEstudianteDesempenoObtenerEntity
 
-		exec := "EXEC dbo.CursoEstudianteDesempeno_Obtener  @IdCurso = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteDesempeno_Obtener @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -950,7 +896,7 @@ func CursoEstudiantesSinGrupoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 
 }
 
-func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoEstudianteFinalizarActualizarInputModel) models.ResponseInfrastructure {
+func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 
@@ -958,7 +904,7 @@ func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.Curso
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoEstudianteFinalizar_Actualizar  @IdCurso = ?, IdUsuario = ?"
+		exec := "EXEC dbo.CursoEstudianteFinalizar_Actualizar @IdCurso = ?, IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -990,7 +936,7 @@ func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.Cur
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoCuestionarioRespuesta_Registrar  @IdCurso = ?, IdUsuario = ?, @IdPregunta = ?, @Puntaje"
+		exec := "EXEC dbo.CursoCuestionarioRespuesta_Registrar @IdCurso = ?, IdUsuario = ?, @IdPregunta = ?, @Puntaje"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario, model.IdPregunta, model.Puntaje).Scan(&resultado)
 
