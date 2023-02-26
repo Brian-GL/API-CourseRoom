@@ -22,8 +22,7 @@ type GrupoArchivoCompartidoRegistrarInputModel struct {
 }
 
 type GruposMensajesObtenerInputModel struct {
-	IdGrupo       *int  `json:"idGrupo" validate:"required"`
-	UltimoMensaje *bool `json:"ultimoMensaje" validate:"required"`
+	IdGrupo *int `json:"idGrupo" validate:"required"`
 }
 
 type GruposObtenerInputModel struct {
