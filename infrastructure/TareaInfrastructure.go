@@ -73,16 +73,16 @@ func TareaEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaInput
 
 	if db != nil {
 
-		var resultado []entities.TareaEstudianteDetalleObtenerEntity
+		var resultado *entities.TareaEstudianteDetalleObtenerEntity
 
 		exec := "EXEC dbo.TareaEstudianteDetalle_Obtener @IdTarea = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró el detalle de la tarea"}
 		}
 
 	} else {
@@ -248,13 +248,13 @@ func TareaRetroalimentacionDetalleObtenerGetAsync(db *gorm.DB, model *models.Tar
 
 	if db != nil {
 
-		var resultado []entities.TareaRetroalimentacionDetalleObtenerEntity
+		var resultado *entities.TareaRetroalimentacionDetalleObtenerEntity
 
 		exec := "EXEC dbo.TareaRetroalimentacionDetalle_Obtener @IdRetroalimentacion = ?"
 
 		db.Raw(exec, model.IdRetroalimentacion).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
