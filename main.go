@@ -170,6 +170,7 @@ func main() {
 	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
 	http.HandleFunc("/api/usuarios/tematicasobtener", usuariosController.UsuarioTematicasObtener)
 	http.HandleFunc("/api/usuarios/credencial", usuariosController.UsuarioCredencialObtener)
+	http.HandleFunc("/api/usuarios/informacioncalculator", usuariosController.UsuarioCalculatorInformacionObtener)
 
 	// #region Archivo Endpoints
 

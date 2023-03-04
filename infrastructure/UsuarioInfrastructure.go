@@ -684,3 +684,34 @@ func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicas
 
 	return response
 }
+
+func UsuarioCalculatorInformacionObtenerGetAsync(db *gorm.DB, model *models.UsuarioCalculatorInformacionObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado []entities.UsuarioCalculatorInformacionObtenerEntity
+
+		exec := "EXEC dbo.CalculatorInformacionDesempeno_Obtener @IdUsuario = ?"
+
+		db.Raw(exec, model.IdUsuario).Scan(&resultado)
+
+		if resultado != nil {
+
+			if len(resultado) > 0 {
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+			} else {
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			}
+
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
