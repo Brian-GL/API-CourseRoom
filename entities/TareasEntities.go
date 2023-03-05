@@ -29,8 +29,8 @@ type TareaEstudianteDetalleObtenerEntity struct {
 	Descripcion       string     `json:"descripcion"`
 	FechaRegistro     time.Time  `json:"fechaRegistro"`
 	FechaEntrega      time.Time  `json:"fechaEntrega"`
-	Calificacion      float64    `json:"calificacion"`
-	Puntualidad       float64    `json:"puntualidad"`
+	Calificacion      float32    `json:"calificacion"`
+	Puntualidad       float32    `json:"puntualidad"`
 	FechaCalificacion *time.Time `json:"fechaCalificacion"`
 	FechaEntregada    *time.Time `json:"fechaEntregada"`
 	Estatus           *string    `json:"estatus"`
@@ -71,14 +71,19 @@ type TareasCreadasProfesorObtenerEntity struct {
 }
 
 type TareaProfesorDetalleObtenerEntity struct {
-	IdCurso       int       `json:"idCurso"`
-	Curso         string    `json:"curso"`
-	ImagenCurso   *string   `json:"imagenCurso"`
-	Nombre        string    `json:"nombre"`
-	Descripcion   string    `json:"descripcion"`
-	FechaRegistro time.Time `json:"fechaRegistro"`
-	FechaEntrega  time.Time `json:"fechaEntrega"`
-	Estatus       *string   `json:"estatus"`
+	IdCurso           int        `json:"idCurso"`
+	Curso             string     `json:"curso"`
+	ImagenCurso       *string    `json:"imagenCurso"`
+	Nombre            string     `json:"nombre"`
+	Descripcion       string     `json:"descripcion"`
+	FechaRegistro     time.Time  `json:"fechaRegistro"`
+	FechaEntrega      time.Time  `json:"fechaEntrega"`
+	Estatus           *string    `json:"estatus"`
+	Calificacion      float32    `json:"calificacion"`
+	Puntualidad       float32    `json:"puntualidad"`
+	FechaCalificacion *time.Time `json:"fechaCalificacion"`
+	FechaEntregada    *time.Time `json:"fechaEntregada"`
+	Modificable       bool       `json:"modificable"`
 }
 
 type TareaImagenesEntregadasObtenerEntity struct {

@@ -43,17 +43,17 @@ type UsuarioDetalleObtenerEntity struct {
 	IdLocalidad        *int       `json:"idLocalidad"`
 	IdEstado           *int       `json:"idEstado"`
 	TipoUsuario        string     `json:"tipoUsuario"`
-	PromedioGeneral    *float64   `json:"promedioGeneral"`
+	PromedioGeneral    *float32   `json:"promedioGeneral"`
 	FechaRegistro      time.Time  `json:"fechaRegistro"`
 	FechaActualizacion *time.Time `json:"fechaActualizacion"`
 }
 
 type UsuarioPuntualidadEntity struct {
-	NuevaPuntualidad *float64 `json:"nuevaPuntualidad"`
+	NuevaPuntualidad *float32 `json:"nuevaPuntualidad"`
 }
 
 type UsuarioPromedioEntity struct {
-	NuevoPromedio *float64 `json:"nuevoPromedio"`
+	NuevoPromedio *float32 `json:"nuevoPromedio"`
 }
 
 type UsuariosBuscarEntity struct {
