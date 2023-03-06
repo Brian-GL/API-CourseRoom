@@ -74,8 +74,7 @@ type CursoMensajeRemoverInputModel struct {
 }
 
 type CursoMensajesObtenerInputModel struct {
-	IdCurso       *int  `json:"idCurso" validate:"required"`
-	UltimoMensaje *bool `json:"ultimoMensaje" validate:"required"`
+	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
 type CursoEstudianteRemoverInputModel struct {
