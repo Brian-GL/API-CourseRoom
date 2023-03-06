@@ -35,6 +35,16 @@ type CursoEstudianteDetalleObtenerEntity struct {
 	DescripcionEstatus      *string    `json:"descripcionEstatus"`
 }
 
+type CursoDetalleObtenerEntity struct {
+	Nombre         string    `json:"nombre"`
+	Descripcion    string    `json:"descripcion"`
+	Imagen         *string   `json:"imagen"`
+	IdProfesor     int       `json:"idProfesor"`
+	NombreProfesor string    `json:"nombreProfesor"`
+	ImagenProfesor *string   `json:"imagenProfesor"`
+	FechaRegistro  time.Time `json:"fechaRegistro"`
+}
+
 type CursoGruposObtenerEntity struct {
 	IdGrupo           int       `json:"idGrupo"`
 	Nombre            string    `json:"nombre"`

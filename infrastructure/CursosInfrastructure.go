@@ -237,10 +237,35 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoInput
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
+		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func CursoDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoDetalleObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.CursoDetalleObtenerEntity
+
+		exec := "EXEC dbo.CursoDetalle_Obtener @IdCurso = ?"
+
+		db.Raw(exec, model.IdCurso).Scan(&resultado)
+
+		if resultado != nil {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del curso"}
 		}
 
 	} else {

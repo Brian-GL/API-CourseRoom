@@ -29,6 +29,10 @@ type CursoDesempenoObtenerInputModel struct {
 	IdCurso *int `json:"idCurso" validate:"required"`
 }
 
+type CursoDetalleObtenerInputModel struct {
+	IdCurso *int `json:"idCurso" validate:"required"`
+}
+
 type CursoFinalizarActualizarInputModel struct {
 	IdCurso    *int `json:"idCurso" validate:"required"`
 	IdProfesor *int `json:"idProfesor" validate:"required"`

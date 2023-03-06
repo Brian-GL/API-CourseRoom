@@ -97,6 +97,7 @@ func main() {
 	http.HandleFunc("/api/cursos/estudiantessingrupoobtener", cursosController.CursoEstudiantesSinGrupoObtener)
 	http.HandleFunc("/api/cursos/estudiantefinalizaractualizar", cursosController.CursoEstudianteFinalizarActualizar)
 	http.HandleFunc("/api/cursos/cuestionariorespuestaregistrar", cursosController.CursoCuestionarioRespuestaRegistrar)
+	http.HandleFunc("/api/cursos/detalleobtener", cursosController.CursoDetalleObtener)
 
 	// // #endregion
 
