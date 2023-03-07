@@ -86,6 +86,17 @@ type TareaProfesorDetalleObtenerEntity struct {
 	Modificable       bool       `json:"modificable"`
 }
 
+type TareaDetalleObtenerEntity struct {
+	IdCurso       int       `json:"idCurso"`
+	Curso         string    `json:"curso"`
+	ImagenCurso   *string   `json:"imagenCurso"`
+	Nombre        string    `json:"nombre"`
+	Descripcion   string    `json:"descripcion"`
+	FechaRegistro time.Time `json:"fechaRegistro"`
+	FechaEntrega  time.Time `json:"fechaEntrega"`
+	Modificable   bool      `json:"modificable"`
+}
+
 type TareaImagenesEntregadasObtenerEntity struct {
 	Nombre    string  `json:"nombre"`
 	Archivo   string  `json:"archivo"`

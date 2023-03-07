@@ -149,6 +149,7 @@ func main() {
 	http.HandleFunc("/api/tareas/archivoadjuntoregistrar", tareasController.TareaArchivoAdjuntoRegistrar)
 	http.HandleFunc("/api/tareas/remover", tareasController.TareaRemover)
 	http.HandleFunc("/api/tareas/registrar", tareasController.TareaRegistrar)
+	http.HandleFunc("/api/tareas/detalle", tareasController.TareaDetalleObtener)
 
 	// #endregion
 

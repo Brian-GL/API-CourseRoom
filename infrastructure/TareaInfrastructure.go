@@ -173,16 +173,41 @@ func TareaProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaProfeso
 
 	if db != nil {
 
-		var resultado []entities.TareaProfesorDetalleObtenerEntity
+		var resultado *entities.TareaProfesorDetalleObtenerEntity
 
 		exec := "EXEC dbo.TareaProfesorDetalle_Obtener @IdTarea = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdProfesor).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información de la tarea"}
+		}
+
+	} else {
+		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
+	}
+
+	return response
+}
+
+func TareaDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaArchivosAdjuntosObtenerInputModel) models.ResponseInfrastructure {
+
+	var response models.ResponseInfrastructure
+
+	if db != nil {
+
+		var resultado *entities.TareaDetalleObtenerEntity
+
+		exec := "EXEC dbo.TareaDetalle_Obtener @IdTarea = ?"
+
+		db.Raw(exec, model.IdTarea).Scan(&resultado)
+
+		if resultado != nil {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+		} else {
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información de la tarea"}
 		}
 
 	} else {
