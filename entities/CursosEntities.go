@@ -188,7 +188,6 @@ type CursoEstudianteDesempenoObtenerEntity struct {
 }
 
 type CursoEstudiantesSinGrupoObtenerEntity struct {
-	IdUsuario    int       `json:"idUsuario"`
-	Estudiante   string    `json:"estudiante"`
-	FechaIngreso time.Time `json:"fechaIngreso"`
+	IdUsuario  int    `json:"idUsuario"`
+	Estudiante string `json:"estudiante"`
 }
