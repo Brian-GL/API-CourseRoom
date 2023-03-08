@@ -632,7 +632,7 @@ func CursosBuscarGetAsync(db *gorm.DB, model *models.CursosBuscarInputModel) mod
 
 		var resultado []entities.CursosBuscarEntity
 
-		exec := "EXEC dbo.Cursos_Buscar @busqueda = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.Cursos_Buscar @Busqueda = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.Busqueda, model.IdUsuario).Scan(&resultado)
 
