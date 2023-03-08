@@ -129,38 +129,6 @@ func AvisoDetalleObtenerGetAsync(db *gorm.DB, model *models.AvisoInputModel) mod
 
 }
 
-func AvisoPlagioProfesorRegistrarPostAsync(db *gorm.DB, model *models.AvisoPlagioProfesorRegistrarInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *entities.AccionEntity
-
-		exec := "EXEC dbo.AvisoPlagioProfesor_Registrar @IdProfesor = ?, @IdUsuario = ?, @IdTarea = ?, @NombreArchivo = ?"
-
-		db.Raw(exec, model.IdProfesor, model.IdUsuario, model.IdTarea, model.NombreArchivo).Scan(&resultado)
-
-		if resultado != nil {
-
-			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
-			}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
 func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure

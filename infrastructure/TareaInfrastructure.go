@@ -217,31 +217,6 @@ func TareaDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaArchivosAdjunto
 	return response
 }
 
-func TareaImagenesEntregadasObtenerGetAsync(db *gorm.DB, model *models.TareaInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado []entities.TareaImagenesEntregadasObtenerEntity
-
-		exec := "EXEC dbo.TareaImagenesEntregadas_Obtener @IdTarea = ?, @IdUsuario = ?"
-
-		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
-
-		if len(resultado) > 0 {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-}
-
 func TareaReatroalimentacionesObtenerGetAsync(db *gorm.DB, model *models.TareaInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -590,7 +565,7 @@ func TareaRemoverDeleteAsync(db *gorm.DB, model *models.TareaRemoverInputModel) 
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
 				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}

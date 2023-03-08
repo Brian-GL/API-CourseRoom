@@ -22,9 +22,9 @@ func CursoActualizarPutAsync(db *gorm.DB, model *models.CursoActualizarInputMode
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -56,7 +56,7 @@ func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -86,9 +86,9 @@ func CursoRemoverDeleteAsync(db *gorm.DB, model *models.CursoRemoverInputModel) 
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -118,9 +118,9 @@ func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoInputModel
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -150,9 +150,9 @@ func CursoCuestionarioContestarValidarGetAsync(db *gorm.DB, model *models.CursoI
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -210,7 +210,7 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoInputMode
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -231,13 +231,13 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoInput
 
 	if db != nil {
 
-		var resultado []entities.CursoEstudianteDetalleObtenerEntity
+		var resultado *entities.CursoEstudianteDetalleObtenerEntity
 
 		exec := "EXEC dbo.CursoEstudianteDetalle_Obtener @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
-		if len(resultado) > 0 {
+		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
@@ -291,9 +291,9 @@ func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarA
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -351,7 +351,7 @@ func CursoMaterialRegistrarPostAsync(db *gorm.DB, model *models.CursoMaterialReg
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -381,9 +381,9 @@ func CursoMaterialRemoverDeleteAsync(db *gorm.DB, model *models.CursoMaterialRem
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -441,7 +441,7 @@ func CursoMensajeRegistrarPostAsync(db *gorm.DB, model *models.CursoMensajeRegis
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -471,9 +471,9 @@ func CursoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.CursoMensajeRemov
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -529,9 +529,9 @@ func CursoEstudianteRemoverDeleteAsync(db *gorm.DB, model *models.CursoEstudiant
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -609,32 +609,6 @@ func CursoProfesorTareasObtenerGetAsync(db *gorm.DB, model *models.CursoProfesor
 		exec := "EXEC dbo.CursoProfesorTareas_Obtener @IdCurso = ?, @IdProfesor = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdProfesor).Scan(&resultado)
-
-		if len(resultado) > 0 {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-
-}
-
-func CursoPromedioObtenerGetAsync(db *gorm.DB, model *models.CursoPromedioObtenerInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado []entities.CursoPromedioObtenerEntity
-
-		exec := "EXEC dbo.CursoPromedio_Obtener @IdCurso = ?"
-
-		db.Raw(exec, model.IdCurso).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
@@ -796,7 +770,7 @@ func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaInp
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -826,9 +800,9 @@ func CursoTematicaRemoverDeleteAsync(db *gorm.DB, model *models.CursoTematicaInp
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -936,9 +910,9 @@ func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.Curso
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -970,7 +944,7 @@ func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.Cur
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {

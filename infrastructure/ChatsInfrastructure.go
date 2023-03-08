@@ -24,7 +24,7 @@ func ChatRegistrarPostAsync(db *gorm.DB, model *models.ChatRegistrarInputModel) 
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -88,7 +88,7 @@ func ChatMensajeRegistrarPostAsync(db *gorm.DB, model *models.ChatMensajeRegistr
 			if resultado.Codigo > 0 {
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {

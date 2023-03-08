@@ -540,32 +540,6 @@ func UsuarioSesionRegistrarPostAsync(db *gorm.DB, model *models.UsuarioSesionReg
 	return response
 }
 
-func UsuarioSesionValidarGetAsync(db *gorm.DB, model *models.UsuarioSesionInputModel) models.ResponseInfrastructure {
-
-	var response models.ResponseInfrastructure
-
-	if db != nil {
-
-		var resultado *bool
-
-		exec := "EXEC dbo.UsuarioSesion_Validar @IdUsuario = ?, @IdSesion = ?"
-
-		db.Raw(exec, model.IdUsuario, model.IdSesion).Scan(&resultado)
-
-		if resultado != nil {
-			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-
-		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
-		}
-
-	} else {
-		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
-	}
-
-	return response
-}
-
 func UsuarioSesionesObtenerGetAsync(db *gorm.DB, model *models.UsuarioSesionesObtenerInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
@@ -666,14 +640,8 @@ func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicas
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
-
-			if len(resultado) > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}
@@ -697,14 +665,8 @@ func UsuarioCalculatorInformacionObtenerGetAsync(db *gorm.DB, model *models.Usua
 
 		db.Raw(exec, model.IdUsuario).Scan(&resultado)
 
-		if resultado != nil {
-
-			if len(resultado) > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
-			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
-			}
-
+		if len(resultado) > 0 {
+			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
 			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
 		}

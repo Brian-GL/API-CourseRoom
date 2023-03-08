@@ -84,9 +84,9 @@ func GrupoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoRemoverInputModel) 
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -177,9 +177,9 @@ func GrupoArchivoCompartidoRemoverDeleteAsync(db *gorm.DB, model *models.GrupoAr
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -289,9 +289,9 @@ func GrupoMensajeRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMensajeRemov
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -476,9 +476,9 @@ func GrupoMiembroRemoverDeleteAsync(db *gorm.DB, model *models.GrupoMiembroRemov
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {

@@ -84,9 +84,9 @@ func PreguntasRespuestaRemoverDeleteAsync(db *gorm.DB, model *models.PreguntasRe
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
@@ -202,9 +202,9 @@ func PreguntasRespuestaMensajeRemoverDeleteAsync(db *gorm.DB, model *models.Preg
 		if resultado != nil {
 
 			if resultado.Codigo > 0 {
-				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: resultado.Mensaje}
 			}
 
 		} else {
