@@ -5,9 +5,9 @@ import (
 	"api-courseroom/models"
 	"bytes"
 	"crypto/tls"
-	"fmt"
+	"encoding/json"
 	"html/template"
-	"net/rpc"
+	"net/http"
 	"os"
 	"path/filepath"
 	"time"
@@ -420,26 +420,21 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 				}
 
 				// Send request to rpc courseroom calculator:
-
-				rpc_client, err := rpc.DialHTTP("tcp", *COURSEROOM_CALCULATOR)
-
-				if err == nil {
-
-					modelCalculator := models.CourseRoomCalculator{
-						IdUsuario:    *model.IdUsuario,
-						IdDesempeno:  resultado.Codigo,
-						SECRET_TOKEN: *SECRET_TOKEN}
-
-					go func() {
-						err := rpc_client.Call("Server.Calificacion", modelCalculator, nil)
-						if err != nil {
-							fmt.Println(err.Error())
-						}
-					}()
-
+				modelCalculatorCalificacion := models.CourseRoomCalculatorCalificacion{
+					Method: "RpcServer.Calificacion",
+					Params: []models.UsuarioCalculatorInputModel{
+						{
+							IdUsuario:   *model.IdUsuario,
+							IdDesempeno: resultado.Codigo,
+						},
+					},
+					Id: 0,
 				}
 
-				defer rpc_client.Close()
+				jsonValue, _ := json.Marshal(modelCalculatorCalificacion)
+
+				//Llamar al calculator de forma asincrona:
+				go http.Post(*COURSEROOM_CALCULATOR, "application/json", bytes.NewBuffer(jsonValue))
 
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {

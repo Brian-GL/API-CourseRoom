@@ -48,10 +48,15 @@ type EmailVerificatorAPISuccess struct {
 	Domain string `json:"domain"`
 }
 
-type CourseRoomCalculator struct {
-	IdUsuario    int
-	IdDesempeno  int
-	SECRET_TOKEN string
+type CourseRoomCalculatorCalificacion struct {
+	Method string                        `json:"method"`
+	Params []UsuarioCalculatorInputModel `json:"params"`
+	Id     int                           `json:"id"`
+}
+
+type UsuarioCalculatorInputModel struct {
+	IdUsuario   int `json:"idUsuario"`
+	IdDesempeno int `json:"idDesempeno"`
 }
 
 type EmailConfiguration struct {

@@ -85,8 +85,3 @@ type UsuarioTematicasObtenerEntity struct {
 	IdTematica int    `json:"idTematica"`
 	Tematica   string `json:"tematica"`
 }
-
-type UsuarioCalculatorInformacionObtenerEntity struct {
-	Indice    int     `json:"Indice"`
-	Resultado float32 `json:"resultado"`
-}

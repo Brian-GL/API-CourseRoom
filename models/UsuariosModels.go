@@ -112,7 +112,3 @@ type UsuarioTematicaInputModel struct {
 type UsuarioTematicasObtenerInputModel struct {
 	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
-
-type UsuarioCalculatorInformacionObtenerInputModel struct {
-	IdUsuario *int `json:"idUsuario" validate:"required"`
-}
