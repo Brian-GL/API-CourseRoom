@@ -658,9 +658,9 @@ func CursosObtenerGetAsync(db *gorm.DB, model *models.CursosObtenerInputModel) m
 
 		var resultado []entities.CursosObtenerEntity
 
-		exec := "EXEC dbo.Cursos_Obtener @IdUsuario = ?, @IdEstatusUsuario = ?"
+		exec := "EXEC dbo.Cursos_Obtener @IdUsuario = ?, @IdEstatusCurso = ?"
 
-		db.Raw(exec, model.IdUsuario, model.IdEstatusUsuario).Scan(&resultado)
+		db.Raw(exec, model.IdUsuario, model.IdEstatusCurso).Scan(&resultado)
 
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}

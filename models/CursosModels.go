@@ -106,8 +106,8 @@ type CursosBuscarInputModel struct {
 }
 
 type CursosObtenerInputModel struct {
-	IdUsuario        *int `json:"idUsuario" validate:"required"`
-	IdEstatusUsuario *int `json:"idEstatusUsuario"`
+	IdUsuario      *int `json:"idUsuario" validate:"required"`
+	IdEstatusCurso *int `json:"idEstatusCurso" validate:"required"`
 }
 
 type CursosNuevosObtenerInputModel struct {
