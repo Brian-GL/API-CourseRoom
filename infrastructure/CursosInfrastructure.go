@@ -735,7 +735,7 @@ func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoInputM
 
 		var resultado []entities.CursoTareasEstudianteObtenerEntity
 
-		exec := "EXEC dbo.CursoTareasEstudiante_Obtener @IdCurso = ?, @IdUsuario"
+		exec := "EXEC dbo.CursoTareasEstudiante_Obtener @IdCurso = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario).Scan(&resultado)
 
@@ -935,7 +935,7 @@ func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.Cur
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.CursoCuestionarioRespuesta_Registrar @IdCurso = ?, IdUsuario = ?, @IdPregunta = ?, @Puntaje"
+		exec := "EXEC dbo.CursoCuestionarioRespuesta_Registrar @IdCurso = ?, @IdUsuario = ?, @IdPregunta = ?, @Puntaje = ?"
 
 		db.Raw(exec, model.IdCurso, model.IdUsuario, model.IdPregunta, model.Puntaje).Scan(&resultado)
 

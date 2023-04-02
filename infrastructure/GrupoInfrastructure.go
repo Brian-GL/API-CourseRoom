@@ -562,7 +562,7 @@ func GrupoTareaPendienteRegistrarPostAsync(db *gorm.DB, model *models.GrupoTarea
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.GrupoTareaPendiente_Registrar @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdUsuarioReceptor = ?, @Nombre = ?, @Descripcion = ?, @FechaFinalizacion"
+		exec := "EXEC dbo.GrupoTareaPendiente_Registrar @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdUsuarioReceptor = ?, @Nombre = ?, @Descripcion = ?, @FechaFinalizacion = ?"
 
 		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.IdUsuarioReceptor, model.Nombre, model.Descripcion, model.FechaFinalizacion).Scan(&resultado)
 
