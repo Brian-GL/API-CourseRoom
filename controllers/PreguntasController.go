@@ -187,7 +187,7 @@ func (controller *PreguntasController) PreguntaActualizar(res http.ResponseWrite
 	}
 }
 
-func (controller *PreguntasController) PreguntasRespuestaRegistar(res http.ResponseWriter, req *http.Request) {
+func (controller *PreguntasController) PreguntasRespuestaRegistrar(res http.ResponseWriter, req *http.Request) {
 
 	// Cabecera de respuesta:
 	res.Header().Add("Content-Type", "application/json")
@@ -220,7 +220,7 @@ func (controller *PreguntasController) PreguntasRespuestaRegistar(res http.Respo
 			{
 				//Registrar aviso:
 
-				var modelo *models.PreguntasRespuestaRegistarInputModel
+				var modelo *models.PreguntasRespuestaRegistrarInputModel
 
 				err := controller.JsonIter.NewDecoder(req.Body).Decode(&modelo)
 
@@ -231,7 +231,7 @@ func (controller *PreguntasController) PreguntasRespuestaRegistar(res http.Respo
 					if err == nil {
 
 						future := async.Exec(func() interface{} {
-							return infrastructure.PreguntasRespuestaRegistarPostAsync(controller.DB, modelo)
+							return infrastructure.PreguntasRespuestaRegistrarPostAsync(controller.DB, modelo)
 						})
 
 						response := future.Await().(models.ResponseInfrastructure)

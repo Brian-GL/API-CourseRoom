@@ -38,7 +38,7 @@ func PreguntasRespuestaActualizarPutAsync(db *gorm.DB, model *models.PreguntasRe
 	return response
 }
 
-func PreguntasRespuestaRegistarPostAsync(db *gorm.DB, model *models.PreguntasRespuestaRegistarInputModel) models.ResponseInfrastructure {
+func PreguntasRespuestaRegistrarPostAsync(db *gorm.DB, model *models.PreguntasRespuestaRegistrarInputModel) models.ResponseInfrastructure {
 
 	var response models.ResponseInfrastructure
 

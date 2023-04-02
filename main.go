@@ -168,7 +168,7 @@ func main() {
 	http.HandleFunc("/api/usuarios/tematicaremover", usuariosController.UsuarioTematicaRemover)
 	http.HandleFunc("/api/usuarios/tematicasobtener", usuariosController.UsuarioTematicasObtener)
 	http.HandleFunc("/api/usuarios/credencial", usuariosController.UsuarioCredencialObtener)
-	
+
 	// #region Archivo Endpoints
 
 	http.HandleFunc("/api/archivo/actualizar", archivoController.ArchivoActualizar)
@@ -178,7 +178,7 @@ func main() {
 	// #region preguntasrespuestas Endpoints
 
 	http.HandleFunc("/api/preguntas/actualizar", preguntasController.PreguntaActualizar)
-	http.HandleFunc("/api/preguntas/registrar", preguntasController.PreguntasRespuestaRegistar)
+	http.HandleFunc("/api/preguntas/registrar", preguntasController.PreguntasRespuestaRegistrar)
 	http.HandleFunc("/api/preguntas/remover", preguntasController.PreguntasRespuestaRemover)
 	http.HandleFunc("/api/preguntas/detalle", preguntasController.PreguntasRespuestaDetalleObtener)
 	http.HandleFunc("/api/preguntas/estatus", preguntasController.PreguntasRespuestaEstatusActualizar)

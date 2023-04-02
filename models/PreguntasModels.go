@@ -7,7 +7,7 @@ type PreguntasRespuestaActualizarInputModel struct {
 	Descripcion         *string `json:"descripcion" validate:"required"`
 }
 
-type PreguntasRespuestaRegistarInputModel struct {
+type PreguntasRespuestaRegistrarInputModel struct {
 	IdUsuario   *int    `json:"idUsuario" validate:"required"`
 	Pregunta    *string `json:"pregunta" validate:"required"`
 	Descripcion *string `json:"descripcion" validate:"required"`
