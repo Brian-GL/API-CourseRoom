@@ -362,7 +362,7 @@ func TareaArchivoEntregadoRemoverDeleteAsync(db *gorm.DB, model *models.TareaArc
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.TareaArchivoEntregado_Remover @IdTarea = ?, @IdUsuario = ?, @IdArchivoEntregado"
+		exec := "EXEC dbo.TareaArchivoEntregado_Remover @IdTarea = ?, @IdUsuario = ?, @IdArchivoEntregado = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdUsuario, model.IdArchivoEntregado).Scan(&resultado)
 
@@ -491,7 +491,7 @@ func TareaArchivoAdjuntoRemoverDeleteAsync(db *gorm.DB, model *models.TareaArchi
 
 		var resultado *entities.AccionEntity
 
-		exec := "EXEC dbo.TareaArchivoAdjunto_Remover @IdTarea = ?, @IdProfesor = ?, @IdArchivoAdjunto"
+		exec := "EXEC dbo.TareaArchivoAdjunto_Remover @IdTarea = ?, @IdProfesor = ?, @IdArchivoAdjunto = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdProfesor, model.IdArchivoAdjunto).Scan(&resultado)
 
