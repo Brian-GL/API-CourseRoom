@@ -150,7 +150,7 @@ func TareasCreadasProfesorObtenerGetAsync(db *gorm.DB, model *models.TareasCread
 
 		var resultado []entities.TareasCreadasProfesorObtenerEntity
 
-		exec := "EXEC dbo.TareasCreadasProfesor_Obtener @IdProfesor = ?"
+		exec := "EXEC dbo.TareasProfesor_Obtener @IdProfesor = ?"
 
 		db.Raw(exec, model.IdProfesor).Scan(&resultado)
 
@@ -586,7 +586,7 @@ func TareaRegistrarPostAsync(db *gorm.DB, model *models.TareaRegistrarInputModel
 
 		exec := "EXEC dbo.Tarea_Registrar @IdCurso = ?, @IdProfesor = ?, @Nombre = ?, @Descripcion = ?, @FechaEntrega = ?"
 
-		db.Raw(exec, model.IdCurso, model.IdProfesor, model.Nombre, model.Descripcion, model.FechaEntrega).Scan(&resultado)
+		db.Raw(exec, model.IdCurso, model.IdProfesor, model.Nombre, model.Descripcion, model.FechaEntrega.Format(time.RFC3339)).Scan(&resultado)
 
 		if resultado != nil {
 
