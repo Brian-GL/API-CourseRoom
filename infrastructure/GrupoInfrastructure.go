@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"api-courseroom/entities"
 	"api-courseroom/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -564,7 +565,7 @@ func GrupoTareaPendienteRegistrarPostAsync(db *gorm.DB, model *models.GrupoTarea
 
 		exec := "EXEC dbo.GrupoTareaPendiente_Registrar @IdGrupo = ?, @IdUsuarioEmisor = ?, @IdUsuarioReceptor = ?, @Nombre = ?, @Descripcion = ?, @FechaFinalizacion = ?"
 
-		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.IdUsuarioReceptor, model.Nombre, model.Descripcion, model.FechaFinalizacion).Scan(&resultado)
+		db.Raw(exec, model.IdGrupo, model.IdUsuarioEmisor, model.IdUsuarioReceptor, model.Nombre, model.Descripcion, model.FechaFinalizacion.Format(time.RFC3339)).Scan(&resultado)
 
 		if resultado != nil {
 
