@@ -22,7 +22,7 @@ func CursoEstatusGetAsync(db *gorm.DB, model *models.CursoEstatusObtenerInputMod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estatus de los cursos"}
 		}
 
 	} else {
@@ -48,7 +48,7 @@ func EstadosGetAsync(db *gorm.DB, model *models.EstadosObtenerInputModel) models
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron los estados"}
 		}
 
 	} else {
@@ -74,7 +74,7 @@ func EstatusTareaPendienteGetAsync(db *gorm.DB, model *models.EstatusTareaPendie
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas con estatus pendiente"}
 		}
 
 	} else {
@@ -100,7 +100,7 @@ func LocalidadesGetAsync(db *gorm.DB, model *models.LocalidadesObtenerInputModel
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron las localidades"}
 		}
 
 	} else {
@@ -126,7 +126,7 @@ func PreguntaRespuestaEstatusGetAsync(db *gorm.DB, model *models.PreguntaRespues
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron las preguntas con estatus"}
 		}
 
 	} else {
@@ -152,7 +152,7 @@ func PreguntasCuestionarioGetAsync(db *gorm.DB, model *models.PreguntasCuestiona
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron cuestionarios"}
 		}
 
 	} else {
@@ -178,7 +178,7 @@ func TematicasGetAsync(db *gorm.DB, model *models.TematicasObtenerInputModel) mo
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tematicas"}
 		}
 
 	} else {
@@ -204,7 +204,7 @@ func TiposUsuarioGetAsync(db *gorm.DB, model *models.TiposUsuarioObtenerInputMod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tipos de usuarios"}
 		}
 
 	} else {
@@ -230,7 +230,7 @@ func TiposArchivoObtenerGetAsync(db *gorm.DB, model *models.TiposArchivoObtenerI
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tipos de archivos"}
 		}
 
 	} else {

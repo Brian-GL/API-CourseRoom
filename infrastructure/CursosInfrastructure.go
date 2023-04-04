@@ -28,7 +28,7 @@ func CursoActualizarPutAsync(db *gorm.DB, model *models.CursoActualizarInputMode
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el curso"}
 		}
 
 	} else {
@@ -60,7 +60,7 @@ func CursoRegistrarPostAsync(db *gorm.DB, model *models.CursoRegistrarInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el curso"}
 		}
 
 	} else {
@@ -124,7 +124,7 @@ func CursoAbandonarActualizarPutAsync(db *gorm.DB, model *models.CursoInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió abandonar el curso"}
 		}
 
 	} else {
@@ -156,7 +156,7 @@ func CursoCuestionarioContestarValidarGetAsync(db *gorm.DB, model *models.CursoI
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió validar las respuestar del cuestionario"}
 		}
 
 	} else {
@@ -182,7 +182,7 @@ func CursoDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoDesempenoObte
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron desempeños de cursos"}
 		}
 
 	} else {
@@ -214,7 +214,7 @@ func CursoEstudianteRegistrarPostAsync(db *gorm.DB, model *models.CursoInputMode
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar al estudiante al curso"}
 		}
 
 	} else {
@@ -240,7 +240,7 @@ func CursoEstudianteDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoInput
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró detalles del estudiante en el curso"}
 		}
 
 	} else {
@@ -297,7 +297,7 @@ func CursoFinalizarActualizarPutAsync(db *gorm.DB, model *models.CursoFinalizarA
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió finalizar el curso"}
 		}
 
 	} else {
@@ -355,7 +355,7 @@ func CursoMaterialRegistrarPostAsync(db *gorm.DB, model *models.CursoMaterialReg
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el material en el curso"}
 		}
 
 	} else {
@@ -413,7 +413,7 @@ func CursoMaterialesObtenerGetAsync(db *gorm.DB, model *models.CursoMaterialesOb
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron materiales en el curso"}
 		}
 
 	} else {
@@ -445,7 +445,7 @@ func CursoMensajeRegistrarPostAsync(db *gorm.DB, model *models.CursoMensajeRegis
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar mensajes en el curso"}
 		}
 
 	} else {
@@ -503,7 +503,7 @@ func CursoMensajesObtenerGetAsync(db *gorm.DB, model *models.CursoMensajesObtene
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron mensajes en el curso"}
 		}
 
 	} else {
@@ -561,7 +561,7 @@ func CursoEstudiantesObtenerGetAsync(db *gorm.DB, model *models.CursoEstudiantes
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estudiantes en el curso"}
 		}
 
 	} else {
@@ -587,7 +587,7 @@ func CursoProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.CursoProfeso
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del profesor en el curso"}
 		}
 
 	} else {
@@ -613,7 +613,7 @@ func CursoProfesorTareasObtenerGetAsync(db *gorm.DB, model *models.CursoProfesor
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas del profesor en el curso"}
 		}
 
 	} else {
@@ -639,7 +639,7 @@ func CursosBuscarGetAsync(db *gorm.DB, model *models.CursosBuscarInputModel) mod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se logro burscar el curso solicitado"}
 		}
 
 	} else {
@@ -665,7 +665,7 @@ func CursosObtenerGetAsync(db *gorm.DB, model *models.CursosObtenerInputModel) m
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron cursos"}
 		}
 
 	} else {
@@ -691,7 +691,7 @@ func CursosNuevosObtenerGetAsync(db *gorm.DB, model *models.CursosNuevosObtenerI
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron nuevos cursos"}
 		}
 
 	} else {
@@ -717,7 +717,7 @@ func CursosProfesorObtenerGetAsync(db *gorm.DB, model *models.CursosProfesorObte
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron cursos de profesores"}
 		}
 	} else {
 		response = models.ResponseInfrastructure{Status: models.ERROR, Data: "No se ha podido conectar a la base de datos"}
@@ -742,7 +742,7 @@ func CursoTareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.CursoInputM
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas entregadas por los estudiantes"}
 		}
 
 	} else {
@@ -774,7 +774,7 @@ func CursoTematicaRegistrarPostAsync(db *gorm.DB, model *models.CursoTematicaInp
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la nueva tematica"}
 		}
 
 	} else {
@@ -832,7 +832,7 @@ func CursoTematicasObtenerGetAsync(db *gorm.DB, model *models.CursoTematicasObte
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tematicas en cursos"}
 		}
 
 	} else {
@@ -858,7 +858,7 @@ func CursoEstudianteDesempenoObtenerGetAsync(db *gorm.DB, model *models.CursoInp
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros del desempeno de los estudiantes"}
 		}
 
 	} else {
@@ -884,7 +884,7 @@ func CursoEstudiantesSinGrupoObtenerGetAsync(db *gorm.DB, model *models.CursoEst
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron estudiantes sin grupos"}
 		}
 
 	} else {
@@ -916,7 +916,7 @@ func CursoEstudianteFinalizarActualizarPutAsync(db *gorm.DB, model *models.Curso
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió finalizar al estudiante del curso"}
 		}
 
 	} else {
@@ -948,7 +948,7 @@ func CursoCuestionarioRespuestaRegistrarPostAsync(db *gorm.DB, model *models.Cur
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió generar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar las respuestas"}
 		}
 
 	} else {

@@ -28,7 +28,7 @@ func ChatRegistrarPostAsync(db *gorm.DB, model *models.ChatRegistrarInputModel) 
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar un nuevo chat"}
 		}
 
 	} else {
@@ -92,7 +92,7 @@ func ChatMensajeRegistrarPostAsync(db *gorm.DB, model *models.ChatMensajeRegistr
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar un mensaje en el chat"}
 		}
 
 	} else {
@@ -150,7 +150,7 @@ func ChatMensajesObtenerGetAsync(db *gorm.DB, model *models.ChatMensajesObtenerI
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron mensajes de los chats"}
 		}
 
 	} else {
@@ -176,7 +176,7 @@ func ChatsBuscarGetAsync(db *gorm.DB, model *models.ChatsBuscarInputModel) model
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontro la busqueda solicitada"}
 		}
 
 	} else {
@@ -202,7 +202,7 @@ func ChatsObtenerGetAsync(db *gorm.DB, model *models.ChatsObtenerInputModel) mod
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron chats"}
 		}
 
 	} else {

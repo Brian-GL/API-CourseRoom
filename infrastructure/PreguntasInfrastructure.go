@@ -28,7 +28,7 @@ func PreguntasRespuestaActualizarPutAsync(db *gorm.DB, model *models.PreguntasRe
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar las preguntas"}
 		}
 
 	} else {
@@ -59,7 +59,7 @@ func PreguntasRespuestaRegistrarPostAsync(db *gorm.DB, model *models.PreguntasRe
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar las preguntas"}
 		}
 
 	} else {
@@ -146,7 +146,7 @@ func PreguntasRespuestaEstatusActualizarPutAsync(db *gorm.DB, model *models.Preg
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el estatus de la pregunta"}
 		}
 
 	} else {
@@ -177,7 +177,7 @@ func PreguntasRespuestaMensajeRegistrarPostAsync(db *gorm.DB, model *models.Preg
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar mensaje en la pregunta"}
 		}
 
 	} else {
@@ -258,7 +258,7 @@ func PreguntasRespuestasBuscarGetAsync(db *gorm.DB, model *models.PreguntasRespu
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros de preguntas"}
 		}
 
 	} else {
