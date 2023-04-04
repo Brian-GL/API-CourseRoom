@@ -28,7 +28,7 @@ func AvisoActualizarPutAsync(db *gorm.DB, model *models.AvisoAccionInputModel) m
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el aviso"}
 		}
 
 	} else {
@@ -60,7 +60,7 @@ func AvisoRegistrarPostAsync(db *gorm.DB, model *models.AvisoRegistrarInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el aviso"}
 		}
 
 	} else {
@@ -118,7 +118,7 @@ func AvisoDetalleObtenerGetAsync(db *gorm.DB, model *models.AvisoInputModel) mod
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del aviso"}
 		}
 
 	} else {
@@ -144,7 +144,7 @@ func AvisosObtenerGetAsync(db *gorm.DB, model *models.AvisosObtenerInputModel) m
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos"}
 		}
 
 	} else {
@@ -170,7 +170,7 @@ func AvisoValidarGetAsync(db *gorm.DB, model *models.AvisosValidarInputModel) mo
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron avisos del usuario"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguieron validar los avisos"}
 		}
 
 	} else {
