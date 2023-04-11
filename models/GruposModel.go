@@ -108,5 +108,5 @@ type GrupoTareaPendienteRegistrarInputModel struct {
 	IdUsuarioReceptor *int       `json:"idUsuarioReceptor" validate:"required"`
 	Nombre            *string    `json:"nombre" validate:"required"`
 	Descripcion       *string    `json:"descripcion"`
-	FechaFinalizacion *time.Time `json:"fechaFinalizacion"`
+	FechaFinalizacion *time.Time `json:"fechaFinalizacion" validate:"required"`
 }
