@@ -38,7 +38,7 @@ func UsuarioActualizarPutAsync(db *gorm.DB, model *models.UsuarioActualizarInput
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar los datos del usuario"}
 		}
 
 	} else {
@@ -84,7 +84,7 @@ func UsuarioRegistrarPostAsync(db *gorm.DB, EMAIL_VERIFICATOR_API *string, email
 				}
 
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar al usuario"}
 			}
 
 		} else {
@@ -243,7 +243,7 @@ func UsuarioAccesoObtenerGetAsync(db *gorm.DB, model *models.UsuarioAccesoObtene
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron el usuario"}
 		}
 
 	} else {
@@ -359,7 +359,7 @@ func UsuarioCuentaActualizarPutAsync(db *gorm.DB, EMAIL_VERIFICATOR_API *string,
 				}
 
 			} else {
-				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+				response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar la cuenta"}
 			}
 
 		} else {
@@ -388,7 +388,7 @@ func UsuarioCuentaObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel) 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron cuentas de este usuario"}
 		}
 
 	} else {
@@ -414,7 +414,7 @@ func UsuarioDesempenoObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputMode
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros del desempeno"}
 		}
 
 	} else {
@@ -440,7 +440,7 @@ func UsuarioDetalleObtenerGetAsync(db *gorm.DB, model *models.UsuarioInputModel)
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro del usuario"}
 		}
 
 	} else {
@@ -466,7 +466,7 @@ func UsuariosBuscarGetAsync(db *gorm.DB, model *models.UsuariosBuscarInputModel)
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron usuarios"}
 		}
 
 	} else {
@@ -498,7 +498,7 @@ func UsuarioSesionActualizarPutAsync(db *gorm.DB, model *models.UsuarioSesionInp
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar la sesion"}
 		}
 
 	} else {
@@ -530,7 +530,7 @@ func UsuarioSesionRegistrarPostAsync(db *gorm.DB, model *models.UsuarioSesionReg
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la sesion"}
 		}
 
 	} else {
@@ -555,7 +555,7 @@ func UsuarioSesionesObtenerGetAsync(db *gorm.DB, model *models.UsuarioSesionesOb
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registrosde sesiones"}
 		}
 
 	} else {
@@ -587,7 +587,7 @@ func UsuarioTematicaRegistrarPostAsync(db *gorm.DB, model *models.UsuarioTematic
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la tematica del usuario"}
 		}
 
 	} else {
@@ -643,7 +643,7 @@ func UsuarioTematicasObtenerGetAsync(db *gorm.DB, model *models.UsuarioTematicas
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tematicas de usuarios"}
 		}
 
 	} else {
