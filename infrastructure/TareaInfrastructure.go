@@ -225,7 +225,7 @@ func TareaReatroalimentacionesObtenerGetAsync(db *gorm.DB, model *models.TareaIn
 
 		var resultado []entities.TareaReatroalimentacionesObtenerEntity
 
-		exec := "EXEC dbo.TareaReatroalimentaciones_Obtener @IdTarea = ?, @IdUsuario = ?"
+		exec := "EXEC dbo.TareaRetroalimentaciones_Obtener @IdTarea = ?, @IdUsuario = ?"
 
 		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
 
