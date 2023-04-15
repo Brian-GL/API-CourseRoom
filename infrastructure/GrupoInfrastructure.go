@@ -29,7 +29,7 @@ func GrupoActualizarPutAsync(db *gorm.DB, model *models.GrupoActualizarInputMode
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el grupo"}
 		}
 
 	} else {
@@ -60,7 +60,7 @@ func GrupoRegistrarPostAsync(db *gorm.DB, model *models.GrupoRegistrarInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el grupo"}
 		}
 
 	} else {
@@ -122,7 +122,7 @@ func GrupoAbandonarActualizarPutAsync(db *gorm.DB, model *models.GrupoAbandonarA
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el grupo a abandonar"}
 		}
 
 	} else {
@@ -153,7 +153,7 @@ func GrupoArchivoCompartidoRegistrarPostAsync(db *gorm.DB, model *models.GrupoAr
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el archivo en el grupo"}
 		}
 
 	} else {
@@ -209,7 +209,7 @@ func GrupoArchivosCompartidosObtenerGetAsync(db *gorm.DB, model *models.GrupoInp
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron archivos compartidos en el grupo"}
 		}
 
 	} else {
@@ -234,7 +234,7 @@ func GrupoDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoInputModel) mod
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del grupo"}
 		}
 
 	} else {
@@ -265,7 +265,7 @@ func GrupoMensajeRegistrarPostAsync(db *gorm.DB, model *models.GrupoMensajeRegis
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió el mensaje del grupo"}
 		}
 
 	} else {
@@ -321,7 +321,7 @@ func GruposMensajesObtenerGetAsync(db *gorm.DB, model *models.GruposMensajesObte
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron los mensajes del grupo"}
 		}
 
 	} else {
@@ -346,7 +346,7 @@ func GruposObtenerGetAsync(db *gorm.DB, model *models.GruposObtenerInputModel) m
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron grupos"}
 		}
 
 	} else {
@@ -371,7 +371,7 @@ func GrupoMiembrosObtenerGetAsync(db *gorm.DB, model *models.GrupoMiembrosObtene
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron miembros en el grupo"}
 		}
 
 	} else {
@@ -396,7 +396,7 @@ func GrupoTareasPendientesObtenerGetAsync(db *gorm.DB, model *models.GrupoInputM
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas pendientes"}
 		}
 
 	} else {
@@ -421,7 +421,7 @@ func GrupoTareaPendienteDetalleObtenerGetAsync(db *gorm.DB, model *models.GrupoT
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron detalles de las tareas pendientes"}
 		}
 
 	} else {
@@ -452,7 +452,7 @@ func GrupoTareaPendienteEstatusActualizarPutAsync(db *gorm.DB, model *models.Gru
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar el estatus de la tarea"}
 		}
 
 	} else {
@@ -514,7 +514,7 @@ func GrupoMiembroRegistrarPostAsync(db *gorm.DB, model *models.GrupoMiembroRegis
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar miembro al grupo"}
 		}
 
 	} else {
@@ -545,7 +545,7 @@ func GrupoTareaPendienteActualizarPutAsync(db *gorm.DB, model *models.GrupoTarea
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar la tarea pendiente"}
 		}
 
 	} else {
@@ -576,7 +576,7 @@ func GrupoTareaPendienteRegistrarPostAsync(db *gorm.DB, model *models.GrupoTarea
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la tarea al grupo"}
 		}
 
 	} else {

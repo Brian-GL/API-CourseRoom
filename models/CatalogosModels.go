@@ -22,7 +22,7 @@ type PreguntaRespuestaEstatusObtenerInputModel struct {
 }
 
 type PreguntasCuestionarioObtenerInputModel struct {
-	IdCuestionario *int `json:"idCuestionario"`
+	IdCuestionario *int `json:"idCuestionario validate: required"`
 }
 
 type TematicasObtenerInputModel struct {

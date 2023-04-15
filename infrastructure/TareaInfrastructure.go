@@ -32,7 +32,7 @@ func TareaArchivosAdjuntosObtenerGetAsync(db *gorm.DB, model *models.TareaArchiv
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron Archivos Adjuntos"}
 		}
 
 	} else {
@@ -57,7 +57,7 @@ func TareaArchivosEntregadosObtenerGetAsync(db *gorm.DB, model *models.TareaInpu
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron Archivos Entregados"}
 		}
 
 	} else {
@@ -107,7 +107,7 @@ func TareasMesObtenerGetAsync(db *gorm.DB, model *models.TareasMesObtenerInputMo
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas este mes"}
 		}
 
 	} else {
@@ -132,7 +132,7 @@ func TareasEstudianteObtenerGetAsync(db *gorm.DB, model *models.TareasEstudiante
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron Tareas del estudiante"}
 		}
 
 	} else {
@@ -157,7 +157,7 @@ func TareasCreadasProfesorObtenerGetAsync(db *gorm.DB, model *models.TareasCread
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas creadas por el profesor"}
 		}
 
 	} else {
@@ -232,7 +232,7 @@ func TareaReatroalimentacionesObtenerGetAsync(db *gorm.DB, model *models.TareaIn
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron retroalimentaciones"}
 		}
 
 	} else {
@@ -257,7 +257,7 @@ func TareaRetroalimentacionDetalleObtenerGetAsync(db *gorm.DB, model *models.Tar
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró información del registro"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontró detalle de la retroalimentacion"}
 		}
 
 	} else {
@@ -282,7 +282,7 @@ func TareasCalificarObtenerGetAsync(db *gorm.DB, model *models.TareasCalificarOb
 		if len(resultado) > 0 {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron registros"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se encontraron tareas calificadas"}
 		}
 
 	} else {
@@ -313,7 +313,7 @@ func TareaActualizarPutAsync(db *gorm.DB, model *models.TareaActualizarInputMode
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar la tarea"}
 		}
 
 	} else {
@@ -344,7 +344,7 @@ func TareaEntregarActualizarPutAsync(db *gorm.DB, model *models.TareaInputModel)
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió actualizar la entrega de la tarea"}
 		}
 
 	} else {
@@ -442,7 +442,7 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió calificar la tarea"}
 		}
 
 	} else {
@@ -473,7 +473,7 @@ func TareaArchivoEntregadoRegistrarPostAsync(db *gorm.DB, model *models.TareaArc
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el archivo"}
 		}
 
 	} else {
@@ -535,7 +535,7 @@ func TareaArchivoAdjuntoRegistrarPostAsync(db *gorm.DB, model *models.TareaArchi
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar el archivo adjunto a la tarea"}
 		}
 
 	} else {
@@ -597,7 +597,7 @@ func TareaRegistrarPostAsync(db *gorm.DB, model *models.TareaRegistrarInputModel
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la tarea"}
 		}
 
 	} else {
@@ -628,7 +628,7 @@ func TareaRetroalimentacionRegistrarPostAsync(db *gorm.DB, model *models.TareaRe
 			}
 
 		} else {
-			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió realizar la acción"}
+			response = models.ResponseInfrastructure{Status: models.ALERT, Data: "No se consiguió registrar la retroalimentacion"}
 		}
 
 	} else {
