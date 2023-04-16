@@ -25,8 +25,8 @@ type TareasCreadasProfesorObtenerInputModel struct {
 }
 
 type TareaProfesorDetalleObtenerInputModel struct {
-	IdTarea    *int `json:"idTarea" validate:"required"`
-	IdProfesor *int `json:"idProfesor" validate:"required"`
+	IdTarea   *int `json:"idTarea" validate:"required"`
+	IdUsuario *int `json:"idUsuario" validate:"required"`
 }
 
 type TareaRetroalimentacionDetalleObtenerInputModel struct {

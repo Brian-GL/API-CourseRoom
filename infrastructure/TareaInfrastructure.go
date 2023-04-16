@@ -175,9 +175,9 @@ func TareaProfesorDetalleObtenerGetAsync(db *gorm.DB, model *models.TareaProfeso
 
 		var resultado *entities.TareaProfesorDetalleObtenerEntity
 
-		exec := "EXEC dbo.TareaProfesorDetalle_Obtener @IdTarea = ?, @IdProfesor = ?"
+		exec := "EXEC dbo.TareaProfesorDetalle_Obtener @IdTarea = ?, @IdUsuario = ?"
 
-		db.Raw(exec, model.IdTarea, model.IdProfesor).Scan(&resultado)
+		db.Raw(exec, model.IdTarea, model.IdUsuario).Scan(&resultado)
 
 		if resultado != nil {
 			response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado}
