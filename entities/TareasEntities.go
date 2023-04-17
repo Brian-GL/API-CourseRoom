@@ -113,8 +113,8 @@ type TareaReatroalimentacionesObtenerEntity struct {
 }
 
 type TareaRetroalimentacionDetalleObtenerEntity struct {
-	Nombre            int       `json:"nombre"`
-	Retroalimentacion int       `json:"retroalimentacion"`
+	Nombre            string    `json:"nombre"`
+	Retroalimentacion string    `json:"retroalimentacion"`
 	NombreArchivo     *string   `json:"nombreArchivo"`
 	Archivo           *string   `json:"archivo"`
 	FechaRegistro     time.Time `json:"fechaRegistro"`
