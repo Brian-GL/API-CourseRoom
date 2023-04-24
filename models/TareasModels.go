@@ -52,7 +52,6 @@ type TareaArchivoEntregadoRemoverInputModel struct {
 
 type TareaCalificarActualizarInputModel struct {
 	IdTarea      *int     `json:"idTarea" validate:"required"`
-	IdCurso      *int     `json:"idCurso" validate:"required"`
 	IdProfesor   *int     `json:"idProfesor" validate:"required"`
 	IdUsuario    *int     `json:"idUsuario" validate:"required"`
 	Calificacion *float32 `json:"calificacion" validate:"required"`
