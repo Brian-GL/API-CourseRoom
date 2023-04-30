@@ -3,20 +3,17 @@ package entities
 import "time"
 
 type CursoDesempenoObtenerEntity struct {
-	IdDesempeno                int       `json:"idDesempeno"`
-	IdUsuario                  int       `json:"idUsuario"`
-	NombreCompleto             string    `json:"nombreCompleto"`
-	Imagen                     *string   `json:"imagen"`
-	IdTarea                    int       `json:"idTarea"`
-	Tarea                      string    `json:"tarea"`
-	Calificacion               float32   `json:"calificacion"`
-	PromedioCurso              float32   `json:"promedioCurso"`
-	PrediccionPromedioCurso    *float32  `json:"prediccionPromedioCurso"`
-	RumboPromedioCurso         *string   `json:"rumboPromedioCurso"`
-	PuntualidadCurso           float32   `json:"puntualidadCurso"`
-	PrediccionPuntualidadCurso *float32  `json:"prediccionPuntualidadCurso"`
-	RumboPuntualidadCurso      *string   `json:"rumboPuntualidadCurso"`
-	FechaRegistro              time.Time `json:"fechaRegistro"`
+	IdUsuario                   int       `json:"idUsuario"`
+	NombreCompleto              string    `json:"nombreCompleto"`
+	Imagen                      *string   `json:"imagen"`
+	IdTarea                     int       `json:"idTarea"`
+	Tarea                       string    `json:"tarea"`
+	Calificacion                float32   `json:"calificacion"`
+	PromedioCalificacionCurso   float32   `json:"promedioCalificacionCurso"`
+	PrediccionCalificacionCurso *float32  `json:"prediccionCalificacionCurso"`
+	Puntualidad                 float32   `json:"puntualidad"`
+	PromedioPuntualidadCurso    float32   `json:"promedioPuntualidadCurso"`
+	FechaRegistro               time.Time `json:"fechaRegistro"`
 }
 
 type CursoEstudianteDetalleObtenerEntity struct {
@@ -174,17 +171,14 @@ type CursoTematicasObtenerEntity struct {
 }
 
 type CursoEstudianteDesempenoObtenerEntity struct {
-	IdDesempeno                int       `json:"idDesempeno"`
-	IdTarea                    int       `json:"idTarea"`
-	Tarea                      string    `json:"tarea"`
-	Calificacion               float32   `json:"calificacion"`
-	PromedioCurso              float32   `json:"promedioCurso"`
-	PrediccionPromedioCurso    *float32  `json:"prediccionPromedioCurso"`
-	RumboPromedioCurso         *string   `json:"rumboPromedioCurso"`
-	PuntualidadCurso           float32   `json:"puntualidadCurso"`
-	PrediccionPuntualidadCurso *float32  `json:"prediccionPuntualidadCurso"`
-	RumboPuntualidadCurso      *string   `json:"rumboPuntualidadCurso"`
-	FechaRegistro              time.Time `json:"fechaRegistro"`
+	IdTarea                     int       `json:"idTarea"`
+	Tarea                       string    `json:"tarea"`
+	Calificacion                float32   `json:"calificacion"`
+	PromedioCalificacionCurso   float32   `json:"promedioCalificacionCurso"`
+	PrediccionCalificacionCurso *float32  `json:"prediccionCalificacionCurso"`
+	Puntualidad                 float32   `json:"puntualidad"`
+	PromedioPuntualidadCurso    float32   `json:"promedioPuntualidadCurso"`
+	FechaRegistro               time.Time `json:"fechaRegistro"`
 }
 
 type CursoEstudiantesSinGrupoObtenerEntity struct {

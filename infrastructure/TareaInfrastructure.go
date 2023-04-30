@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -401,40 +402,51 @@ func TareaCalificarActualizarPutAsync(db *gorm.DB, emailConfiguration *models.Em
 
 			if resultado.Codigo > 0 {
 
-				var usuario *entities.UsuarioCuentaObtenerEntity
-
-				exec = "EXEC dbo.UsuarioCuenta_Obtener @IdUsuario = ?"
-
-				db.Raw(exec, model.IdUsuario).Scan(&usuario)
-
-				if usuario != nil {
-
-					modelEmail := models.CalificacionEmail{
-						CorreoElectronico:    usuario.CorreoElectronico,
-						NombreTarea:          *resultado.NombreTarea,
-						FechaCalificacion:    time.Now().Format("10-10-2022 12:00 p.m"),
-						CalificacionObtenida: *model.Calificacion,
-						Anio:                 time.Now().Year()}
-
-					go SendCalificacionEmail(emailConfiguration, &modelEmail)
-				}
-
-				// Send request to rpc courseroom calculator:
-				modelCalculatorCalificacion := models.CourseRoomCalculatorCalificacion{
-					Method: "RpcServer.Calificacion",
-					Params: []models.UsuarioCalculatorInputModel{
-						{
-							IdUsuario:   *model.IdUsuario,
-							IdDesempeno: resultado.Codigo,
-						},
-					},
-					Id: 0,
-				}
-
-				jsonValue, _ := json.Marshal(modelCalculatorCalificacion)
-
 				//Llamar al calculator de forma asincrona:
-				go http.Post(*COURSEROOM_CALCULATOR, "application/json", bytes.NewBuffer(jsonValue))
+
+				client := http.Client{
+					Timeout: 10 * time.Minute,
+				}
+
+				go func() {
+
+					var usuario *entities.UsuarioCuentaObtenerEntity
+
+					exec = "EXEC dbo.UsuarioCuenta_Obtener @IdUsuario = ?"
+
+					db.Raw(exec, model.IdUsuario).Scan(&usuario)
+
+					if usuario != nil {
+
+						modelEmail := models.CalificacionEmail{
+							CorreoElectronico:    usuario.CorreoElectronico,
+							NombreTarea:          *resultado.NombreTarea,
+							FechaCalificacion:    time.Now().Format("10-10-2022 12:00 p.m"),
+							CalificacionObtenida: *model.Calificacion,
+							Anio:                 time.Now().Year()}
+
+						SendCalificacionEmail(emailConfiguration, &modelEmail)
+					}
+
+					// Send request to rpc courseroom calculator:
+					modelCalculatorCalificacion := models.CourseRoomCalculatorCalificacion{
+						Method: "RpcServer.Calificacion",
+						Params: []models.UsuarioCalculatorInputModel{
+							{
+								IdUsuario:   *model.IdUsuario,
+								IdDesempeno: resultado.Codigo,
+							},
+						},
+						Id: 0,
+					}
+
+					jsonValue, _ := json.Marshal(modelCalculatorCalificacion)
+
+					_, err := client.Post(*COURSEROOM_CALCULATOR, "application/json", bytes.NewBuffer(jsonValue))
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+				}()
 
 				response = models.ResponseInfrastructure{Status: models.SUCCESS, Data: resultado.Mensaje}
 			} else {
@@ -667,6 +679,7 @@ func SendCalificacionEmail(emailConfiguration *models.EmailConfiguration, data *
 
 	// Send Email
 	if err := d.DialAndSend(m); err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
